@@ -1939,7 +1939,7 @@
                             <small>Upload a photo from the convention</small>
                         </div>
                         
-                        <button type="submit" class="submit-btn">Submit to Gallery</button>
+                        <button type="button" class="submit-btn" onclick="return false;">Submit to Gallery</button>
                     </form>
                 </div>
 
@@ -3495,10 +3495,26 @@
 
             setupFormSubmission() {
                 const form = document.getElementById('gallery-form');
-                if (form) {
+                const submitBtn = document.querySelector('.submit-btn');
+                
+                if (form && submitBtn) {
+                    // Handle button click instead of form submit
+                    submitBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        console.log('Submit button clicked, handling submission');
+                        this.handleSubmission(e);
+                        return false;
+                    });
+                    
+                    // Also handle form submit as backup
                     form.addEventListener('submit', (e) => {
                         e.preventDefault();
+                        e.stopPropagation();
+                        console.log('Form submission prevented, handling manually');
                         this.handleSubmission(e);
+                        return false;
                     });
                 }
             }
@@ -3510,13 +3526,24 @@
                 try {
                     console.log('Starting submission...');
                     console.log('Backend type:', this.backendType);
+                    console.log('Current URL hash:', window.location.hash);
+                    
                     submitBtn.textContent = 'Submitting...';
                     submitBtn.disabled = true;
 
-                    const formData = new FormData(e.target);
+                    const form = document.getElementById('gallery-form');
+                    const formData = new FormData(form);
                     const name = formData.get('name');
                     const message = formData.get('message');
                     const imageFile = formData.get('image');
+                    
+                    // Validate required fields
+                    if (!name || name.trim() === '') {
+                        alert('Please enter your name');
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                        return;
+                    }
 
                     const galleryItem = {
                         name: name,
@@ -3567,6 +3594,18 @@
                     console.log('Gallery item saved successfully');
                     this.resetForm();
                     this.showSuccessMessage();
+                    
+                    // Ensure we stay on the gallery section
+                    setTimeout(() => {
+                        const gallerySection = document.getElementById('gallery');
+                        if (gallerySection) {
+                            gallerySection.scrollIntoView({ behavior: 'smooth' });
+                        }
+                        // Ensure URL hash stays on gallery
+                        if (window.location.hash !== '#gallery') {
+                            window.location.hash = '#gallery';
+                        }
+                    }, 100);
 
                 } catch (error) {
                     console.error('Error submitting gallery item:', error);
