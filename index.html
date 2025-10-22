@@ -228,8 +228,6 @@
 
         /* Filters */
         .filters {
-            position: sticky;
-            top: 80px;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             display: flex;
@@ -358,7 +356,7 @@
 
         .program-day-header {
             position: sticky;
-            top: 160px;
+            top: 80px;
             background: var(--white);
             border-bottom: 3px solid var(--day-color, var(--purple));
             padding: 1rem;
@@ -1699,6 +1697,7 @@
             .filters {
                 flex-direction: column;
                 gap: 0.5rem;
+                margin-bottom: 1.5rem;
             }
 
             .filter-group {
@@ -1709,6 +1708,15 @@
 
             .filter-label {
                 min-width: 60px;
+            }
+
+            .program-day-header {
+                top: 60px;
+            }
+
+            .search-container {
+                padding: 0.75rem;
+                margin: -0.75rem -0.75rem 1rem -0.75rem;
             }
 
             .speakers-grid {
