@@ -209,7 +209,7 @@
             padding: 1rem;
             margin: -1rem -1rem 1rem -1rem;
             border-bottom: 1px solid var(--gray-200);
-            z-index: 5;
+            z-index: 15;
         }
 
         .search-input {
@@ -228,9 +228,16 @@
 
         /* Filters */
         .filters {
+            position: sticky;
+            top: 80px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             display: flex;
             gap: 0.75rem;
             margin-bottom: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            z-index: 12;
             flex-wrap: wrap;
         }
 
@@ -290,6 +297,49 @@
             color: var(--white);
         }
 
+        /* Color-coded day tabs - MA Brand Colors */
+        .day-tab[data-day="fri"] {
+            border-left: 4px solid var(--purple);
+        }
+
+        .day-tab[data-day="fri"]:hover {
+            background: #f3f0ff;
+            color: var(--purple);
+        }
+
+        .day-tab[data-day="fri"].active {
+            background: var(--purple);
+            color: var(--white);
+        }
+
+        .day-tab[data-day="sat"] {
+            border-left: 4px solid var(--blue);
+        }
+
+        .day-tab[data-day="sat"]:hover {
+            background: #eff6ff;
+            color: var(--blue);
+        }
+
+        .day-tab[data-day="sat"].active {
+            background: var(--blue);
+            color: var(--white);
+        }
+
+        .day-tab[data-day="sun"] {
+            border-left: 4px solid #fbbf24;
+        }
+
+        .day-tab[data-day="sun"]:hover {
+            background: #fffbeb;
+            color: #fbbf24;
+        }
+
+        .day-tab[data-day="sun"].active {
+            background: #fbbf24;
+            color: var(--white);
+        }
+
         .day-tab:focus {
             outline: 2px solid var(--blue);
             outline-offset: 2px;
@@ -299,6 +349,163 @@
         .sessions-grid {
             display: grid;
             gap: 1rem;
+        }
+
+        /* Program Day Sections */
+        .program-day-section {
+            margin-bottom: 3rem;
+        }
+
+        .program-day-header {
+            position: sticky;
+            top: 160px;
+            background: var(--white);
+            border-bottom: 3px solid var(--day-color, var(--purple));
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .program-day-header.sticky-active {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: var(--shadow-lg);
+            border-bottom-width: 4px;
+        }
+
+        .day-header-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+
+        .day-info {
+            flex: 1;
+        }
+
+        .day-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--day-color, var(--purple));
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .day-date {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin: 0.25rem 0 0 0;
+        }
+
+        .day-session-count {
+            background: var(--day-color, var(--purple));
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .program-day-sessions {
+            display: grid;
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Agenda Day Sections */
+        .agenda-day-section {
+            margin-bottom: 2rem;
+        }
+
+        .agenda-day-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .agenda-day-sessions {
+            display: grid;
+            gap: 1rem;
+        }
+
+        /* Sponsors Carousel */
+        .sponsors-carousel {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .sponsors-carousel-title {
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--purple);
+            margin-bottom: 0.75rem;
+        }
+
+        .sponsors-scroll {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .sponsors-track {
+            display: flex;
+            animation: scroll 30s linear infinite;
+            gap: 1rem;
+        }
+
+        .sponsor-logo {
+            flex-shrink: 0;
+            background: var(--white);
+            padding: 0.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+            min-width: 180px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .sponsor-logo:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--purple);
+        }
+
+        .sponsor-logo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .sponsors-track:hover {
+            animation-play-state: paused;
         }
 
         .session-card {
@@ -400,6 +607,26 @@
             padding: 0.25rem 0.5rem;
             border-radius: var(--radius-sm);
         }
+
+        /* Color-coded day tags - MA Brand Colors */
+        .day-tag[data-day="fri"] {
+            background: var(--purple);
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .day-tag[data-day="sat"] {
+            background: var(--blue);
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .day-tag[data-day="sun"] {
+            background: #fbbf24;
+            color: var(--white);
+            font-weight: 600;
+        }
+
 
         .session-description {
             margin-top: 0.75rem;
@@ -943,81 +1170,109 @@
             transform: translateY(0);
         }
 
-        /* PWA Install Prompt */
-        .install-prompt {
-            position: fixed;
-            bottom: 1rem;
-            left: 1rem;
-            right: 1rem;
-            background: var(--white);
-            border: 1px solid var(--gray-200);
+        /* About Section */
+        .about-section {
+            margin-bottom: 2.5rem;
+            padding: 1.5rem;
+            background: var(--gray-50);
             border-radius: var(--radius-lg);
-            padding: 1rem;
-            box-shadow: var(--shadow-lg);
-            z-index: 1000;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
         }
 
-        .install-prompt.show {
-            transform: translateY(0);
+        .about-section h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 1rem;
         }
 
-        .install-prompt-content {
-            display: flex;
-            align-items: center;
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            margin-bottom: 1rem;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: var(--radius-md);
+        }
+
+        .countries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 0.75rem;
+            margin-top: 1rem;
         }
 
-        .install-prompt-icon {
-            font-size: 1.5rem;
+        .country-item {
+            background: var(--white);
+            padding: 0.75rem;
+            border-radius: var(--radius-md);
+            text-align: center;
+            font-weight: 500;
+            border: 1px solid var(--gray-200);
         }
 
-        .install-prompt-text {
-            flex: 1;
+        .highlights-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 1rem;
         }
 
-        .install-prompt-text h4 {
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
+        .highlights-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-200);
         }
 
-        .install-prompt-text p {
-            font-size: 0.75rem;
-            color: var(--gray-600);
-            margin: 0;
+        .highlights-list li:last-child {
+            border-bottom: none;
         }
 
-        .install-prompt-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .install-btn {
+        .sponsors-link-btn {
+            display: inline-block;
             background: var(--purple);
             color: var(--white);
-            border: none;
-            padding: 0.5rem 1rem;
+            padding: 0.75rem 1.5rem;
             border-radius: var(--radius-md);
-            font-size: 0.75rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s ease;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: background-color 0.2s ease;
         }
 
-        .install-btn:hover {
+        .sponsors-link-btn:hover {
             background: var(--blue);
         }
 
-        .install-dismiss {
-            background: transparent;
-            color: var(--gray-500);
-            border: none;
-            padding: 0.5rem;
+        .awards-info {
+            margin-top: 1rem;
+        }
+
+        .award-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--white);
             border-radius: var(--radius-md);
-            cursor: pointer;
-            font-size: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--gray-200);
+        }
+
+        .award-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .award-item div p {
+            margin: 0.5rem 0 0 0;
+            color: var(--gray-600);
+            font-size: 0.875rem;
         }
 
         /* Gallery Section */
@@ -1421,7 +1676,9 @@
         }
 
         .bottom-nav-icon {
-            font-size: 1.25rem;
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
         }
 
         /* Responsive */
@@ -1573,6 +1830,52 @@
                 <button class="day-tab" data-day="sun">Sunday</button>
             </div>
 
+            <!-- Sponsors Carousel -->
+            <div class="sponsors-carousel">
+                <h3 class="sponsors-carousel-title">Our Sponsors</h3>
+                <div class="sponsors-scroll">
+                    <div class="sponsors-track">
+                        <a href="https://yourchildsday.com.au" target="_blank" rel="noopener noreferrer" class="sponsor-logo">
+                            <img src="https://events.montessori.org.au/wp-content/uploads/2025/09/1.png" alt="Your Child's Day Logo" loading="lazy">
+                        </a>
+                        <a href="https://mecta.edu.au" target="_blank" rel="noopener noreferrer" class="sponsor-logo">
+                            <img src="https://events.montessori.org.au/wp-content/uploads/2025/09/2.png" alt="MECTA Logo" loading="lazy">
+                        </a>
+                        <a href="https://kidsgourmetfood.com.au" target="_blank" rel="noopener noreferrer" class="sponsor-logo">
+                            <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/Untitled-design16.png" alt="Kids Gourmet Food Logo" loading="lazy">
+                        </a>
+                        <a href="https://compliantcleaningsupplies.com.au" target="_blank" rel="noopener noreferrer" class="sponsor-logo">
+                            <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/13.png" alt="Compliant Cleaning Supplies Logo" loading="lazy">
+                        </a>
+                        <a href="https://montessorisports.com.au" target="_blank" rel="noopener noreferrer" class="sponsor-logo">
+                            <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/14.png" alt="Montessori Sports Logo" loading="lazy">
+                        </a>
+                        <a href="https://southbankmontessori.com.au" target="_blank" rel="noopener noreferrer" class="sponsor-logo">
+                            <img src="https://events.montessori.org.au/wp-content/uploads/2025/09/3.png" alt="Southbank Montessori Logo" loading="lazy">
+                        </a>
+                        <a href="https://transparentclassroom.com" target="_blank" rel="noopener noreferrer" class="sponsor-logo">
+                            <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/Untitled-design-9.png" alt="Transparent Classroom Logo" loading="lazy">
+                        </a>
+                        <!-- Duplicate for seamless loop -->
+                        <div class="sponsor-logo">
+                            <img src="https://events.montessori.org.au/wp-content/uploads/2025/09/1.png" alt="Your Child's Day Logo" loading="lazy">
+                        </div>
+                        <div class="sponsor-logo">
+                            <img src="https://events.montessori.org.au/wp-content/uploads/2025/09/2.png" alt="MECTA Logo" loading="lazy">
+                        </div>
+                        <div class="sponsor-logo">
+                            <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/Untitled-design16.png" alt="Kids Gourmet Food Logo" loading="lazy">
+                        </div>
+                        <div class="sponsor-logo">
+                            <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/13.png" alt="Compliant Cleaning Supplies Logo" loading="lazy">
+                        </div>
+                        <div class="sponsor-logo">
+                            <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/14.png" alt="Montessori Sports Logo" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="sessions-grid" id="sessions-container">
                 <!-- Sessions will be populated by JavaScript -->
             </div>
@@ -1673,18 +1976,84 @@
         <!-- About Section -->
         <section id="about" class="section" role="region" aria-labelledby="about-heading">
             <h2 id="about-heading">About MIC2025</h2>
-            <div style="background: var(--gray-50); border-radius: var(--radius-lg); padding: 1.5rem;">
-                <p style="margin-bottom: 1rem;">
-                    The Montessori International Convention 2025 brings together educators, researchers, and advocates 
-                    from around the world to share knowledge, experiences, and innovations in Montessori education.
-                </p>
-                <p style="margin-bottom: 1rem;">
-                    This digital program replaces traditional printed schedules, providing an interactive and 
-                    environmentally friendly way to navigate the convention.
-                </p>
-                <p>
-                    Scan the QR code to access this program on your mobile device for the best experience.
-                </p>
+            
+            <!-- YouTube Video -->
+            <div class="about-section">
+                <h3>Welcome to MIC2025</h3>
+                <div class="video-container">
+                    <iframe 
+                        src="https://www.youtube.com/embed/4w2MYRTeagg" 
+                        title="MIC2025 Welcome Video"
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- Our Vision -->
+            <div class="about-section">
+                <h3>Our Vision</h3>
+                <p>The Montessori International Convention 2025 brings together educators, researchers, and advocates from around the world to share knowledge, experiences, and innovations in Montessori education. We envision a future where Montessori principles guide educational transformation globally.</p>
+            </div>
+
+            <!-- International Participation -->
+            <div class="about-section">
+                <h3>International Participation</h3>
+                <p>Our speakers represent a diverse range of countries, showcasing the global reach of Montessori education:</p>
+                <div class="countries-grid">
+                    <div class="country-item">🇦🇺 Australia</div>
+                    <div class="country-item">🇹🇭 Thailand</div>
+                    <div class="country-item">🇨🇳 China</div>
+                    <div class="country-item">🇰🇭 Cambodia</div>
+                    <div class="country-item">🇹🇼 Taiwan</div>
+                    <div class="country-item">🇺🇸 USA</div>
+                    <div class="country-item">🇳🇱 Netherlands</div>
+                </div>
+            </div>
+
+            <!-- Program Highlights -->
+            <div class="about-section">
+                <h3>Program Highlights</h3>
+                <ul class="highlights-list">
+                    <li>🎯 <strong>3 Days</strong> of intensive learning and networking</li>
+                    <li>👥 <strong>29+ International Speakers</strong> from 7 countries</li>
+                    <li>📚 <strong>40+ Sessions</strong> covering diverse Montessori topics</li>
+                    <li>🌍 <strong>Global Perspectives</strong> on Montessori education</li>
+                    <li>🤝 <strong>Networking Opportunities</strong> with like-minded educators</li>
+                    <li>🏆 <strong>Awards Ceremony</strong> recognizing excellence in Montessori</li>
+                </ul>
+            </div>
+
+            <!-- Sponsors Link -->
+            <div class="about-section">
+                <h3>Our Sponsors</h3>
+                <p>We are grateful to our sponsors who make MIC2025 possible. Their support enables us to bring together the global Montessori community.</p>
+                <a href="#sponsors" class="sponsors-link-btn" data-section="sponsors">
+                    View Our Sponsors
+                </a>
+            </div>
+
+            <!-- Recognition Awards -->
+            <div class="about-section">
+                <h3>Recognition Awards</h3>
+                <p>MIC2025 features a spectacular awards ceremony celebrating excellence in Montessori education and acknowledging the accomplishments of Montessorians in the Asia-Pacific Region. Join us for an evening of recognition and celebration.</p>
+                <div class="awards-info">
+                    <div class="award-item">
+                        <span class="award-icon">🏆</span>
+                        <div>
+                            <strong>Excellence in Montessori Education</strong>
+                            <p>Recognizing outstanding contributions to Montessori practice</p>
+                        </div>
+                    </div>
+                    <div class="award-item">
+                        <span class="award-icon">🌟</span>
+                        <div>
+                            <strong>Asia-Pacific Recognition</strong>
+                            <p>Celebrating Montessorians across the Asia-Pacific region</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -2000,37 +2369,24 @@
     <!-- Bottom Navigation -->
     <nav class="bottom-nav" role="navigation" aria-label="Bottom navigation">
         <a href="#program" class="bottom-nav-item active" data-section="program">
-            <span class="bottom-nav-icon">📅</span>
+            <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/8.png" alt="Program" class="bottom-nav-icon">
             <span>Program</span>
         </a>
         <a href="#agenda" class="bottom-nav-item" data-section="agenda">
-            <span class="bottom-nav-icon">⭐</span>
+            <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/9.png" alt="Agenda" class="bottom-nav-icon">
             <span>Agenda</span>
         </a>
         <a href="#speakers" class="bottom-nav-item" data-section="speakers">
-            <span class="bottom-nav-icon">👥</span>
+            <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/10.png" alt="Speakers" class="bottom-nav-icon">
             <span>Speakers</span>
         </a>
-        <a href="#venue" class="bottom-nav-item" data-section="venue">
-            <span class="bottom-nav-icon">📍</span>
-            <span>Venue</span>
+        <a href="#about" class="bottom-nav-item" data-section="about">
+            <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/11-1.png" alt="About" class="bottom-nav-icon">
+            <span>About</span>
         </a>
     </nav>
 
     <!-- PWA Install Prompt -->
-    <div class="install-prompt" id="install-prompt">
-        <div class="install-prompt-content">
-            <div class="install-prompt-icon">📱</div>
-            <div class="install-prompt-text">
-                <h4>Install MIC2025</h4>
-                <p>Add to your home screen for quick access</p>
-            </div>
-            <div class="install-prompt-actions">
-                <button class="install-btn" id="install-btn">Install</button>
-                <button class="install-dismiss" id="install-dismiss">✕</button>
-            </div>
-        </div>
-    </div>
 
     <script type="module">
         // Data and State Management
@@ -2802,29 +3158,119 @@
                 return;
             }
 
-            container.innerHTML = filteredSessions.map(session => `
-                <div class="session-card" data-session-id="${session.id}" tabindex="0" role="button" aria-label="View details for ${session.title}">
-                    <div class="session-header">
-                        <span class="session-time">${session.time}</span>
-                        <button class="bookmark-btn ${bookmarkedSessions.has(session.id) ? 'bookmarked' : ''}" 
-                                data-session-id="${session.id}" 
-                                aria-label="${bookmarkedSessions.has(session.id) ? 'Remove from' : 'Add to'} My Agenda">
-                            ${bookmarkedSessions.has(session.id) ? '★' : '☆'}
-                        </button>
+            // Group sessions by day
+            const sessionsByDay = {
+                'fri': [],
+                'sat': [],
+                'sun': []
+            };
+
+            filteredSessions.forEach(session => {
+                sessionsByDay[session.day].push(session);
+            });
+
+            // Sort sessions within each day by time
+            Object.keys(sessionsByDay).forEach(day => {
+                sessionsByDay[day].sort((a, b) => a.time.localeCompare(b.time));
+            });
+
+            // Day labels and info
+            const dayInfo = {
+                'fri': { 
+                    label: 'Friday', 
+                    date: 'April 11, 2025',
+                    color: 'var(--purple)'
+                },
+                'sat': { 
+                    label: 'Saturday', 
+                    date: 'April 12, 2025',
+                    color: 'var(--blue)'
+                },
+                'sun': { 
+                    label: 'Sunday', 
+                    date: 'April 13, 2025',
+                    color: '#fbbf24'
+                }
+            };
+
+            // Render sessions grouped by day with sticky headers
+            container.innerHTML = Object.keys(sessionsByDay).map(day => {
+                const daySessions = sessionsByDay[day];
+                if (daySessions.length === 0) return '';
+
+                const info = dayInfo[day];
+                
+                return `
+                    <div class="program-day-section" data-day="${day}">
+                        <div class="program-day-header" style="--day-color: ${info.color}">
+                            <div class="day-header-content">
+                                <div class="day-info">
+                                    <h2 class="day-title">${info.label}</h2>
+                                    <p class="day-date">${info.date}</p>
+                                </div>
+                                <div class="day-session-count">${daySessions.length} sessions</div>
+                            </div>
+                        </div>
+                        <div class="program-day-sessions">
+                            ${daySessions.map(session => `
+                                <div class="session-card" data-session-id="${session.id}" tabindex="0" role="button" aria-label="View details for ${session.title}">
+                                    <div class="session-header">
+                                        <span class="session-time">${session.time}</span>
+                                        <button class="bookmark-btn ${bookmarkedSessions.has(session.id) ? 'bookmarked' : ''}" 
+                                                data-session-id="${session.id}" 
+                                                aria-label="${bookmarkedSessions.has(session.id) ? 'Remove from' : 'Add to'} My Agenda">
+                                            ${bookmarkedSessions.has(session.id) ? '★' : '☆'}
+                                        </button>
+                                    </div>
+                                    <h3 class="session-title">${session.title}</h3>
+                                    <p class="session-presenter">${flagify(session.presenter)}</p>
+                                    <span class="session-room">${session.room}</span>
+                                    <div class="session-tags">
+                                        <span class="session-tag day-tag" data-day="${session.day}">${session.day.charAt(0).toUpperCase() + session.day.slice(1)}</span>
+                                        <span class="session-tag theme-tag">${session.theme.charAt(0).toUpperCase() + session.theme.slice(1)}</span>
+                                    </div>
+                                    <div class="session-description">${session.description}</div>
+                                </div>
+                            `).join('')}
+                        </div>
                     </div>
-                    <h3 class="session-title">${session.title}</h3>
-                    <p class="session-presenter">${flagify(session.presenter)}</p>
-                    <span class="session-room">${session.room}</span>
-                    <div class="session-tags">
-                        <span class="session-tag">${session.day.charAt(0).toUpperCase() + session.day.slice(1)}</span>
-                        <span class="session-tag">${session.theme.charAt(0).toUpperCase() + session.theme.slice(1)}</span>
-                    </div>
-                    <div class="session-description">${session.description}</div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
 
             // Add event listeners
             addSessionEventListeners();
+            
+            // Add sticky header behavior
+            setupStickyDayHeaders();
+        }
+
+        // Sticky Day Headers Functionality
+        function setupStickyDayHeaders() {
+            const dayHeaders = document.querySelectorAll('.program-day-header');
+            
+            // Create intersection observer for sticky behavior
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const header = entry.target;
+                    const daySection = header.closest('.program-day-section');
+                    const day = daySection.dataset.day;
+                    
+                    if (entry.isIntersecting) {
+                        // Header is visible, remove sticky state
+                        header.classList.remove('sticky-active');
+                    } else {
+                        // Header is not visible, make it sticky
+                        header.classList.add('sticky-active');
+                    }
+                });
+            }, {
+                rootMargin: '-80px 0px 0px 0px',
+                threshold: 0
+            });
+
+            dayHeaders.forEach(header => {
+                observer.observe(header);
+            });
         }
 
         function renderMyAgenda() {
@@ -2844,26 +3290,62 @@
                 return;
             }
 
-            container.innerHTML = bookmarkedSessionsList.map(session => `
-                <div class="session-card" data-session-id="${session.id}" tabindex="0" role="button" aria-label="View details for ${session.title}">
-                    <div class="session-header">
-                        <span class="session-time">${session.time}</span>
-                        <button class="bookmark-btn bookmarked" 
-                                data-session-id="${session.id}" 
-                                aria-label="Remove from My Agenda">
-                            ★
-                        </button>
+            // Group sessions by day
+            const sessionsByDay = {
+                'fri': [],
+                'sat': [],
+                'sun': []
+            };
+
+            bookmarkedSessionsList.forEach(session => {
+                sessionsByDay[session.day].push(session);
+            });
+
+            // Sort sessions within each day by time
+            Object.keys(sessionsByDay).forEach(day => {
+                sessionsByDay[day].sort((a, b) => a.time.localeCompare(b.time));
+            });
+
+            // Day labels
+            const dayLabels = {
+                'fri': 'Friday',
+                'sat': 'Saturday', 
+                'sun': 'Sunday'
+            };
+
+            // Render sessions grouped by day
+            container.innerHTML = Object.keys(sessionsByDay).map(day => {
+                const daySessions = sessionsByDay[day];
+                if (daySessions.length === 0) return '';
+
+                return `
+                    <div class="agenda-day-section">
+                        <h3 class="agenda-day-title">${dayLabels[day]}</h3>
+                        <div class="agenda-day-sessions">
+                            ${daySessions.map(session => `
+                                <div class="session-card" data-session-id="${session.id}" tabindex="0" role="button" aria-label="View details for ${session.title}">
+                                    <div class="session-header">
+                                        <span class="session-time">${session.time}</span>
+                                        <button class="bookmark-btn bookmarked" 
+                                                data-session-id="${session.id}" 
+                                                aria-label="Remove from My Agenda">
+                                            ★
+                                        </button>
+                                    </div>
+                                    <h3 class="session-title">${session.title}</h3>
+                                    <p class="session-presenter">${flagify(session.presenter)}</p>
+                                    <span class="session-room">${session.room}</span>
+                                    <div class="session-tags">
+                                        <span class="session-tag day-tag" data-day="${session.day}">${session.day.charAt(0).toUpperCase() + session.day.slice(1)}</span>
+                                        <span class="session-tag theme-tag">${session.theme.charAt(0).toUpperCase() + session.theme.slice(1)}</span>
+                                    </div>
+                                    <div class="session-description">${session.description}</div>
+                                </div>
+                            `).join('')}
+                        </div>
                     </div>
-                    <h3 class="session-title">${session.title}</h3>
-                    <p class="session-presenter">${flagify(session.presenter)}</p>
-                    <span class="session-room">${session.room}</span>
-                    <div class="session-tags">
-                        <span class="session-tag">${session.day.charAt(0).toUpperCase() + session.day.slice(1)}</span>
-                        <span class="session-tag">${session.theme.charAt(0).toUpperCase() + session.theme.slice(1)}</span>
-                    </div>
-                    <div class="session-description">${session.description}</div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
 
             // Add event listeners
             addSessionEventListeners();
@@ -2969,6 +3451,18 @@
                     e.target.classList.add('active');
                     
                     applyFilters();
+                    
+                    // Smooth scroll to the day section
+                    setTimeout(() => {
+                        const daySection = document.querySelector(`[data-day="${day}"]`);
+                        if (daySection) {
+                            daySection.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'start',
+                                inline: 'nearest'
+                            });
+                        }
+                    }, 100);
                 });
             });
 
@@ -3079,7 +3573,7 @@
                 let matchesSearch = true;
                 
                 if (searchTerm) {
-                    // Create a more precise search that looks for whole words or exact matches
+                    // Create a more flexible search that handles partial matches
                     const searchWords = searchTerm.split(/\s+/).filter(word => word.length > 0);
                     const searchText = [
                         session.title.toLowerCase(),
@@ -3088,11 +3582,11 @@
                         session.description.toLowerCase()
                     ].join(' ');
                     
-                    // Check if all search words appear as whole words or exact matches
+                    // Check if all search words appear in the text (partial or whole word matches)
                     matchesSearch = searchWords.every(word => {
-                        // Look for whole word matches (word boundaries)
-                        const wholeWordRegex = new RegExp(`\\b${word}\\b`, 'i');
-                        return wholeWordRegex.test(searchText);
+                        // Look for partial matches (more flexible)
+                        const partialRegex = new RegExp(word, 'i');
+                        return partialRegex.test(searchText);
                     });
                 }
 
@@ -3350,7 +3844,6 @@
                 this.setupHapticFeedback();
                 this.setupGalaSparkle();
                 this.setupOfflineDetection();
-                this.setupPWAInstall();
             }
 
 
@@ -3409,48 +3902,6 @@
                 updateOnlineStatus();
             }
 
-            // PWA Install Prompt
-            setupPWAInstall() {
-                const installPrompt = document.getElementById('install-prompt');
-                const installBtn = document.getElementById('install-btn');
-                const dismissBtn = document.getElementById('install-dismiss');
-
-                // Check if already installed
-                if (window.matchMedia('(display-mode: standalone)').matches) {
-                    return;
-                }
-
-                // Show prompt for repeat visitors
-                if (this.visitCount >= 2) {
-                    setTimeout(() => {
-                        installPrompt.classList.add('show');
-                    }, 3000);
-                }
-
-                // Listen for beforeinstallprompt
-                window.addEventListener('beforeinstallprompt', (e) => {
-                    e.preventDefault();
-                    this.deferredPrompt = e;
-                });
-
-                installBtn.addEventListener('click', async () => {
-                    if (this.deferredPrompt) {
-                        this.deferredPrompt.prompt();
-                        const { outcome } = await this.deferredPrompt.userChoice;
-                        if (outcome === 'accepted') {
-                            this.setInstallPromptDismissed();
-                        }
-                        this.deferredPrompt = null;
-                    }
-                    installPrompt.classList.remove('show');
-                });
-
-                dismissBtn.addEventListener('click', () => {
-                    installPrompt.classList.remove('show');
-                    this.setInstallPromptDismissed();
-                });
-            }
-
             getVisitCount() {
                 return parseInt(localStorage.getItem('mic2025_visit_count') || '0');
             }
@@ -3459,14 +3910,6 @@
                 const count = this.getVisitCount() + 1;
                 localStorage.setItem('mic2025_visit_count', count.toString());
                 return count;
-            }
-
-            setInstallPromptDismissed() {
-                localStorage.setItem('mic2025_install_dismissed', 'true');
-            }
-
-            isInstallPromptDismissed() {
-                return localStorage.getItem('mic2025_install_dismissed') === 'true';
             }
         }
 
