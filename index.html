@@ -1,0 +1,3943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIC2025 - Montessori International Convention 2025</title>
+    <meta name="description" content="Digital program for Montessori International Convention 2025">
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, onSnapshot, orderBy, query, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+
+        // Firebase configuration (replace with your actual config)
+        const firebaseConfig = {
+            apiKey: "demo-api-key",
+            authDomain: "mic2025-demo.firebaseapp.com",
+            projectId: "mic2025-demo",
+            storageBucket: "mic2025-demo.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "demo-app-id"
+        };
+
+        // Google Drive configuration
+        const GOOGLE_DRIVE_CONFIG = {
+            FOLDER_ID: "1HqmNQkmqnM-AlZNWd-YuKezp19Lhvley", // Your actual Google Drive folder ID
+            API_KEY: "AIzaSyCW_OOP4JVRU8LGAEaDlLCQ2TdrVveNuKs", // Your actual Google Drive API key
+            CLIENT_ID: "your-google-client-id.apps.googleusercontent.com" // Replace with your Google Client ID
+        };
+
+        // GitHub Pages configuration (Free & Open Source)
+        const GITHUB_CONFIG = {
+            REPO: "your-username/mic2025-gallery", // Your GitHub repository
+            BRANCH: "main", // Branch to store data
+            DATA_FILE: "gallery-data.json" // JSON file to store submissions
+        };
+
+        // Local JSON configuration (No external services)
+        const JSON_CONFIG = {
+            DATA_URL: "./gallery-data.json", // Local JSON file
+            ENABLE_LOCAL_STORAGE: true // Fallback to localStorage
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // Make Firebase and Google Drive available globally
+        window.firebase = {
+            db,
+            storage,
+            collection,
+            addDoc,
+            getDocs,
+            onSnapshot,
+            orderBy,
+            query,
+            serverTimestamp,
+            ref,
+            uploadBytes,
+            getDownloadURL
+        };
+
+        window.googleDrive = {
+            config: GOOGLE_DRIVE_CONFIG,
+            folderId: GOOGLE_DRIVE_CONFIG.FOLDER_ID,
+            apiKey: GOOGLE_DRIVE_CONFIG.API_KEY,
+            clientId: GOOGLE_DRIVE_CONFIG.CLIENT_ID
+        };
+    </script>
+    
+    <style>
+        :root {
+            --gold: #F1B33A;
+            --purple: #9F34FA;
+            --blue: #4C4CF1;
+            --white: #ffffff;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-800);
+            background-color: var(--white);
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--purple), var(--blue));
+            color: var(--white);
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .header p {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 0.75rem 1rem;
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-item {
+            background: var(--gray-100);
+            color: var(--gray-600);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-item:hover {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .nav-item.active {
+            background: var(--gold);
+            color: var(--gray-800);
+        }
+
+        .nav-item:focus {
+            outline: 2px solid var(--blue);
+            outline-offset: 2px;
+        }
+
+        /* Main Content */
+        .main {
+            min-height: calc(100vh - 200px);
+            padding-bottom: 80px;
+        }
+
+        .section {
+            display: none;
+            padding: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--gray-800);
+        }
+
+        /* Search */
+        .search-container {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            margin: -1rem -1rem 1rem -1rem;
+            border-bottom: 1px solid var(--gray-200);
+            z-index: 5;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--blue);
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .filter-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .filter-select {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            background: var(--white);
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            outline: 2px solid var(--blue);
+            outline-offset: 1px;
+        }
+
+        /* Day Tabs */
+        .day-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .day-tab {
+            background: var(--gray-100);
+            color: var(--gray-600);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .day-tab:hover {
+            background: var(--gray-200);
+        }
+
+        .day-tab.active {
+            background: var(--purple);
+            color: var(--white);
+        }
+
+        .day-tab:focus {
+            outline: 2px solid var(--blue);
+            outline-offset: 2px;
+        }
+
+        /* Session Cards */
+        .sessions-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .session-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .session-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .session-card:focus {
+            outline: 2px solid var(--blue);
+            outline-offset: 2px;
+        }
+
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .session-time {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--purple);
+            background: rgba(159, 52, 250, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+        }
+
+        .bookmark-btn {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+            color: var(--gray-400);
+        }
+
+        .bookmark-btn:hover {
+            color: var(--gold);
+            background: rgba(241, 179, 58, 0.1);
+        }
+
+        .bookmark-btn.bookmarked {
+            color: var(--gold);
+        }
+
+        .bookmark-btn:focus {
+            outline: 2px solid var(--blue);
+            outline-offset: 2px;
+        }
+
+        .session-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .session-presenter {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: 0.5rem;
+        }
+
+        .session-room {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            background: var(--gray-100);
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .session-tags {
+            display: flex;
+            gap: 0.25rem;
+            flex-wrap: wrap;
+        }
+
+        .session-tag {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            background: var(--gray-100);
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+        }
+
+        .session-description {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--gray-200);
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            line-height: 1.5;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--gray-500);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--gray-600);
+        }
+
+        .empty-state p {
+            font-size: 0.875rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Speakers Grid */
+        .speakers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .speaker-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .speaker-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .speaker-card:focus {
+            outline: 2px solid var(--blue);
+            outline-offset: 2px;
+        }
+
+        .speaker-image {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 0.5rem;
+            border-radius: 50%;
+            overflow: hidden;
+            background: var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .speaker-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .speaker-initials {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--purple);
+            color: var(--white);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .speaker-flag {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .speaker-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            line-height: 1.3;
+        }
+
+        /* Speaker Modal */
+        .speaker-modal {
+            max-width: 600px;
+        }
+
+        .speaker-modal-image {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            overflow: hidden;
+            background: var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .speaker-modal-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .speaker-modal-initials {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--purple);
+            color: var(--white);
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .speaker-modal-info {
+            text-align: center;
+        }
+
+        .speaker-modal-country {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .speaker-modal-flag {
+            font-size: 1.5rem;
+        }
+
+        .speaker-modal-country-name {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .speaker-modal-bio {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .speaker-modal-sessions {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .speaker-modal-sessions-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .speaker-modal-sessions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .speaker-modal-session-item {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .speaker-modal-session-item:hover {
+            background: var(--blue-50);
+            border-color: var(--blue-200);
+            transform: translateY(-1px);
+        }
+
+        .speaker-modal-session-time {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--purple);
+            margin-bottom: 0.25rem;
+        }
+
+        .speaker-modal-session-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .speaker-modal-session-details {
+            display: flex;
+            gap: 0.75rem;
+            font-size: 0.75rem;
+            color: var(--gray-600);
+        }
+
+        .speaker-modal-session-day {
+            background: var(--gray-200);
+            padding: 0.125rem 0.375rem;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+        }
+
+        .speaker-modal-session-room {
+            background: var(--gray-200);
+            padding: 0.125rem 0.375rem;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+        }
+
+        /* Sponsors */
+        .sponsor-tier {
+            margin-bottom: 3rem;
+        }
+
+        .sponsor-tier-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--purple), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sponsors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .sponsor-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .sponsor-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .sponsor-card.featured {
+            border: 2px solid var(--gold);
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef, #dee2e6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sponsor-card.featured::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(192, 192, 192, 0.1) 0%, 
+                rgba(192, 192, 192, 0.2) 25%, 
+                rgba(169, 169, 169, 0.3) 50%, 
+                rgba(192, 192, 192, 0.2) 75%, 
+                rgba(192, 192, 192, 0.1) 100%);
+            z-index: 1;
+        }
+
+        .sponsor-card.featured > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Bronze Sponsor Tier Background */
+        .bronze-tier {
+            background: linear-gradient(135deg, 
+                rgba(205, 127, 50, 0.05) 0%, 
+                rgba(184, 115, 51, 0.1) 25%, 
+                rgba(160, 82, 45, 0.15) 50%, 
+                rgba(184, 115, 51, 0.1) 75%, 
+                rgba(205, 127, 50, 0.05) 100%);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .bronze-tier .sponsor-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .sponsor-logo {
+            width: 120px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .sponsor-logo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .sponsor-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 0.75rem;
+        }
+
+        .sponsor-description {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .sponsor-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--purple);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .sponsor-btn:hover {
+            background: var(--blue);
+            transform: translateY(-1px);
+        }
+
+        .sponsor-card.featured .sponsor-info {
+            text-align: left;
+        }
+
+        .sponsor-card.featured .sponsor-logo {
+            width: 173px;
+            height: 173px;
+            margin-bottom: 1.5rem;
+        }
+
+        .sponsor-card.featured .sponsor-name {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .sponsor-card.featured .sponsor-description {
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+        .venue-info {
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .venue-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 0.5rem;
+        }
+
+        .venue-address {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+        }
+
+        .venue-description {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .venue-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .venue-btn {
+            background: var(--blue);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .venue-btn:hover {
+            background: var(--purple);
+            transform: translateY(-1px);
+        }
+
+        .venue-btn:focus {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px;
+        }
+
+        .venue-map {
+            width: 100%;
+            height: 300px;
+            border: none;
+            border-radius: var(--radius-lg);
+            margin-bottom: 1.5rem;
+        }
+
+        .map-legend {
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .map-legend p {
+            margin: 0.25rem 0;
+            color: var(--gray-700);
+        }
+
+
+        /* Haptic Feedback */
+        .haptic-pop {
+            animation: haptic-pop 0.1s ease-out;
+        }
+
+        @keyframes haptic-pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Gala Sparkle Background */
+        .gala-sparkle {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gala-sparkle::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.3), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.2), transparent),
+                radial-gradient(1px 1px at 90px 40px, rgba(255, 255, 255, 0.4), transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255, 255, 255, 0.3), transparent),
+                radial-gradient(2px 2px at 160px 30px, rgba(255, 255, 255, 0.2), transparent);
+            background-repeat: repeat;
+            background-size: 200px 100px;
+            animation: sparkle-drift 20s linear infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gala-sparkle.visible::before {
+            opacity: 1;
+        }
+
+        @keyframes sparkle-drift {
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(-200px) translateY(-100px); }
+        }
+
+        /* Offline Banner */
+        .offline-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--gray-800);
+            color: var(--white);
+            padding: 0.75rem 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            z-index: 1000;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .offline-banner.show {
+            transform: translateY(0);
+        }
+
+        /* PWA Install Prompt */
+        .install-prompt {
+            position: fixed;
+            bottom: 1rem;
+            left: 1rem;
+            right: 1rem;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .install-prompt.show {
+            transform: translateY(0);
+        }
+
+        .install-prompt-content {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .install-prompt-icon {
+            font-size: 1.5rem;
+        }
+
+        .install-prompt-text {
+            flex: 1;
+        }
+
+        .install-prompt-text h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .install-prompt-text p {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            margin: 0;
+        }
+
+        .install-prompt-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .install-btn {
+            background: var(--purple);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .install-btn:hover {
+            background: var(--blue);
+        }
+
+        .install-dismiss {
+            background: transparent;
+            color: var(--gray-500);
+            border: none;
+            padding: 0.5rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        /* Gallery Section */
+        .section-subtitle {
+            text-align: center;
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .gallery-notice {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .gallery-notice p {
+            margin: 0;
+            font-size: 0.875rem;
+            color: var(--gray-700);
+        }
+
+        .gallery-submission {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .gallery-submission h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .gallery-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-family: inherit;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--purple);
+            box-shadow: 0 0 0 3px rgba(159, 52, 250, 0.1);
+        }
+
+        .form-group small {
+            display: block;
+            color: var(--gray-500);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        .submit-btn {
+            background: var(--purple);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: var(--blue);
+            transform: translateY(-1px);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+
+        .gallery-item:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .gallery-item-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: var(--radius-md);
+            margin-bottom: 1rem;
+        }
+
+        .gallery-item-content {
+            text-align: center;
+        }
+
+        .gallery-item-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 0.5rem;
+        }
+
+        .gallery-item-message {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .gallery-item-date {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            font-style: italic;
+        }
+
+        .gallery-item-text-only {
+            padding: 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--gray-50), var(--white));
+        }
+
+        .gallery-item-text-only .gallery-item-message {
+            font-size: 1rem;
+            font-style: italic;
+            color: var(--gray-700);
+        }
+
+        .nearby-list {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+        }
+
+        .nearby-list h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 0.75rem;
+        }
+
+        .nearby-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .nearby-item:last-child {
+            border-bottom: none;
+        }
+
+        .nearby-name {
+            font-size: 0.875rem;
+            color: var(--gray-700);
+        }
+
+        .nearby-link {
+            color: var(--blue);
+            text-decoration: none;
+            font-size: 0.75rem;
+        }
+
+        .nearby-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-right: 1rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-400);
+            padding: 0.25rem;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--gray-600);
+            background: var(--gray-100);
+        }
+
+        .modal-close:focus {
+            outline: 2px solid var(--blue);
+            outline-offset: 2px;
+        }
+
+        .modal-content {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-field {
+            margin-bottom: 0.75rem;
+        }
+
+        .modal-field-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .modal-field-value {
+            font-size: 0.875rem;
+            color: var(--gray-700);
+        }
+
+        .modal-description {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            line-height: 1.6;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-btn-primary {
+            background: var(--gold);
+            color: var(--gray-800);
+        }
+
+        .modal-btn-primary:hover {
+            background: #e6a533;
+            transform: translateY(-1px);
+        }
+
+        .modal-btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .modal-btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        .modal-btn:focus {
+            outline: 2px solid var(--blue);
+            outline-offset: 2px;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border-top: 1px solid var(--gray-200);
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-around;
+            z-index: 10;
+        }
+
+        .bottom-nav-item {
+            background: none;
+            border: none;
+            color: var(--gray-500);
+            font-size: 0.75rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            text-decoration: none;
+        }
+
+        .bottom-nav-item:hover {
+            color: var(--gray-700);
+            background: var(--gray-100);
+        }
+
+        .bottom-nav-item.active {
+            color: var(--purple);
+        }
+
+        .bottom-nav-item:focus {
+            outline: 2px solid var(--blue);
+            outline-offset: 2px;
+        }
+
+        .bottom-nav-icon {
+            font-size: 1.25rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.25rem;
+            }
+
+            .nav {
+                padding: 0.5rem;
+            }
+
+            .nav-item {
+                padding: 0.375rem 0.75rem;
+                font-size: 0.8rem;
+            }
+
+            .filters {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .filter-group {
+                flex-direction: row;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .filter-label {
+                min-width: 60px;
+            }
+
+            .speakers-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .venue-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .modal {
+                margin: 0.5rem;
+                padding: 1rem;
+            }
+        }
+
+        /* Loading states */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* Focus management */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Offline Banner -->
+    <div class="offline-banner" id="offline-banner">
+        📡 You're offline; all content still available
+    </div>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <h1>MIC2025</h1>
+        <p>Montessori International Convention 2025</p>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+        <a href="#program" class="nav-item active" data-section="program">Program</a>
+        <a href="#agenda" class="nav-item" data-section="agenda">My Agenda</a>
+        <a href="#speakers" class="nav-item" data-section="speakers">Speakers</a>
+        <a href="#venue" class="nav-item" data-section="venue">Venue</a>
+        <a href="#about" class="nav-item" data-section="about">About</a>
+        <a href="#sponsors" class="nav-item" data-section="sponsors">Sponsors</a>
+        <a href="#gallery" class="nav-item" data-section="gallery">Gallery</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main" role="main">
+        <!-- Program Section -->
+        <section id="program" class="section active" role="region" aria-labelledby="program-heading">
+            <div class="search-container">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    placeholder="Search by title, presenter, room..." 
+                    aria-label="Search sessions"
+                >
+            </div>
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <label class="filter-label" for="day-filter">Day</label>
+                    <select id="day-filter" class="filter-select" aria-label="Filter by day">
+                        <option value="">All Days</option>
+                        <option value="fri">Friday</option>
+                        <option value="sat">Saturday</option>
+                        <option value="sun">Sunday</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label" for="theme-filter">Theme</label>
+                    <select id="theme-filter" class="filter-select" aria-label="Filter by theme">
+                        <option value="">All Themes</option>
+                        <option value="networking">Networking</option>
+                        <option value="opening">Opening</option>
+                        <option value="technology">Technology</option>
+                        <option value="sustainability">Sustainability</option>
+                        <option value="personal-growth">Personal Growth</option>
+                        <option value="adult-care">Adult Care</option>
+                        <option value="schools">Schools</option>
+                        <option value="leadership">Leadership</option>
+                        <option value="holistic-education">Holistic Education</option>
+                        <option value="environment">Environment</option>
+                        <option value="parenting">Parenting</option>
+                        <option value="special-needs">Special Needs</option>
+                        <option value="early-childhood">Early Childhood</option>
+                        <option value="materials">Materials</option>
+                        <option value="awards">Awards</option>
+                        <option value="closing">Closing</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label" for="room-filter">Room</label>
+                    <select id="room-filter" class="filter-select" aria-label="Filter by room">
+                        <option value="">All Rooms</option>
+                        <option value="main-hall">Main Hall</option>
+                        <option value="endeavour-room-1">Endeavour Room 1</option>
+                        <option value="endeavour-room-2">Endeavour Room 2</option>
+                        <option value="endeavour-room-3">Endeavour Room 3</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="day-tabs">
+                <button class="day-tab active" data-day="fri">Friday</button>
+                <button class="day-tab" data-day="sat">Saturday</button>
+                <button class="day-tab" data-day="sun">Sunday</button>
+            </div>
+
+            <div class="sessions-grid" id="sessions-container">
+                <!-- Sessions will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- My Agenda Section -->
+        <section id="agenda" class="section" role="region" aria-labelledby="agenda-heading">
+            <h2 id="agenda-heading">My Agenda</h2>
+            <div class="sessions-grid" id="agenda-container">
+                <!-- Bookmarked sessions will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Speakers Section -->
+        <section id="speakers" class="section" role="region" aria-labelledby="speakers-heading">
+            <h2 id="speakers-heading">Speakers</h2>
+            <div class="search-container">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    placeholder="Search speakers..." 
+                    aria-label="Search speakers"
+                    id="speaker-search"
+                >
+            </div>
+            <div class="speakers-grid" id="speakers-container">
+                <!-- Speakers will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Venue Section -->
+        <section id="venue" class="section" role="region" aria-labelledby="venue-heading">
+            <h2 id="venue-heading">Venue</h2>
+            
+            <div class="venue-info">
+                <h3 class="venue-name">The Brighton Hotel Sydney – MGallery Collection</h3>
+                <p class="venue-address">Princess Street, Brighton-Le-Sands NSW, Australia</p>
+                <p class="venue-description">
+                    Located on the beautiful Botany Bay foreshore, The Brighton Hotel offers stunning waterfront views 
+                    and easy access to Sydney's attractions. The venue provides modern facilities perfect for 
+                    conferences and events.
+                </p>
+                
+                <div class="venue-buttons">
+                    <a href="https://maps.google.com/maps?q=The+Brighton+Hotel+Sydney+Princess+Street+Brighton-Le-Sands+NSW+Australia" 
+                       target="_blank" rel="noopener" class="venue-btn">Get Directions</a>
+                    <a href="https://maps.google.com/maps/search/cafes+near+The+Brighton+Hotel+Sydney+Princess+Street+Brighton-Le-Sands+NSW+Australia" 
+                       target="_blank" rel="noopener" class="venue-btn">Nearby Cafes</a>
+                    <a href="https://transportnsw.info/" 
+                       target="_blank" rel="noopener" class="venue-btn">Transport Info</a>
+                    <a href="https://maps.google.com/maps/search/parking+near+The+Brighton+Hotel+Sydney+Princess+Street+Brighton-Le-Sands+NSW+Australia" 
+                       target="_blank" rel="noopener" class="venue-btn">Parking</a>
+                </div>
+            </div>
+
+            <div class="venue-map">
+                <iframe 
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=151.1517662,-33.9621065,151.1557662,-33.9581065&layer=mapnik&marker=-33.9610,151.1545&marker=-33.9615,151.1548&marker=-33.9612,151.1550&marker=-33.9608,151.1542"
+                    width="100%"
+                    height="300"
+                    frameborder="0"
+                    scrolling="no"
+                    marginheight="0"
+                    marginwidth="0"
+                    title="Map of The Brighton Hotel Sydney with nearby locations"
+                ></iframe>
+                <br>
+                <small>
+                    <a href="https://www.openstreetmap.org/?mlat=-33.9610&mlon=151.1545&zoom=16&layers=M" target="_blank" rel="noopener">View Larger Map</a>
+                </small>
+            </div>
+
+            <div class="nearby-list">
+                <h3>Nearby Options</h3>
+                <div class="nearby-item">
+                    <span class="nearby-name">Le Sands Restaurant</span>
+                    <a href="https://maps.google.com/maps/search/Le+Sands+Restaurant+Brighton-Le-Sands+NSW+Australia" 
+                       target="_blank" rel="noopener" class="nearby-link">View</a>
+                </div>
+                <div class="nearby-item">
+                    <span class="nearby-name">Criniti's</span>
+                    <a href="https://maps.google.com/maps/search/Criniti+Brighton-Le-Sands+NSW+Australia" 
+                       target="_blank" rel="noopener" class="nearby-link">View</a>
+                </div>
+                <div class="nearby-item">
+                    <span class="nearby-name">Atlantis on the Bay</span>
+                    <a href="https://maps.google.com/maps/search/Atlantis+on+the+Bay+Brighton-Le-Sands+NSW+Australia" 
+                       target="_blank" rel="noopener" class="nearby-link">View</a>
+                </div>
+            </div>
+
+            <!-- TODO: Add floorplan placeholder -->
+            <div style="background: var(--gray-100); border: 2px dashed var(--gray-300); border-radius: var(--radius-lg); padding: 2rem; text-align: center; color: var(--gray-500); margin-top: 1.5rem;">
+                <p>📋 Floorplan placeholder - Replace with actual floorplan image</p>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section" role="region" aria-labelledby="about-heading">
+            <h2 id="about-heading">About MIC2025</h2>
+            <div style="background: var(--gray-50); border-radius: var(--radius-lg); padding: 1.5rem;">
+                <p style="margin-bottom: 1rem;">
+                    The Montessori International Convention 2025 brings together educators, researchers, and advocates 
+                    from around the world to share knowledge, experiences, and innovations in Montessori education.
+                </p>
+                <p style="margin-bottom: 1rem;">
+                    This digital program replaces traditional printed schedules, providing an interactive and 
+                    environmentally friendly way to navigate the convention.
+                </p>
+                <p>
+                    Scan the QR code to access this program on your mobile device for the best experience.
+                </p>
+            </div>
+        </section>
+
+        <!-- Sponsors Section -->
+        <section id="sponsors" class="section" role="region" aria-labelledby="sponsors-heading">
+            <div class="container">
+                <h2 id="sponsors-heading" class="section-heading">Our Sponsors</h2>
+                
+                <!-- Silver Sponsor -->
+                <div class="sponsor-tier">
+                    <h3 class="sponsor-tier-title">Silver Sponsor</h3>
+                    <div class="sponsor-card featured">
+                        <div class="sponsor-logo">
+                            <img src="https://events.montessori.org.au/wp-content/uploads/2025/09/1.png" alt="Your Child's Day Logo" loading="lazy">
+                        </div>
+                        <div class="sponsor-info">
+                            <h4 class="sponsor-name">Your Child's Day</h4>
+                            <p class="sponsor-description">Software that supports how Montessori Early Education Centres & Schools naturally work. Authentic learning moments, meaningful family connections, and the careful preparation that creates thriving educational communities. Your Child's Day streamlines documentation and operations. Built by Australian Montessorians in partnership with Montessori Australia.</p>
+                            <a href="https://yourchildsday.com.au" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bronze Sponsors -->
+                <div class="sponsor-tier bronze-tier">
+                    <h3 class="sponsor-tier-title">Bronze Sponsors</h3>
+                    <div class="sponsors-grid">
+                        <div class="sponsor-card">
+                            <div class="sponsor-logo">
+                                <img src="https://events.montessori.org.au/wp-content/uploads/2025/09/2.png" alt="MECTA Logo" loading="lazy">
+                            </div>
+                            <h4 class="sponsor-name">MECTA (Montessori and Early Childhood Training Australia)</h4>
+                            <p class="sponsor-description">MECTA is dedicated to shaping the future of early childhood education through accredited courses that combine theory with hands-on learning. Their personalized mentoring and professional development programs support educators in delivering authentic Montessori education.</p>
+                            <a href="https://mecta.com.au" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
+                        </div>
+
+                        <div class="sponsor-card">
+                            <div class="sponsor-logo">
+                                <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/Untitled-design16.png" alt="Kids Gourmet Food Logo" loading="lazy">
+                            </div>
+                            <h4 class="sponsor-name">Kids Gourmet Food</h4>
+                            <p class="sponsor-description">Delivering fresh, nutritious, and creative meals to early learning centers. KGF saves time on menu planning and meal preparation while catering to diverse dietary requirements, ensuring children receive the nutrition they need to thrive.</p>
+                            <a href="https://kidsgourmetfood.com.au" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
+                        </div>
+
+                        <div class="sponsor-card">
+                            <div class="sponsor-logo">
+                                <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/13.png" alt="Compliant Cleaning Supplies Logo" loading="lazy">
+                            </div>
+                            <h4 class="sponsor-name">Compliant Cleaning Supplies</h4>
+                            <p class="sponsor-description">Online ordering system for cleaning supplies designed for contractors, facility managers, and education institutions. Reduces costs and ensures consistent supply of quality cleaning products for early learning environments.</p>
+                            <a href="https://compliantcleaningsupplies.com.au" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
+                        </div>
+
+                        <div class="sponsor-card">
+                            <div class="sponsor-logo">
+                                <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/14.png" alt="Montessori Sports Logo" loading="lazy">
+                            </div>
+                            <h4 class="sponsor-name">Montessori Sports</h4>
+                            <p class="sponsor-description">AMI Montessori Sports integrates physical education with Montessori principles to foster coordination, confidence, and a love of movement. Focuses on purposeful activity, teamwork, and respect while developing children's physical capabilities.</p>
+                            <a href="https://montessorisports.org" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Photography Sponsor -->
+                <div class="sponsor-tier">
+                    <h3 class="sponsor-tier-title">Photography Sponsor</h3>
+                    <div class="sponsors-grid">
+                        <div class="sponsor-card">
+                            <div class="sponsor-logo">
+                                <img src="https://events.montessori.org.au/wp-content/uploads/2025/09/3.png" alt="Southbank Montessori Logo" loading="lazy">
+                            </div>
+                            <h4 class="sponsor-name">Southbank Montessori</h4>
+                            <p class="sponsor-description">Nurturing Early Learning. Southbank Montessori believes in nurturing the whole child through a holistic approach to education - the Montessori method. Their program cultivates a love for learning and empowers children to thrive in a prepared environment that emphasizes natural curiosity and individual progress.</p>
+                            <a href="https://southbankmontessori.com.au" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Morning Tea Sponsor -->
+                <div class="sponsor-tier">
+                    <h3 class="sponsor-tier-title">Morning Tea Sponsor</h3>
+                    <div class="sponsors-grid">
+                        <div class="sponsor-card">
+                            <div class="sponsor-logo">
+                                <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/Untitled-design-9.png" alt="Transparent Classroom Logo" loading="lazy">
+                            </div>
+                            <h4 class="sponsor-name">Transparent Classroom</h4>
+                            <p class="sponsor-description">A software company made by Montessori educators for Montessori educators! Transparent Classroom began in 2012 with the goal of making record keeping easy and fun, and sharing it with parents too. Their teachers and parents loved it, and by 2015, they had 20 other schools using it!</p>
+                            <a href="https://transparentclassroom.com" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Sponsor -->
+                <div class="sponsor-tier">
+                    <h3 class="sponsor-tier-title">Additional Sponsor</h3>
+                    <div class="sponsors-grid">
+                        <div class="sponsor-card">
+                            <div class="sponsor-logo">
+                                <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/12.png" alt="Montessori Tours and Travel Logo" loading="lazy">
+                            </div>
+                            <h4 class="sponsor-name">Montessori Tours and Travel</h4>
+                            <p class="sponsor-description">Offers unique opportunities to explore the world through a Montessori perspective. Their custom and signature tours invite travellers to connect with like-minded people and experience both the historical and contemporary influences of Maria Montessori's work across more than 110 countries.</p>
+                            <a href="https://montessoritoursandtravel.com" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exhibitors -->
+                <div class="sponsor-tier">
+                    <h3 class="sponsor-tier-title">Exhibitors</h3>
+                    <div class="sponsors-grid">
+                        <div class="sponsor-card">
+                            <div class="sponsor-logo">
+                                <img src="https://events.montessori.org.au/wp-content/uploads/2025/09/5.png" alt="Education National Logo" loading="lazy">
+                            </div>
+                            <h4 class="sponsor-name">Education National</h4>
+                            <a href="https://educationnational.com.au" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
+                        </div>
+
+                        <div class="sponsor-card">
+                            <div class="sponsor-logo">
+                                <img src="https://events.montessori.org.au/wp-content/uploads/2025/09/6.png" alt="Think Education Supplies Logo" loading="lazy">
+                            </div>
+                            <h4 class="sponsor-name">Think Education Supplies</h4>
+                            <a href="https://thinkeducationsupplies.com.au" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
+                        </div>
+
+                        <div class="sponsor-card">
+                            <div class="sponsor-logo">
+                                <img src="https://events.montessori.org.au/wp-content/uploads/2025/09/7.png" alt="SMTC Logo" loading="lazy">
+                            </div>
+                            <h4 class="sponsor-name">Sydney Montessori Training Centre</h4>
+                            <a href="https://smtc.edu.au" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
+                        </div>
+
+                        <div class="sponsor-card">
+                            <div class="sponsor-logo">
+                                <img src="https://events.montessori.org.au/wp-content/uploads/2025/09/8.png" alt="A2Z Montessori Logo" loading="lazy">
+                            </div>
+                            <h4 class="sponsor-name">A2Z Montessori</h4>
+                            <a href="https://a2zmontessori.com.au" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
+                        </div>
+
+                        <div class="sponsor-card">
+                            <div class="sponsor-logo">
+                                <img src="https://events.montessori.org.au/wp-content/uploads/2025/09/9.png" alt="Montessori Training Australia Logo" loading="lazy">
+                            </div>
+                            <h4 class="sponsor-name">Montessori Training Australia</h4>
+                            <a href="https://montessoritrainingaustralia.com.au" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
+                        </div>
+
+                        <div class="sponsor-card">
+                            <div class="sponsor-logo">
+                                <img src="https://events.montessori.org.au/wp-content/uploads/2025/09/10.png" alt="AMTI Logo" loading="lazy">
+                            </div>
+                            <h4 class="sponsor-name">Australian Montessori Training Institute</h4>
+                            <a href="https://amti.edu.au" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
+                        </div>
+
+                        <div class="sponsor-card">
+                            <div class="sponsor-logo">
+                                <img src="https://events.montessori.org.au/wp-content/uploads/2025/09/1.png" alt="Your Child's Day Logo" loading="lazy">
+                            </div>
+                            <h4 class="sponsor-name">Your Child's Day</h4>
+                            <a href="https://yourchildsday.com.au" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
+                        </div>
+
+                        <div class="sponsor-card">
+                            <div class="sponsor-logo">
+                                <img src="https://events.montessori.org.au/wp-content/uploads/2025/09/2.png" alt="MECTA Logo" loading="lazy">
+                            </div>
+                            <h4 class="sponsor-name">MECTA (Montessori and Early Childhood Training Australia)</h4>
+                            <a href="https://mecta.com.au" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
+                        </div>
+
+                        <div class="sponsor-card">
+                            <div class="sponsor-logo">
+                                <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/Untitled-design16.png" alt="Kids Gourmet Food Logo" loading="lazy">
+                            </div>
+                            <h4 class="sponsor-name">Kids Gourmet Food</h4>
+                            <a href="https://kidsgourmetfood.com.au" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
+                        </div>
+
+                        <div class="sponsor-card">
+                            <div class="sponsor-logo">
+                                <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/13.png" alt="Compliant Cleaning Supplies Logo" loading="lazy">
+                            </div>
+                            <h4 class="sponsor-name">Compliant Cleaning Supplies</h4>
+                            <a href="https://compliantcleaningsupplies.com.au" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
+                        </div>
+
+                        <div class="sponsor-card">
+                            <div class="sponsor-logo">
+                                <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/14.png" alt="Montessori Sports Logo" loading="lazy">
+                            </div>
+                            <h4 class="sponsor-name">Montessori Sports</h4>
+                            <a href="https://montessorisports.org" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section id="gallery" class="section" role="region" aria-labelledby="gallery-heading">
+            <div class="container">
+                <h2 id="gallery-heading" class="section-heading">MIC2025 Gallery</h2>
+                <p class="section-subtitle">Share your memories and moments from the convention</p>
+                
+                <div class="gallery-notice">
+                    <p><strong>Live Gallery:</strong> Your submissions will be visible to all convention attendees!</p>
+                    <details style="margin-top: 1rem; text-align: left;">
+                        <summary style="cursor: pointer; font-weight: 500;">Setup Instructions</summary>
+                        <div style="margin-top: 1rem; padding: 1rem; background: var(--gray-100); border-radius: var(--radius-md); font-size: 0.875rem;">
+                            <p><strong>Free & Open Source Options:</strong></p>
+                            
+                            <h4 style="margin: 1rem 0 0.5rem 0; color: var(--green);">Option 1: GitHub Pages (Recommended)</h4>
+                            <ol style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                                <li>Create a GitHub repository for your gallery</li>
+                                <li>Enable GitHub Pages in repository settings</li>
+                                <li>Create a gallery-data.json file in the repository</li>
+                                <li>Update the GitHub configuration in the code</li>
+                                <li>Free hosting + free storage + version control!</li>
+                            </ol>
+
+                            <h4 style="margin: 1rem 0 0.5rem 0; color: var(--blue);">Option 2: Local JSON File</h4>
+                            <ol style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                                <li>Create a gallery-data.json file in your project</li>
+                                <li>Host on any free web server (GitHub Pages, Netlify, etc.)</li>
+                                <li>No external dependencies - pure HTML/CSS/JS</li>
+                                <li>Perfect for small galleries</li>
+                            </ol>
+
+                            <h4 style="margin: 1rem 0 0.5rem 0; color: var(--purple);">Option 3: Local Storage (Demo)</h4>
+                            <ol style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                                <li>Works immediately - no setup required</li>
+                                <li>Stores data locally in each user's browser</li>
+                                <li>Perfect for testing and demos</li>
+                                <li>No cross-user sharing (demo only)</li>
+                            </ol>
+                        </div>
+                    </details>
+                </div>
+                
+                <!-- Submission Form -->
+                <div class="gallery-submission">
+                    <h3>Share Your Experience</h3>
+                    <form id="gallery-form" class="gallery-form">
+                        <div class="form-group">
+                            <label for="gallery-name">Your Name</label>
+                            <input type="text" id="gallery-name" name="name" placeholder="Enter your name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="gallery-message">Message/Testimonial</label>
+                            <textarea id="gallery-message" name="message" placeholder="Share your thoughts about the convention..." rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="gallery-image">Photo (optional)</label>
+                            <input type="file" id="gallery-image" name="image" accept="image/*">
+                            <small>Upload a photo from the convention</small>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">Submit to Gallery</button>
+                    </form>
+                </div>
+
+                <!-- Gallery Display -->
+                <div class="gallery-grid" id="gallery-grid">
+                    <!-- Gallery items will be dynamically added here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Speaker Modal -->
+    <div class="modal-overlay" id="speaker-modal" role="dialog" aria-modal="true" aria-labelledby="speaker-modal-title">
+        <div class="modal speaker-modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="speaker-modal-title">Speaker Details</h3>
+                <button class="modal-close" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-content" id="speaker-modal-content">
+                <!-- Speaker content will be populated by JavaScript -->
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-secondary" id="speaker-modal-close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Session Modal -->
+    <div class="modal-overlay" id="session-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">Session Details</h3>
+                <button class="modal-close" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-content" id="modal-content">
+                <!-- Modal content will be populated by JavaScript -->
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-primary" id="modal-bookmark-btn">Add to My Agenda</button>
+                <button class="modal-btn modal-btn-secondary" id="modal-close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" role="navigation" aria-label="Bottom navigation">
+        <a href="#program" class="bottom-nav-item active" data-section="program">
+            <span class="bottom-nav-icon">📅</span>
+            <span>Program</span>
+        </a>
+        <a href="#agenda" class="bottom-nav-item" data-section="agenda">
+            <span class="bottom-nav-icon">⭐</span>
+            <span>Agenda</span>
+        </a>
+        <a href="#speakers" class="bottom-nav-item" data-section="speakers">
+            <span class="bottom-nav-icon">👥</span>
+            <span>Speakers</span>
+        </a>
+        <a href="#venue" class="bottom-nav-item" data-section="venue">
+            <span class="bottom-nav-icon">📍</span>
+            <span>Venue</span>
+        </a>
+    </nav>
+
+    <!-- PWA Install Prompt -->
+    <div class="install-prompt" id="install-prompt">
+        <div class="install-prompt-content">
+            <div class="install-prompt-icon">📱</div>
+            <div class="install-prompt-text">
+                <h4>Install MIC2025</h4>
+                <p>Add to your home screen for quick access</p>
+            </div>
+            <div class="install-prompt-actions">
+                <button class="install-btn" id="install-btn">Install</button>
+                <button class="install-dismiss" id="install-dismiss">✕</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Data and State Management
+        const STORAGE_KEYS = {
+            BOOKMARKS: 'mic2025_bookmarks',
+            LAST_VIEW: 'mic2025_view'
+        };
+
+        let currentSession = null;
+        let allSessions = [];
+        let filteredSessions = [];
+        let bookmarkedSessions = new Set();
+
+        // Real MIC2025 Program Data
+        const sessionsData = [
+            // Friday Sessions
+            {
+                id: 'fri-001',
+                day: 'fri',
+                time: '07:45',
+                title: 'Registration, Networking & Exhibitors',
+                presenter: 'Convention Staff',
+                room: 'Main Hall',
+                theme: 'networking',
+                description: 'Welcome to MIC2025! Registration, networking opportunities, and exhibitor displays.'
+            },
+            {
+                id: 'fri-002',
+                day: 'fri',
+                time: '08:15',
+                title: 'Convention Welcome',
+                presenter: 'Convention Staff',
+                room: 'Main Hall',
+                theme: 'opening',
+                description: 'Official welcome to the Montessori International Convention 2025.'
+            },
+            {
+                id: 'fri-003',
+                day: 'fri',
+                time: '08:30',
+                title: 'The Work of Byron Katie',
+                presenter: 'Rosie Stave (🇦🇺 Australia)',
+                room: 'Main Hall',
+                theme: 'personal-growth',
+                description: 'Rosie Stave introduces "The Work of Byron Katie," described by Time Magazine as "4 Questions to Inner Peace." This powerful practice invites us to examine our thoughts and beliefs, and to gently question the stories we tell ourselves. Through that inquiry, we uncover what lies beneath—our natural state of peace, compassion, and humility.'
+            },
+            {
+                id: 'fri-004',
+                day: 'fri',
+                time: '09:30',
+                title: 'Sustainable Montessori Education: The CMMIS Model',
+                presenter: 'Nathasassi Warittanadejcho (🇹🇭 Thailand)',
+                room: 'Main Hall',
+                theme: 'sustainability',
+                description: 'Join Nathasassi Warittanadejcho (Aer) as she unveils the sustainability blueprint of Chiang Mai Montessori International School (CMMIS). This session explores how CMMIS integrates eco-friendly practices, financial resilience, and strong community engagement to create a Montessori environment rooted in sustainability.'
+            },
+            {
+                id: 'fri-005',
+                day: 'fri',
+                time: '10:15',
+                title: 'Morning Tea, Networking & Exhibitors',
+                presenter: 'Convention Staff',
+                room: 'Main Hall',
+                theme: 'networking',
+                description: 'Morning tea break with networking opportunities and exhibitor displays.'
+            },
+            {
+                id: 'fri-006',
+                day: 'fri',
+                time: '10:45',
+                title: 'The Importance of Safe Struggle and Discomfort: Navigating a Life of Continuous Transformation',
+                presenter: 'Dimitri (🇦🇺 Australia)',
+                room: 'Main Hall',
+                theme: 'personal-growth',
+                description: 'This workshop explores the vital role of discomfort and struggle in all learning environments. We\'ll examine how experiencing challenge is not only a natural part of daily life but also a crucial element of any Rite of Passage – shaping who we are becoming.'
+            },
+            {
+                id: 'fri-007',
+                day: 'fri',
+                time: '11:30',
+                title: 'Artificial Intelligence and Our Cosmic Purpose',
+                presenter: 'Mark Powell (🇦🇺 Australia)',
+                room: 'Main Hall',
+                theme: 'technology',
+                description: 'Dr Montessori believed education should prepare children for the world they live in, embracing new technologies that expand their understanding. While digital tools can connect cultures and strengthen identity, artificial intelligence poses a greater risk by replacing the uniquely human teacher-child relationship. Montessori educators today must protect the human heart of education and ensure technology serves the child, not the other way around.'
+            },
+            {
+                id: 'fri-008',
+                day: 'fri',
+                time: '12:15',
+                title: 'Lunch, Networking & Exhibitors',
+                presenter: 'Convention Staff',
+                room: 'Main Hall',
+                theme: 'networking',
+                description: 'Lunch break with networking opportunities and exhibitor displays.'
+            },
+            {
+                id: 'fri-009',
+                day: 'fri',
+                time: '13:15',
+                title: 'Montessori Approach to Dementia Care',
+                presenter: 'Atika Latifi (🇦🇺 Australia)',
+                room: 'Endeavour Room 1',
+                theme: 'adult-care',
+                description: 'Gain valuable insights into dementia, including how it affects the brain and the different types. Discover how the Montessori approach creates a holistic, person-centred environment to support individuals living with dementia.'
+            },
+            {
+                id: 'fri-010',
+                day: 'fri',
+                time: '13:15',
+                title: 'Big Work in Mainstream Secondary Classrooms',
+                presenter: 'John Butler (🇦🇺 Australia)',
+                room: 'Endeavour Room 2',
+                theme: 'schools',
+                description: 'This workshop explores how the Montessori concept of Big Work can be adapted for mainstream secondary classrooms to empower students and deepen their connection to ethics and philosophy.'
+            },
+            {
+                id: 'fri-011',
+                day: 'fri',
+                time: '13:15',
+                title: 'Montessori Innovation in China',
+                presenter: 'Daisy Wang (🇨🇳 China)',
+                room: 'Endeavour Room 3',
+                theme: 'leadership',
+                description: 'This session will introduce Montessori\'s educational philosophy and highlight the innovative practices in teaching and community operations being implemented in China.'
+            },
+            {
+                id: 'fri-012',
+                day: 'fri',
+                time: '14:15',
+                title: 'Afternoon Tea, Networking & Exhibitors',
+                presenter: 'Convention Staff',
+                room: 'Main Hall',
+                theme: 'networking',
+                description: 'Afternoon tea break with networking opportunities and exhibitor displays.'
+            },
+            {
+                id: 'fri-013',
+                day: 'fri',
+                time: '14:45',
+                title: 'Serving the Child is Montessori\'s Legacy - What Does Holistic Education Look Like in 2025',
+                presenter: 'Eva Nislev (🇦🇺 Australia)',
+                room: 'Main Hall',
+                theme: 'holistic-education',
+                description: 'This session explores the concept of holism, rooted in the Greek term holon, which views the universe as an interconnected whole. Drawing on Socrates\' idea of "know thyself," holistic education emphasizes the integration of mind, body, and spirit.'
+            },
+            {
+                id: 'fri-014',
+                day: 'fri',
+                time: '15:30',
+                title: 'Wonderful World of Trees',
+                presenter: 'Chamroeun Koun (🇰🇭 Cambodia)',
+                room: 'Main Hall',
+                theme: 'environment',
+                description: 'Come on a journey with Phnom Penh Montessori International School, Cambodia\'s first pioneering authentic Montessori school, as we explore how Montessori students use project-based learning to discover environmental issues and how they actively tackle real-world environmental challenges.'
+            },
+            {
+                id: 'fri-015',
+                day: 'fri',
+                time: '16:15',
+                title: 'Sustainable Development of Montessori Education',
+                presenter: 'Hsiao-Yun Chang and Chia-Hsun (Johnson) Chang (🇹🇼 Taiwan)',
+                room: 'Main Hall',
+                theme: 'sustainability',
+                description: 'Explore how educators can incorporate Artificial Intelligence to enhance teaching practices while maintaining a strong focus on ethical considerations. Participants will examine the importance of embedding ethics in teacher training.'
+            },
+            {
+                id: 'fri-016',
+                day: 'fri',
+                time: '17:30',
+                title: 'Champagne and Canapés Welcome',
+                presenter: 'Convention Staff',
+                room: 'Main Hall',
+                theme: 'networking',
+                description: 'Join us for a welcome drink and canapés – the perfect opportunity to meet fellow delegates from around the globe. Connect, unwind, and share your passion for all things Montessori as we kick off the weekend together.'
+            },
+
+            // Saturday Sessions
+            {
+                id: 'sat-001',
+                day: 'sat',
+                time: '08:00',
+                title: 'Arrival, Networking & Exhibitors',
+                presenter: 'Convention Staff',
+                room: 'Main Hall',
+                theme: 'networking',
+                description: 'Day 2 begins with arrival, networking opportunities, and exhibitor displays.'
+            },
+            {
+                id: 'sat-002',
+                day: 'sat',
+                time: '08:30',
+                title: 'Parents as Teachers / Teachers as Parents',
+                presenter: 'Cathy Swan (🇺🇸 USA)',
+                room: 'Main Hall',
+                theme: 'parenting',
+                description: 'Focuses on inspiring freedom with self-discipline, offering choices, developing self-control and responsibility, and the overlap between parenting and teaching.'
+            },
+            {
+                id: 'sat-003',
+                day: 'sat',
+                time: '09:30',
+                title: 'Tim Seldin Unscripted',
+                presenter: 'Tim Seldin (🇺🇸 USA)',
+                room: 'Main Hall',
+                theme: 'leadership',
+                description: 'In conversation with Gavin McCormack.'
+            },
+            {
+                id: 'sat-004',
+                day: 'sat',
+                time: '10:15',
+                title: 'Morning Tea, Networking & Exhibitors',
+                presenter: 'Convention Staff',
+                room: 'Main Hall',
+                theme: 'networking',
+                description: 'Morning tea break with networking opportunities and exhibitor displays.'
+            },
+            {
+                id: 'sat-005',
+                day: 'sat',
+                time: '10:45',
+                title: 'Addressing the Shortage of Montessori-Trained Educators',
+                presenter: 'Maxine Bergh (🇦🇺 Australia)',
+                room: 'Main Hall',
+                theme: 'leadership',
+                description: 'Discusses "Balancing Tradition and Innovation in Montessori classrooms," maintaining brand identity, fostering innovation, team cohesion, marketing, and embedding Montessori practices.'
+            },
+            {
+                id: 'sat-006',
+                day: 'sat',
+                time: '11:30',
+                title: 'Building Bridges Through Sensory Integration Activities: A SPED Inclusion Program in a Montessori Setting',
+                presenter: 'Maria Gayla Escanillas (🇹🇭 Thailand)',
+                room: 'Main Hall',
+                theme: 'special-needs',
+                description: 'Strategies to prepare children with sensory integration difficulties in a Montessori environment, how the Montessori approach supports them, and how adults can create supportive spaces.'
+            },
+            {
+                id: 'sat-007',
+                day: 'sat',
+                time: '12:15',
+                title: 'Lunch, Networking & Exhibitors',
+                presenter: 'Convention Staff',
+                room: 'Main Hall',
+                theme: 'networking',
+                description: 'Lunch break with networking opportunities and exhibitor displays.'
+            },
+            {
+                id: 'sat-008',
+                day: 'sat',
+                time: '13:15',
+                title: 'Mindfulness for Emotional Regulation in Children',
+                presenter: 'Kelzang Lhadon (🇦🇺 Australia)',
+                room: 'Endeavour Room 1',
+                theme: 'early-childhood',
+                description: 'Focuses on mindfulness for emotional regulation, focus, and resilience in children, integrating practices like Box Breathing and Mindful Walking into Montessori activities.'
+            },
+            {
+                id: 'sat-009',
+                day: 'sat',
+                time: '13:15',
+                title: 'The Work of Byron Katie: Practical Workshop',
+                presenter: 'Rosie Stave (🇦🇺 Australia)',
+                room: 'Endeavour Room 2',
+                theme: 'personal-growth',
+                description: 'A practical workshop on the Byron Katie process for clarity, choice, and meaningful change, quoting Eckhart Tolle.'
+            },
+            {
+                id: 'sat-010',
+                day: 'sat',
+                time: '13:15',
+                title: 'Core Values Supporting Distributed Leadership in Montessori',
+                presenter: 'JR Alberto (🇦🇺 Australia)',
+                room: 'Endeavour Room 3',
+                theme: 'leadership',
+                description: 'Explores how core values support distributed leadership in a Montessori setting, influencing decision-making, trust, and empowerment.'
+            },
+            {
+                id: 'sat-011',
+                day: 'sat',
+                time: '14:15',
+                title: 'Four Goals of Gracious Parenting and Teaching',
+                presenter: 'Cathy Swan (🇺🇸 USA)',
+                room: 'Endeavour Room 1',
+                theme: 'early-childhood',
+                description: 'Explores the "Four Goals of Gracious Parenting and Teaching" for positive relationships, growth, and cooperation, including positive phrasing, offering choice, and age-appropriate expectations.'
+            },
+            {
+                id: 'sat-012',
+                day: 'sat',
+                time: '14:15',
+                title: 'Artificial Intelligence in Transforming Education',
+                presenter: 'Pip Cleaves (🇦🇺 Australia)',
+                room: 'Endeavour Room 2',
+                theme: 'technology',
+                description: 'Discusses Artificial Intelligence in transforming education at Global Village Learning, showcasing its role in streamlining administrative tasks, enhancing learning, fostering curiosity, and creativity.'
+            },
+            {
+                id: 'sat-013',
+                day: 'sat',
+                time: '14:15',
+                title: 'Echoes Montessori: Intergenerational Learning',
+                presenter: 'Barbara and Jessica Langford (🇦🇺 Australia)',
+                room: 'Endeavour Room 3',
+                theme: 'adult-care',
+                description: 'Shares the story of Echoes Montessori, an early learning centre within a retirement living complex, highlighting the benefits of intergenerational programs.'
+            },
+            {
+                id: 'sat-014',
+                day: 'sat',
+                time: '15:15',
+                title: 'Afternoon Tea, Networking & Exhibitors',
+                presenter: 'Convention Staff',
+                room: 'Main Hall',
+                theme: 'networking',
+                description: 'Afternoon tea break with networking opportunities and exhibitor displays.'
+            },
+            {
+                id: 'sat-015',
+                day: 'sat',
+                time: '15:45',
+                title: 'The (R)Evolution of the Montessori Materials',
+                presenter: 'Chris Willemsen (🇳🇱 Netherlands)',
+                room: 'Main Hall',
+                theme: 'materials',
+                description: 'Traces the journey of Montessori materials from Maria Montessori\'s revolutionary approach to current insights and scientific research, emphasizing their fundamental role in child development and ongoing evolution since 1952.'
+            },
+            {
+                id: 'sat-016',
+                day: 'sat',
+                time: '16:30',
+                title: 'The Work of Byron Katie: Fireside Conversation',
+                presenter: 'Rosie Stave (🇦🇺 Australia)',
+                room: 'Main Hall',
+                theme: 'personal-growth',
+                description: 'A close-up discussion on "The Work of Byron," sharing ideas and practical tips for implementation.'
+            },
+            {
+                id: 'sat-017',
+                day: 'sat',
+                time: '18:00',
+                title: 'Gala Dinner Recognition Awards',
+                presenter: 'Convention Staff',
+                room: 'Main Hall',
+                theme: 'awards',
+                description: 'A spectacular evening celebrating excellence in Montessori education and acknowledging accomplishments of Montessorians in the Asia-Pacific Region.'
+            },
+
+            // Sunday Sessions
+            {
+                id: 'sun-001',
+                day: 'sun',
+                time: '08:00',
+                title: 'Arrival, Networking & Exhibitors',
+                presenter: 'Convention Staff',
+                room: 'Main Hall',
+                theme: 'networking',
+                description: 'Day 3 begins with arrival, networking opportunities, and exhibitor displays.'
+            },
+            {
+                id: 'sun-002',
+                day: 'sun',
+                time: '08:30',
+                title: 'How Can I Help? Servant Leadership: Transforming Our Schools Through Service',
+                presenter: 'Christine Harrison (🇦🇺 Australia)',
+                room: 'Main Hall',
+                theme: 'leadership',
+                description: 'As Montessori Leaders, whom do we serve and how can we make them thrive? Servant leadership turns the traditional leadership model on its head. Instead of focusing on power, authority, or personal ambition, servant leaders prioritize the needs and growth of their team members.'
+            },
+            {
+                id: 'sun-003',
+                day: 'sun',
+                time: '09:30',
+                title: 'The Experience of Promoting Montessori Education in Taiwan by TMEC',
+                presenter: 'Tung-Liao Cheng (🇹🇼 Taiwan)',
+                room: 'Main Hall',
+                theme: 'leadership',
+                description: 'This presentation explores innovations in Taiwan designed to establish and promote Montessori education. Built on four key pillars: public engagement, capacity building, research and development, and public school transformation.'
+            },
+            {
+                id: 'sun-004',
+                day: 'sun',
+                time: '10:15',
+                title: 'Morning Tea, Networking & Exhibitors',
+                presenter: 'Convention Staff',
+                room: 'Main Hall',
+                theme: 'networking',
+                description: 'Morning tea break with networking opportunities and exhibitor displays.'
+            },
+            {
+                id: 'sun-005',
+                day: 'sun',
+                time: '10:45',
+                title: 'Montessori Education with Medical Care in China',
+                presenter: 'Jixiu Cao (🇨🇳 China)',
+                room: 'Endeavour Room 1',
+                theme: 'early-childhood',
+                description: 'In Shenzhen, China, Baotian Childcare Center combines Montessori education with medical care to support children aged 6 months to 6 years. With a focus on "medical support, nurturing focus, educational reinforcement."'
+            },
+            {
+                id: 'sun-006',
+                day: 'sun',
+                time: '10:45',
+                title: 'Intergenerational Practice within Montessori Education',
+                presenter: 'Emeritus Professor Janna Anneke Fitzgerald (🇦🇺 Australia)',
+                room: 'Endeavour Room 2',
+                theme: 'adult-care',
+                description: 'Intergenerational practice within Montessori education fosters meaningful connections between young children and older generations, enriching learning across the lifespan.'
+            },
+            {
+                id: 'sun-007',
+                day: 'sun',
+                time: '12:00',
+                title: 'Lunch, Networking & Exhibitors',
+                presenter: 'Convention Staff',
+                room: 'Main Hall',
+                theme: 'networking',
+                description: 'Lunch break with networking opportunities and exhibitor displays.'
+            },
+            {
+                id: 'sun-008',
+                day: 'sun',
+                time: '13:00',
+                title: 'Core Connections, Quality Outcomes',
+                presenter: 'Jane Newman (🇦🇺 Australia)',
+                room: 'Main Hall',
+                theme: 'personal-growth',
+                description: 'Come and explore the powerful idea that understanding the motivations behind our behaviors is key to achieving quality outcomes in both personal and professional settings. Drawing on Dr. William Glasser\'s Choice Theory.'
+            },
+            {
+                id: 'sun-009',
+                day: 'sun',
+                time: '13:45',
+                title: 'The Application and Practice of Precision Nutrition in Early Childhood Development',
+                presenter: 'Kezheng Li Ph.D (🇨🇳 China)',
+                room: 'Main Hall',
+                theme: 'early-childhood',
+                description: 'During a child\'s growth, dietary nutrition is crucial not only for physical health but also closely linked to the development of their emotional and behavioral patterns. Recent studies have found that good diets can make children happy, focused, and calm.'
+            },
+            {
+                id: 'sun-010',
+                day: 'sun',
+                time: '14:30',
+                title: 'Conference Close',
+                presenter: 'Convention Staff',
+                room: 'Main Hall',
+                theme: 'closing',
+                description: 'Official closing of the Montessori International Convention 2025.'
+            }
+        ];
+
+        const speakersData = [
+            { 
+                name: 'Sylvia Arotin', 
+                flag: '🇦🇺', 
+                country: 'Australia',
+                image: 'assets/img/speakers/sylvia-arotin.jpg',
+                bio: 'Sylvia Arotin is recognised as "Woman of the Year 2025" and "Woman Changing the World in Early Childhood Education." She is a Montessori educator, speaker, and consultant, and owns My Montessori School while founding Guide & Grow. Sylvia brings her expertise and passion for Montessori education to her role as co-Master of Ceremonies for MIC2025.'
+            },
+            { 
+                name: 'Gavin McCormack', 
+                flag: '🇦🇺', 
+                country: 'Australia',
+                image: 'assets/img/speakers/gavin-mccormack.jpg',
+                bio: 'Gavin McCormack is a Montessori-trained teacher, ambassador, and founder of schools and platforms dedicated to Montessori education. Recognised as an influential global educator and author, Gavin brings his extensive experience and passion for Montessori education to his role as co-Master of Ceremonies for MIC2025.'
+            },
+            { 
+                name: 'Mark Powell', 
+                flag: '🇦🇺', 
+                country: 'Australia',
+                image: 'assets/img/speakers/mark-powell.jpg',
+                bio: 'Mark Powell is a leading Montessori educator and the Director of Education Services at Montessori Australia. With studies in anthropology, sociology, music, and economics, he brings a broad understanding of human development to his work. His Montessori journey began in Sydney, leading him to complete elementary training at the Center for Montessori Teacher Education in New York. For more than twenty years, Mark has taught in Montessori classrooms, trained educators, and developed learning materials. He promotes authentic Montessori practice grounded in respect, independence, and positive discipline.'
+            },
+            { 
+                name: 'Nathasassi Warittanadejcho (Aer)', 
+                flag: '🇹🇭', 
+                country: 'Thailand',
+                image: 'assets/img/speakers/nathasassi-warittanadejcho.jpg',
+                bio: 'Nathasassi Warittanadejcho (Aer) is the founder and director of Chiang Mai Montessori International School (CMMIS), Thailand\'s pioneering sustainable Montessori institution. She has dedicated her career to integrating eco-friendly practices, financial resilience, and strong community engagement to create authentic Montessori environments. Aer\'s innovative approach combines traditional Montessori principles with modern sustainability practices, making Montessori education accessible and environmentally conscious.'
+            },
+            { 
+                name: 'Dimitri', 
+                flag: '🇦🇺', 
+                country: 'Australia',
+                image: 'assets/img/speakers/dimitri.jpg',
+                bio: 'Dimitri is a transformative educator specializing in the vital role of discomfort and struggle in learning environments. He explores how experiencing challenge is not only a natural part of daily life but also a crucial element of any Rite of Passage – shaping who we are becoming. His work focuses on supporting children to engage with tasks that offer just enough challenge, helping them build resilience, adaptability, and the capacity to navigate life\'s ever-changing conditions.'
+            },
+            { 
+                name: 'Rosie Stave', 
+                flag: '🇦🇺', 
+                country: 'Australia',
+                image: 'assets/img/speakers/rosie-stave.jpg',
+                bio: 'Rosie Stave is a certified facilitator of The Work of Byron Katie, a transformative process known as "4 Questions to Inner Peace." She specializes in helping individuals let go of limiting thoughts and uncover their deepest truth of peace, compassion, and humility. Rosie\'s practical workshops provide participants with powerful tools for personal growth and emotional clarity, making complex psychological concepts accessible and actionable.'
+            },
+            { 
+                name: 'Atika Latifi', 
+                flag: '🇦🇺', 
+                country: 'Australia',
+                image: 'assets/img/speakers/atika-latifi.jpg',
+                bio: 'Atika Latifi is a specialist in Montessori approaches to dementia care, bringing valuable insights into how dementia affects the brain and the different types of cognitive challenges. She has developed innovative methods for creating holistic, person-centred environments that support individuals living with dementia. Her work demonstrates how Montessori principles can be adapted to promote cognitive well-being and minimize challenging behaviors in diverse care settings.'
+            },
+            { 
+                name: 'John Butler', 
+                flag: '🇦🇺', 
+                country: 'Australia',
+                image: 'assets/img/speakers/john-butler.jpg',
+                bio: 'John Butler started his journey as a Montessori teacher in an after-school care club at Inner Sydney Montessori School. During his time there, he began training as a secondary school teacher and eventually became the history and philosophy teacher at Burwood Girls in Sydney. He learned that independence, choice, and freedom are paramount in allowing children to dream big and achieve even bigger.'
+            },
+            { 
+                name: 'Daisy Wang', 
+                flag: '🇨🇳', 
+                country: 'China',
+                image: 'assets/img/speakers/daisy-wang.jpg',
+                bio: 'Daisy Wang is a leading advocate for Montessori education in China, introducing Montessori\'s educational philosophy and highlighting innovative practices in teaching and community operations. She has been instrumental in adapting Montessori principles to meet local needs while fostering effective learning environments. Her work demonstrates how Montessori education can thrive in diverse cultural contexts.'
+            },
+            { 
+                name: 'Eva Nislev (PhD)', 
+                flag: '🇦🇺', 
+                country: 'Australia',
+                image: 'assets/img/speakers/eva-nislev.jpg',
+                bio: 'Eva Nislev is a highly motivated and enthusiastic professional with a passion for teaching and mentoring. Her career has involved actively seeking opportunities to grow and learn, refining her ability to support, motivate, and lead students and professionals in education. With years of experience as a university lecturer and education consultant, Eva remains deeply engaged in classrooms weekly, offering practical insights grounded in Montessori\'s holistic approach.'
+            },
+            { 
+                name: 'Chamroeun Koun', 
+                flag: '🇰🇭', 
+                country: 'Cambodia',
+                image: 'assets/img/speakers/chamroeun-koun.jpg',
+                bio: 'Chamroeun Koun is the founder of Phnom Penh Montessori International School, Cambodia\'s first pioneering authentic Montessori school. He leads innovative project-based learning initiatives that help students discover environmental issues and actively tackle real-world environmental challenges. His work demonstrates how Montessori education can nurture environmentally conscious, empowered global citizens through hands-on environmental projects.'
+            },
+            { 
+                name: 'Hsiao-Yun (Sherry) Chang', 
+                flag: '🇹🇼', 
+                country: 'Taiwan',
+                image: 'assets/img/speakers/hsiao-yun-chang.jpg',
+                bio: 'Born in Taiwan, Hsiao-Yun\'s journey into Montessori education began while pursuing a master\'s degree in linguistics in the United States. A visit to a Montessori preschool profoundly shifted her career path, inspired by how children naturally acquire language. With nearly 30 years of experience, she firmly believes in Montessori\'s inclusive approach to nurturing the whole child and has integrated Montessori principles into university teaching.'
+            },
+            { 
+                name: 'Chia-Hsun (Johnson) Chang', 
+                flag: '🇹🇼', 
+                country: 'Taiwan',
+                image: 'assets/img/speakers/chia-hsun-chang.jpg',
+                bio: 'Chia-Hsun (Johnson) Chang specializes in incorporating Artificial Intelligence to enhance teaching practices while maintaining a strong focus on ethical considerations. He examines the importance of embedding ethics in teacher training, with particular emphasis on developing self-discipline and modeling ethical behavior through educator conduct. His work empowers educators to embrace AI tools thoughtfully and responsibly in their professional practice.'
+            },
+            { 
+                name: 'Cathy Swan', 
+                flag: '🇺🇸', 
+                country: 'USA',
+                image: 'assets/img/speakers/cathy-swan.jpg',
+                bio: 'Cathy Swan focuses on inspiring freedom with self-discipline, offering choices, developing self-control and responsibility, and exploring the overlap between parenting and teaching. She has developed the "Four Goals of Gracious Parenting and Teaching" framework, emphasizing positive relationships, growth, and cooperation through positive phrasing, offering choice, and age-appropriate expectations.'
+            },
+            { 
+                name: 'Tim Seldin', 
+                flag: '🇺🇸', 
+                country: 'USA',
+                image: 'assets/img/speakers/tim-seldin.jpg',
+                bio: 'Tim Seldin is a renowned Montessori educator and author, known for his extensive work in Montessori teacher education and school leadership. His "unscripted" conversations provide authentic insights into Montessori philosophy and practice, drawing from decades of experience in Montessori education. He continues to inspire educators worldwide through his thoughtful approach to Montessori leadership and innovation.'
+            },
+            { 
+                name: 'Maxine Bergh', 
+                flag: '🇦🇺', 
+                country: 'Australia',
+                image: 'assets/img/speakers/maxine-bergh.jpg',
+                bio: 'Maxine Bergh addresses the critical shortage of Montessori-trained educators by discussing "Balancing Tradition and Innovation in Montessori classrooms." Her work focuses on maintaining brand identity while fostering innovation, team cohesion, marketing, and embedding Montessori practices. She provides strategies for upskilling staff, integrating technology, and implementing effective auditing procedures.'
+            },
+            { 
+                name: 'Maria Gayla Escanillas', 
+                flag: '🇹🇭', 
+                country: 'Thailand',
+                image: 'assets/img/speakers/maria-gayla-escanillas.jpg',
+                bio: 'Maria Gayla Escanillas specializes in building bridges through sensory integration activities, developing SPED inclusion programs in Montessori settings. She provides strategies to prepare children with sensory integration difficulties in Montessori environments, demonstrating how the Montessori approach supports them and how adults can create supportive spaces. Her work bridges special education needs with Montessori principles.'
+            },
+            { 
+                name: 'Kelzang Lhadon', 
+                flag: '🇦🇺', 
+                country: 'Australia',
+                image: 'assets/img/speakers/kelzang-lhadon.jpg',
+                bio: 'Kelzang Lhadon focuses on mindfulness for emotional regulation, focus, and resilience in children. She integrates practices like Box Breathing and Mindful Walking into Montessori activities, helping children develop essential self-regulation skills. Her work demonstrates how mindfulness practices can enhance Montessori education and support children\'s emotional development.'
+            },
+            { 
+                name: 'JR Alberto', 
+                flag: '🇦🇺', 
+                country: 'Australia',
+                image: 'assets/img/speakers/jr-alberto.jpg',
+                bio: 'Originally from Aotearoa (New Zealand), JR is a dedicated Montessori educator with expertise in educational philosophy and leadership. Since moving to Australia in 2018, he has played a key role in establishing 13 Montessori early learning centers. He currently serves as the Director of Quality and Curriculum Development at Discovery Bay Early Learning, specializing in Montessori methodology and STEM-integrated programs.'
+            },
+            { 
+                name: 'Pip Cleaves', 
+                flag: '🇦🇺', 
+                country: 'Australia',
+                image: 'assets/img/speakers/pip-cleaves.jpg',
+                bio: 'Pip Cleaves is not your typical school leader. She\'s a systems disruptor, a creative force, and a moral compass in motion - leading from the margins where the most meaningful change begins. As Principal of Global Village Learning, Pip is reimagining education through human-centred design, courageous leadership, and community-powered learning. She blends vision with action, championing student agency and educational equity.'
+            },
+            { 
+                name: 'Barbara Langford', 
+                flag: '🇦🇺', 
+                country: 'Australia',
+                image: 'assets/img/speakers/barbara-langford.jpg',
+                bio: 'Barbara Langford, along with her daughter Jessica, shares the story of Echoes Montessori, an early learning centre within a retirement living complex. Their work highlights the benefits of intergenerational programs, demonstrating how meaningful connections between young children and older generations can enrich learning across the lifespan and address societal issues like social isolation and ageism.'
+            },
+            { 
+                name: 'Jessica Langford', 
+                flag: '🇦🇺', 
+                country: 'Australia',
+                image: 'assets/img/speakers/jessica-langford.jpg',
+                bio: 'Jessica Langford works alongside her mother Barbara in developing intergenerational Montessori programs. Their innovative approach creates inclusive spaces that promote collaboration between generations, fostering social, emotional, and cognitive development for both children and older adults through shared learning experiences.'
+            },
+            { 
+                name: 'Chris Willemsen', 
+                flag: '🇳🇱', 
+                country: 'Netherlands',
+                image: 'assets/img/speakers/chris-willemsen.jpg',
+                bio: 'Chris Willemsen traces the journey of Montessori materials from Maria Montessori\'s revolutionary approach to current insights and scientific research. He emphasizes their fundamental role in child development and ongoing evolution since 1952. His work demonstrates how Montessori materials continue to evolve while maintaining their core educational principles.'
+            },
+            { 
+                name: 'Christine Harrison', 
+                flag: '🇦🇺', 
+                country: 'Australia',
+                image: 'assets/img/speakers/christine-harrison.jpg',
+                bio: 'Christine Harrison specializes in servant leadership, transforming schools through service. She explores how Montessori Leaders can serve their communities and make them thrive. Servant leadership turns the traditional leadership model on its head, prioritizing the needs and growth of team members over power, authority, or personal ambition.'
+            },
+            { 
+                name: 'Tung-Liao Cheng', 
+                flag: '🇹🇼', 
+                country: 'Taiwan',
+                image: 'assets/img/speakers/tung-liao-cheng.jpg',
+                bio: 'Dr. Tung-Liao Cheng has been deeply involved in the development of rural education in Taiwan for many years, striving to create a new paradigm in education. He has served as project director for various experimental education institutions and is working on establishing the Taiwan Montessori Education Center (TMEC), aiming to drive educational innovation through advocacy, discourse, and action.'
+            },
+            { 
+                name: 'Jixiu Cao', 
+                flag: '🇨🇳', 
+                country: 'China',
+                image: 'assets/img/speakers/jixiu-cao.jpg',
+                bio: 'Jixiu Cao works at Baotian Childcare Center in Shenzhen, China, which combines Montessori education with medical care to support children aged 6 months to 6 years. With a focus on "medical support, nurturing focus, educational reinforcement," the centre offers tailored Montessori programs alongside health services, demonstrating how holistic care can enhance early childhood education.'
+            },
+            { 
+                name: 'Emeritus Professor Janna Anneke Fitzgerald', 
+                flag: '🇦🇺', 
+                country: 'Australia',
+                image: 'assets/img/speakers/janna-fitzgerald.jpg',
+                bio: 'Emeritus Professor Janna Anneke Fitzgerald specializes in intergenerational practice within Montessori education. She fosters meaningful connections between young children and older generations, enriching learning across the lifespan. Her work creates inclusive spaces that promote collaboration and address societal issues like social isolation and ageism through shared learning experiences.'
+            },
+            { 
+                name: 'Jane Newman', 
+                flag: '🇦🇺', 
+                country: 'Australia',
+                image: 'assets/img/speakers/jane-newman.jpg',
+                bio: 'Jane Newman has over 25 years of experience, including more than a decade in leadership roles. She served as principal of Grovely State School in Brisbane, one of Australia\'s longest-running public Montessori schools. She is also a certified instructor of Choice Theory, Dr. William Glasser\'s internal control psychological approach, and founded New Core: Learning Starts Within.'
+            },
+            { 
+                name: 'Kezheng Li Ph.D', 
+                flag: '🇨🇳', 
+                country: 'China',
+                image: 'assets/img/speakers/kezheng-li.jpg',
+                bio: 'Dr. Kezheng Li has over ten years of practical work experience in pediatric nutrition and healthcare, with expertise in pediatric allergies, asthma, ADHD, and autism. He is passionate about providing nutrition education to parents and child caregivers, helping them address common health issues in preschool children through personalized dietary plans and precision nutrition approaches.'
+            }
+        ];
+
+        // Utility Functions
+        function flagify(text) {
+            const countryMap = {
+                'Australia': '🇦🇺',
+                'USA': '🇺🇸',
+                'Thailand': '🇹🇭',
+                'China': '🇨🇳',
+                'Cambodia': '🇰🇭',
+                'Taiwan': '🇹🇼',
+                'Netherlands': '🇳🇱'
+            };
+            
+            return text.replace(/\(([^)]+)\)/g, (match, country) => {
+                const flag = countryMap[country.trim()];
+                return flag ? `(${flag})` : match;
+            });
+        }
+
+        function loadBookmarks() {
+            const stored = localStorage.getItem(STORAGE_KEYS.BOOKMARKS);
+            if (stored) {
+                try {
+                    const bookmarks = JSON.parse(stored);
+                    bookmarkedSessions = new Set(bookmarks);
+                } catch (e) {
+                    console.warn('Failed to load bookmarks:', e);
+                    bookmarkedSessions = new Set();
+                }
+            }
+        }
+
+        function saveBookmarks() {
+            localStorage.setItem(STORAGE_KEYS.BOOKMARKS, JSON.stringify([...bookmarkedSessions]));
+        }
+
+        function loadLastView() {
+            const stored = localStorage.getItem(STORAGE_KEYS.LAST_VIEW);
+            return stored || 'program';
+        }
+
+        function saveLastView(section) {
+            localStorage.setItem(STORAGE_KEYS.LAST_VIEW, section);
+        }
+
+        // Routing Functions
+        function navigateToSection(section) {
+            // Update URL hash
+            window.location.hash = section;
+            
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            
+            // Show target section
+            const targetSection = document.getElementById(section);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Update navigation states
+            updateNavigationStates(section);
+            
+            // Save last view
+            saveLastView(section);
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Update content based on section
+            updateSectionContent(section);
+        }
+
+        function updateNavigationStates(activeSection) {
+            // Update top navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.section === activeSection);
+            });
+            
+            // Update bottom navigation
+            document.querySelectorAll('.bottom-nav-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.section === activeSection);
+            });
+        }
+
+        function updateSectionContent(section) {
+            switch (section) {
+                case 'program':
+                    renderSessions();
+                    break;
+                case 'agenda':
+                    renderMyAgenda();
+                    break;
+                case 'speakers':
+                    renderSpeakers();
+                    break;
+            }
+        }
+
+        // Session Rendering
+        function renderSessions() {
+            const container = document.getElementById('sessions-container');
+            if (!container) return;
+
+            if (filteredSessions.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔍</div>
+                        <h3>No sessions found</h3>
+                        <p>Try adjusting your search terms or filters to find sessions.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredSessions.map(session => `
+                <div class="session-card" data-session-id="${session.id}" tabindex="0" role="button" aria-label="View details for ${session.title}">
+                    <div class="session-header">
+                        <span class="session-time">${session.time}</span>
+                        <button class="bookmark-btn ${bookmarkedSessions.has(session.id) ? 'bookmarked' : ''}" 
+                                data-session-id="${session.id}" 
+                                aria-label="${bookmarkedSessions.has(session.id) ? 'Remove from' : 'Add to'} My Agenda">
+                            ${bookmarkedSessions.has(session.id) ? '★' : '☆'}
+                        </button>
+                    </div>
+                    <h3 class="session-title">${session.title}</h3>
+                    <p class="session-presenter">${flagify(session.presenter)}</p>
+                    <span class="session-room">${session.room}</span>
+                    <div class="session-tags">
+                        <span class="session-tag">${session.day.charAt(0).toUpperCase() + session.day.slice(1)}</span>
+                        <span class="session-tag">${session.theme.charAt(0).toUpperCase() + session.theme.slice(1)}</span>
+                    </div>
+                    <div class="session-description">${session.description}</div>
+                </div>
+            `).join('');
+
+            // Add event listeners
+            addSessionEventListeners();
+        }
+
+        function renderMyAgenda() {
+            const container = document.getElementById('agenda-container');
+            if (!container) return;
+
+            const bookmarkedSessionsList = allSessions.filter(session => bookmarkedSessions.has(session.id));
+
+            if (bookmarkedSessionsList.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⭐</div>
+                        <h3>No sessions bookmarked</h3>
+                        <p>Browse the program and tap the star (☆) on sessions you'd like to attend.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = bookmarkedSessionsList.map(session => `
+                <div class="session-card" data-session-id="${session.id}" tabindex="0" role="button" aria-label="View details for ${session.title}">
+                    <div class="session-header">
+                        <span class="session-time">${session.time}</span>
+                        <button class="bookmark-btn bookmarked" 
+                                data-session-id="${session.id}" 
+                                aria-label="Remove from My Agenda">
+                            ★
+                        </button>
+                    </div>
+                    <h3 class="session-title">${session.title}</h3>
+                    <p class="session-presenter">${flagify(session.presenter)}</p>
+                    <span class="session-room">${session.room}</span>
+                    <div class="session-tags">
+                        <span class="session-tag">${session.day.charAt(0).toUpperCase() + session.day.slice(1)}</span>
+                        <span class="session-tag">${session.theme.charAt(0).toUpperCase() + session.theme.slice(1)}</span>
+                    </div>
+                    <div class="session-description">${session.description}</div>
+                </div>
+            `).join('');
+
+            // Add event listeners
+            addSessionEventListeners();
+        }
+
+        function renderSpeakers() {
+            const container = document.getElementById('speakers-container');
+            if (!container) return;
+
+            const searchTerm = document.getElementById('speaker-search')?.value.toLowerCase() || '';
+            const filteredSpeakers = speakersData.filter(speaker => 
+                speaker.name.toLowerCase().includes(searchTerm)
+            );
+
+            container.innerHTML = filteredSpeakers.map(speaker => `
+                <div class="speaker-card" data-speaker-name="${speaker.name}" tabindex="0" role="button" aria-label="View details for ${speaker.name}">
+                    <div class="speaker-image">
+                        <img src="${speaker.image}" alt="${speaker.name}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="speaker-initials" style="display: none;">${speaker.name.split(' ').map(n => n[0]).join('')}</div>
+                    </div>
+                    <div class="speaker-flag">${speaker.flag}</div>
+                    <div class="speaker-name">${speaker.name}</div>
+                </div>
+            `).join('');
+
+            // Add event listeners for speaker cards
+            addSpeakerEventListeners();
+        }
+
+        function addSpeakerEventListeners() {
+            // Speaker card clicks
+            document.querySelectorAll('.speaker-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    const speakerName = card.dataset.speakerName;
+                    openSpeakerModal(speakerName);
+                });
+
+                card.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        const speakerName = card.dataset.speakerName;
+                        openSpeakerModal(speakerName);
+                    }
+                });
+            });
+        }
+
+        // Event Listeners
+        function addSessionEventListeners() {
+            // Session card clicks
+            document.querySelectorAll('.session-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('bookmark-btn')) return;
+                    const sessionId = card.dataset.sessionId;
+                    openSessionModal(sessionId);
+                });
+
+                card.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        if (e.target.classList.contains('bookmark-btn')) return;
+                        const sessionId = card.dataset.sessionId;
+                        openSessionModal(sessionId);
+                    }
+                });
+            });
+
+            // Bookmark button clicks
+            document.querySelectorAll('.bookmark-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const sessionId = btn.dataset.sessionId;
+                    toggleBookmark(sessionId);
+                });
+            });
+        }
+
+        function addFilterEventListeners() {
+            // Search input
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', applyFilters);
+            }
+
+            // Filter selects
+            document.querySelectorAll('.filter-select').forEach(select => {
+                select.addEventListener('change', applyFilters);
+            });
+
+            // Day tabs
+            document.querySelectorAll('.day-tab').forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    const day = e.target.dataset.day;
+                    
+                    // Update day filter
+                    const dayFilter = document.getElementById('day-filter');
+                    if (dayFilter) {
+                        dayFilter.value = day;
+                    }
+                    
+                    // Update tab states
+                    document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+                    e.target.classList.add('active');
+                    
+                    applyFilters();
+                });
+            });
+
+            // Speaker search
+            const speakerSearch = document.getElementById('speaker-search');
+            if (speakerSearch) {
+                speakerSearch.addEventListener('input', renderSpeakers);
+            }
+        }
+
+        function addNavigationEventListeners() {
+            // Top navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = item.dataset.section;
+                    navigateToSection(section);
+                });
+            });
+
+            // Bottom navigation
+            document.querySelectorAll('.bottom-nav-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = item.dataset.section;
+                    navigateToSection(section);
+                });
+            });
+        }
+
+        function addModalEventListeners() {
+            const modal = document.getElementById('session-modal');
+            const speakerModal = document.getElementById('speaker-modal');
+            const closeBtn = document.querySelector('.modal-close');
+            const closeBtnSecondary = document.getElementById('modal-close-btn');
+            const bookmarkBtn = document.getElementById('modal-bookmark-btn');
+            const speakerCloseBtn = document.getElementById('speaker-modal-close-btn');
+
+            // Close session modal
+            function closeSessionModal() {
+                modal.classList.remove('active', 'gala-sparkle', 'visible');
+                document.body.style.overflow = '';
+                currentSession = null;
+            }
+
+            // Close speaker modal
+            function closeSpeakerModal() {
+                speakerModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            closeBtn?.addEventListener('click', (e) => {
+                if (modal.classList.contains('active')) {
+                    closeSessionModal();
+                } else if (speakerModal.classList.contains('active')) {
+                    closeSpeakerModal();
+                }
+            });
+
+            closeBtnSecondary?.addEventListener('click', closeSessionModal);
+            speakerCloseBtn?.addEventListener('click', closeSpeakerModal);
+
+            // Close on backdrop click
+            modal?.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeSessionModal();
+                }
+            });
+
+            speakerModal?.addEventListener('click', (e) => {
+                if (e.target === speakerModal) {
+                    closeSpeakerModal();
+                }
+            });
+
+            // Close on Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (modal.classList.contains('active')) {
+                        closeSessionModal();
+                    } else if (speakerModal.classList.contains('active')) {
+                        closeSpeakerModal();
+                    }
+                }
+            });
+
+            // Session modal bookmark button
+            bookmarkBtn?.addEventListener('click', () => {
+                if (currentSession) {
+                    toggleBookmark(currentSession.id);
+                    updateModalBookmarkButton();
+                }
+            });
+        }
+
+        // Filtering Functions
+        function applyFilters() {
+            const searchTerm = document.querySelector('.search-input')?.value.toLowerCase() || '';
+            const dayFilter = document.getElementById('day-filter')?.value || '';
+            const themeFilter = document.getElementById('theme-filter')?.value || '';
+            const roomFilter = document.getElementById('room-filter')?.value || '';
+
+            filteredSessions = allSessions.filter(session => {
+                let matchesSearch = true;
+                
+                if (searchTerm) {
+                    // Create a more precise search that looks for whole words or exact matches
+                    const searchWords = searchTerm.split(/\s+/).filter(word => word.length > 0);
+                    const searchText = [
+                        session.title.toLowerCase(),
+                        session.presenter.toLowerCase(),
+                        session.room.toLowerCase(),
+                        session.description.toLowerCase()
+                    ].join(' ');
+                    
+                    // Check if all search words appear as whole words or exact matches
+                    matchesSearch = searchWords.every(word => {
+                        // Look for whole word matches (word boundaries)
+                        const wholeWordRegex = new RegExp(`\\b${word}\\b`, 'i');
+                        return wholeWordRegex.test(searchText);
+                    });
+                }
+
+                const matchesDay = !dayFilter || session.day === dayFilter;
+                const matchesTheme = !themeFilter || session.theme === themeFilter;
+                const matchesRoom = !roomFilter || session.room.toLowerCase().includes(roomFilter.toLowerCase());
+
+                return matchesSearch && matchesDay && matchesTheme && matchesRoom;
+            });
+
+            renderSessions();
+        }
+
+        // Bookmark Functions
+        function toggleBookmark(sessionId) {
+            if (bookmarkedSessions.has(sessionId)) {
+                bookmarkedSessions.delete(sessionId);
+            } else {
+                bookmarkedSessions.add(sessionId);
+            }
+            
+            saveBookmarks();
+            updateBookmarkButtons();
+            
+            // If we're on the agenda page, refresh it
+            if (window.location.hash === '#agenda') {
+                renderMyAgenda();
+            }
+        }
+
+        function updateBookmarkButtons() {
+            document.querySelectorAll('.bookmark-btn').forEach(btn => {
+                const sessionId = btn.dataset.sessionId;
+                const isBookmarked = bookmarkedSessions.has(sessionId);
+                
+                btn.classList.toggle('bookmarked', isBookmarked);
+                btn.innerHTML = isBookmarked ? '★' : '☆';
+                btn.setAttribute('aria-label', `${isBookmarked ? 'Remove from' : 'Add to'} My Agenda`);
+            });
+        }
+
+        // Modal Functions
+        function openSessionModal(sessionId) {
+            const session = allSessions.find(s => s.id === sessionId);
+            if (!session) return;
+
+            currentSession = session;
+            
+            const modal = document.getElementById('session-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+            const bookmarkBtn = document.getElementById('modal-bookmark-btn');
+
+            modalTitle.textContent = session.title;
+            
+            modalContent.innerHTML = `
+                <div class="modal-field">
+                    <div class="modal-field-label">Speaker</div>
+                    <div class="modal-field-value">${flagify(session.presenter)}</div>
+                </div>
+                <div class="modal-field">
+                    <div class="modal-field-label">Day</div>
+                    <div class="modal-field-value">${session.day.charAt(0).toUpperCase() + session.day.slice(1)}</div>
+                </div>
+                <div class="modal-field">
+                    <div class="modal-field-label">Time</div>
+                    <div class="modal-field-value">${session.time}</div>
+                </div>
+                <div class="modal-field">
+                    <div class="modal-field-label">Location</div>
+                    <div class="modal-field-value">${session.room}</div>
+                </div>
+                <div class="modal-description">${session.description}</div>
+            `;
+
+            updateModalBookmarkButton();
+            
+            // Add gala sparkle effect for special sessions
+            if (session.title.toLowerCase().includes('gala') || 
+                session.title.toLowerCase().includes('awards') || 
+                session.title.toLowerCase().includes('closing')) {
+                modal.classList.add('gala-sparkle', 'visible');
+            } else {
+                modal.classList.remove('gala-sparkle', 'visible');
+            }
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Focus management
+            const firstFocusable = modal.querySelector('button');
+            if (firstFocusable) {
+                firstFocusable.focus();
+            }
+        }
+
+        function updateModalBookmarkButton() {
+            const bookmarkBtn = document.getElementById('modal-bookmark-btn');
+            if (!bookmarkBtn || !currentSession) return;
+
+            const isBookmarked = bookmarkedSessions.has(currentSession.id);
+            bookmarkBtn.textContent = isBookmarked ? 'Remove from My Agenda' : 'Add to My Agenda';
+        }
+
+        // Speaker Modal Functions
+        function openSpeakerModal(speakerName) {
+            const speaker = speakersData.find(s => s.name === speakerName);
+            if (!speaker) return;
+
+            // Find sessions by this speaker
+            const speakerSessions = allSessions.filter(session => 
+                session.presenter.toLowerCase().includes(speakerName.toLowerCase()) ||
+                speakerName.toLowerCase().includes(session.presenter.toLowerCase().split(' (')[0])
+            );
+
+            const modal = document.getElementById('speaker-modal');
+            const modalTitle = document.getElementById('speaker-modal-title');
+            const modalContent = document.getElementById('speaker-modal-content');
+
+            modalTitle.textContent = speaker.name;
+            
+            modalContent.innerHTML = `
+                <div class="speaker-modal-image">
+                    <img src="${speaker.image}" alt="${speaker.name}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="speaker-modal-initials" style="display: none;">${speaker.name.split(' ').map(n => n[0]).join('')}</div>
+                </div>
+                <div class="speaker-modal-info">
+                    <div class="speaker-modal-country">
+                        <span class="speaker-modal-flag">${speaker.flag}</span>
+                        <span class="speaker-modal-country-name">${speaker.country}</span>
+                    </div>
+                    <div class="speaker-modal-bio">${speaker.bio}</div>
+                    ${speakerSessions.length > 0 ? `
+                        <div class="speaker-modal-sessions">
+                            <h4 class="speaker-modal-sessions-title">Presenting Sessions</h4>
+                            <div class="speaker-modal-sessions-list">
+                                ${speakerSessions.map(session => `
+                                    <div class="speaker-modal-session-item" data-session-id="${session.id}">
+                                        <div class="speaker-modal-session-time">${session.time}</div>
+                                        <div class="speaker-modal-session-title">${session.title}</div>
+                                        <div class="speaker-modal-session-details">
+                                            <span class="speaker-modal-session-day">${session.day.charAt(0).toUpperCase() + session.day.slice(1)}</span>
+                                            <span class="speaker-modal-session-room">${session.room}</span>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Add click handlers to session items
+            addSpeakerModalSessionListeners();
+            
+            // Focus management
+            const firstFocusable = modal.querySelector('button');
+            if (firstFocusable) {
+                firstFocusable.focus();
+            }
+        }
+
+        function addSpeakerModalSessionListeners() {
+            document.querySelectorAll('.speaker-modal-session-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const sessionId = item.dataset.sessionId;
+                    // Close speaker modal first
+                    document.getElementById('speaker-modal').classList.remove('active');
+                    document.body.style.overflow = '';
+                    // Open session modal
+                    setTimeout(() => openSessionModal(sessionId), 100);
+                });
+            });
+        }
+
+        // Hash Change Handler
+        function handleHashChange() {
+            const hash = window.location.hash.slice(1) || 'program';
+            navigateToSection(hash);
+        }
+
+        // Initialization
+        function init() {
+            // Load data
+            allSessions = [...sessionsData];
+            filteredSessions = [...allSessions];
+            
+            // Load saved state
+            loadBookmarks();
+            
+            // Set up event listeners
+            addFilterEventListeners();
+            addNavigationEventListeners();
+            addModalEventListeners();
+            
+            // Handle initial route
+            const lastView = loadLastView();
+            const hash = window.location.hash.slice(1) || lastView;
+            navigateToSection(hash);
+            
+            // Handle hash changes
+            window.addEventListener('hashchange', handleHashChange);
+            
+            // Initial render
+            renderSessions();
+        }
+
+        // Start the app
+        init();
+
+        // Enhanced Features
+        class EnhancedFeatures {
+            constructor() {
+                this.deferredPrompt = null;
+                this.visitCount = this.getVisitCount();
+                this.init();
+            }
+
+            init() {
+                this.setupHapticFeedback();
+                this.setupGalaSparkle();
+                this.setupOfflineDetection();
+                this.setupPWAInstall();
+            }
+
+
+            // Haptic Feedback
+            setupHapticFeedback() {
+                document.addEventListener('click', (e) => {
+                    if (e.target.matches('.bookmark-btn, .nav-item, .session-card, .sponsor-btn, .venue-btn, .nearby-link')) {
+                        e.target.classList.add('haptic-pop');
+                        setTimeout(() => {
+                            e.target.classList.remove('haptic-pop');
+                        }, 100);
+                    }
+                });
+            }
+
+            // Gala Sparkle Background
+            setupGalaSparkle() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.target.classList.contains('gala-sparkle')) {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add('visible');
+                            } else {
+                                entry.target.classList.remove('visible');
+                            }
+                        }
+                    });
+                });
+
+                // Look for Gala sessions and add sparkle effect
+                setTimeout(() => {
+                    document.querySelectorAll('.session-card').forEach(card => {
+                        const title = card.querySelector('.session-title')?.textContent.toLowerCase();
+                        if (title && (title.includes('gala') || title.includes('awards') || title.includes('closing'))) {
+                            card.classList.add('gala-sparkle');
+                            observer.observe(card);
+                        }
+                    });
+                }, 1000);
+            }
+
+            // Offline Detection
+            setupOfflineDetection() {
+                const offlineBanner = document.getElementById('offline-banner');
+                
+                const updateOnlineStatus = () => {
+                    if (navigator.onLine) {
+                        offlineBanner.classList.remove('show');
+                    } else {
+                        offlineBanner.classList.add('show');
+                    }
+                };
+
+                window.addEventListener('online', updateOnlineStatus);
+                window.addEventListener('offline', updateOnlineStatus);
+                updateOnlineStatus();
+            }
+
+            // PWA Install Prompt
+            setupPWAInstall() {
+                const installPrompt = document.getElementById('install-prompt');
+                const installBtn = document.getElementById('install-btn');
+                const dismissBtn = document.getElementById('install-dismiss');
+
+                // Check if already installed
+                if (window.matchMedia('(display-mode: standalone)').matches) {
+                    return;
+                }
+
+                // Show prompt for repeat visitors
+                if (this.visitCount >= 2) {
+                    setTimeout(() => {
+                        installPrompt.classList.add('show');
+                    }, 3000);
+                }
+
+                // Listen for beforeinstallprompt
+                window.addEventListener('beforeinstallprompt', (e) => {
+                    e.preventDefault();
+                    this.deferredPrompt = e;
+                });
+
+                installBtn.addEventListener('click', async () => {
+                    if (this.deferredPrompt) {
+                        this.deferredPrompt.prompt();
+                        const { outcome } = await this.deferredPrompt.userChoice;
+                        if (outcome === 'accepted') {
+                            this.setInstallPromptDismissed();
+                        }
+                        this.deferredPrompt = null;
+                    }
+                    installPrompt.classList.remove('show');
+                });
+
+                dismissBtn.addEventListener('click', () => {
+                    installPrompt.classList.remove('show');
+                    this.setInstallPromptDismissed();
+                });
+            }
+
+            getVisitCount() {
+                return parseInt(localStorage.getItem('mic2025_visit_count') || '0');
+            }
+
+            incrementVisitCount() {
+                const count = this.getVisitCount() + 1;
+                localStorage.setItem('mic2025_visit_count', count.toString());
+                return count;
+            }
+
+            setInstallPromptDismissed() {
+                localStorage.setItem('mic2025_install_dismissed', 'true');
+            }
+
+            isInstallPromptDismissed() {
+                return localStorage.getItem('mic2025_install_dismissed') === 'true';
+            }
+        }
+
+        // Initialize enhanced features
+        new EnhancedFeatures();
+
+        // Gallery Functionality with Firebase and Google Drive Support
+        class GalleryManager {
+            constructor() {
+                this.galleryData = [];
+                this.backendType = this.detectBackendType();
+                this.init();
+            }
+
+            detectBackendType() {
+                // Check if GitHub Pages is configured
+                if (GITHUB_CONFIG.REPO !== "your-username/mic2025-gallery") {
+                    console.log('Using GitHub Pages backend');
+                    return 'github';
+                }
+                
+                // Check if local JSON file exists
+                if (JSON_CONFIG.DATA_URL && JSON_CONFIG.DATA_URL !== "./gallery-data.json") {
+                    console.log('Using local JSON file backend');
+                    return 'json';
+                }
+                
+                // Check if Google Drive is properly configured
+                if (GOOGLE_DRIVE_CONFIG.API_KEY !== "your-google-drive-api-key") {
+                    console.log('Using Google Drive backend');
+                    return 'googleDrive';
+                }
+                
+                // Check if Firebase is properly configured
+                if (firebaseConfig.apiKey !== "demo-api-key") {
+                    console.log('Using Firebase backend');
+                    return 'firebase';
+                }
+                
+                console.log('Using demo mode for testing');
+                return 'demo';
+            }
+
+            async init() {
+                this.setupFormSubmission();
+                await this.loadGalleryData();
+            }
+
+            async loadGalleryData() {
+                try {
+                    if (this.backendType === 'json') {
+                        // Load from JSON file localStorage simulation
+                        this.galleryData = this.loadDemoData('mic2025_gallery_json');
+                    } else if (this.backendType === 'github') {
+                        // Load from GitHub localStorage simulation
+                        this.galleryData = this.loadDemoData('mic2025_gallery_github');
+                    } else if (this.backendType === 'googleDrive') {
+                        // Load from Google Drive localStorage simulation
+                        this.galleryData = this.loadDemoData('mic2025_gallery_googledrive');
+                    } else if (this.backendType === 'firebase') {
+                        await this.setupRealtimeListener();
+                        return; // setupRealtimeListener handles rendering
+                    } else {
+                        // Demo mode
+                        this.setupDemoMode();
+                        return;
+                    }
+                    
+                    this.renderGallery();
+                } catch (error) {
+                    console.error('Error loading gallery data:', error);
+                    this.renderErrorState();
+                }
+            }
+
+            setupFormSubmission() {
+                const form = document.getElementById('gallery-form');
+                if (form) {
+                    form.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        this.handleSubmission(e);
+                    });
+                }
+            }
+
+            async handleSubmission(e) {
+                const submitBtn = document.querySelector('.submit-btn');
+                const originalText = submitBtn.textContent;
+                
+                try {
+                    console.log('Starting submission...');
+                    console.log('Backend type:', this.backendType);
+                    submitBtn.textContent = 'Submitting...';
+                    submitBtn.disabled = true;
+
+                    const formData = new FormData(e.target);
+                    const name = formData.get('name');
+                    const message = formData.get('message');
+                    const imageFile = formData.get('image');
+
+                    const galleryItem = {
+                        name: name,
+                        message: message,
+                        imageUrl: null,
+                        timestamp: window.firebase.serverTimestamp(),
+                        date: new Date().toLocaleDateString()
+                    };
+
+                    // Handle image upload based on backend type
+                    if (imageFile && imageFile.size > 0) {
+                        console.log('Processing image file:', imageFile.name, imageFile.size);
+                        if (this.backendType === 'googleDrive') {
+                            console.log('Uploading to Google Drive...');
+                            const imageUrl = await this.uploadToGoogleDrive(imageFile);
+                            galleryItem.imageUrl = imageUrl;
+                        } else if (this.backendType === 'firebase') {
+                            console.log('Uploading to Firebase...');
+                            const imageUrl = await this.uploadImage(imageFile);
+                            galleryItem.imageUrl = imageUrl;
+                        } else {
+                            // Demo mode - convert to base64
+                            console.log('Converting to base64 (demo mode)...');
+                            const imageUrl = await this.convertToBase64(imageFile);
+                            galleryItem.imageUrl = imageUrl;
+                        }
+                    }
+
+                    // Add to database based on backend type
+                    console.log('Saving gallery item...');
+                    if (this.backendType === 'json') {
+                        console.log('Saving to JSON file...');
+                        await this.addToJsonFile(galleryItem);
+                    } else if (this.backendType === 'github') {
+                        console.log('Saving to GitHub...');
+                        await this.addToGitHub(galleryItem);
+                    } else if (this.backendType === 'googleDrive') {
+                        console.log('Saving to Google Drive...');
+                        await this.addToGoogleDrive(galleryItem);
+                    } else if (this.backendType === 'firebase') {
+                        console.log('Saving to Firebase...');
+                        await this.addGalleryItem(galleryItem);
+                    } else {
+                        // Demo mode - save to localStorage
+                        console.log('Saving to localStorage (demo mode)...');
+                        this.addGalleryItemDemo(galleryItem);
+                    }
+                    console.log('Gallery item saved successfully');
+                    this.resetForm();
+                    this.showSuccessMessage();
+
+                } catch (error) {
+                    console.error('Error submitting gallery item:', error);
+                    this.showErrorMessage();
+                } finally {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }
+            }
+
+            async uploadImage(imageFile) {
+                try {
+                    // Create a unique filename
+                    const timestamp = Date.now();
+                    const filename = `gallery/${timestamp}_${imageFile.name}`;
+                    
+                    // Upload to Firebase Storage
+                    const storageRef = window.firebase.ref(window.firebase.storage, filename);
+                    const snapshot = await window.firebase.uploadBytes(storageRef, imageFile);
+                    
+                    // Get download URL
+                    const downloadURL = await window.firebase.getDownloadURL(snapshot.ref);
+                    return downloadURL;
+                } catch (error) {
+                    console.error('Error uploading image:', error);
+                    throw error;
+                }
+            }
+
+            async addGalleryItem(item) {
+                try {
+                    const docRef = await window.firebase.addDoc(
+                        window.firebase.collection(window.firebase.db, 'gallery'),
+                        item
+                    );
+                    console.log('Document written with ID: ', docRef.id);
+                } catch (error) {
+                    console.error('Error adding document: ', error);
+                    throw error;
+                }
+            }
+
+            async setupRealtimeListener() {
+                try {
+                    // Check if Firebase is available
+                    if (!window.firebase || !window.firebase.db) {
+                        console.log('Firebase not available, using demo mode');
+                        this.setupDemoMode();
+                        return;
+                    }
+
+                    const galleryCollection = window.firebase.collection(window.firebase.db, 'gallery');
+                    const q = window.firebase.query(galleryCollection, window.firebase.orderBy('timestamp', 'desc'));
+
+                    window.firebase.onSnapshot(q, (snapshot) => {
+                        this.galleryData = [];
+                        snapshot.forEach((doc) => {
+                            const data = doc.data();
+                            this.galleryData.push({
+                                id: doc.id,
+                                ...data,
+                                date: data.timestamp ? new Date(data.timestamp.toDate()).toLocaleDateString() : data.date
+                            });
+                        });
+                        this.renderGallery();
+                    }, (error) => {
+                        console.error('Error setting up realtime listener:', error);
+                        this.setupDemoMode();
+                    });
+                } catch (error) {
+                    console.error('Error connecting to Firebase:', error);
+                    this.setupDemoMode();
+                }
+            }
+
+            setupDemoMode() {
+                // Load demo data from localStorage
+                this.galleryData = this.loadDemoData();
+                this.renderGallery();
+                
+                // Update the notice to show demo mode
+                const notice = document.querySelector('.gallery-notice p');
+                if (notice) {
+                    notice.innerHTML = '<strong>Demo Mode:</strong> Using local storage. Set up Firebase for real-time sharing!';
+                }
+            }
+
+            loadDemoData() {
+                try {
+                    const data = localStorage.getItem('mic2025_gallery_demo');
+                    return data ? JSON.parse(data) : [];
+                } catch (e) {
+                    return [];
+                }
+            }
+
+            saveDemoData() {
+                localStorage.setItem('mic2025_gallery_demo', JSON.stringify(this.galleryData));
+            }
+
+            async convertToBase64(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            addGalleryItemDemo(item) {
+                const demoItem = {
+                    id: Date.now().toString(),
+                    ...item,
+                    timestamp: Date.now()
+                };
+                this.galleryData.unshift(demoItem);
+                this.saveDemoData();
+                this.renderGallery();
+            }
+
+            // JSON File Functions (Free & Open Source)
+            async addToJsonFile(item) {
+                try {
+                    const jsonItem = {
+                        id: Date.now().toString(),
+                        ...item,
+                        timestamp: Date.now()
+                    };
+                    
+                    // Add to local data
+                    this.galleryData.unshift(jsonItem);
+                    
+                    // Save to localStorage as backup
+                    this.saveDemoData('mic2025_gallery_json');
+                    
+                    // In a real implementation, you would save to a server
+                    // For now, we'll use localStorage and show instructions
+                    console.log('JSON file backend: Using localStorage fallback');
+                    console.log('To implement real JSON file saving, you need a server endpoint');
+                    
+                    this.renderGallery();
+                    
+                } catch (error) {
+                    console.error('Error saving to JSON file:', error);
+                    throw error;
+                }
+            }
+
+            async addToGitHub(item) {
+                try {
+                    const githubItem = {
+                        id: Date.now().toString(),
+                        ...item,
+                        timestamp: Date.now()
+                    };
+                    
+                    // Add to local data
+                    this.galleryData.unshift(githubItem);
+                    
+                    // Save to localStorage as backup
+                    this.saveDemoData('mic2025_gallery_github');
+                    
+                    // In a real implementation, you would use GitHub API
+                    // For now, we'll use localStorage and show instructions
+                    console.log('GitHub backend: Using localStorage fallback');
+                    console.log('To implement real GitHub saving, you need GitHub API integration');
+                    
+                    this.renderGallery();
+                    
+                } catch (error) {
+                    console.error('Error saving to GitHub:', error);
+                    throw error;
+                }
+            }
+
+            // Google Drive Functions (Simplified - No OAuth Required)
+            async uploadToGoogleDrive(file) {
+                try {
+                    // For this simplified implementation, we'll use base64 and store in localStorage
+                    // In a real implementation, you would need to set up Google Drive API with proper authentication
+                    console.log('Google Drive upload not fully implemented. Using base64 fallback.');
+                    const base64Url = await this.convertToBase64(file);
+                    return base64Url;
+                } catch (error) {
+                    console.error('Error with Google Drive upload:', error);
+                    // Fallback to base64
+                    return await this.convertToBase64(file);
+                }
+            }
+
+            async getGoogleDriveToken() {
+                // This would need to be implemented with proper OAuth 2.0 flow
+                // For now, we'll throw an error to indicate it's not implemented
+                throw new Error('Google Drive OAuth not implemented. Please use Firebase or demo mode.');
+            }
+
+            createMultipartBody(metadata, base64Content, mimeType) {
+                const boundary = 'foo_bar_baz';
+                const delimiter = `\r\n--${boundary}\r\n`;
+                const close_delim = `\r\n--${boundary}--`;
+                
+                const body = 
+                    delimiter +
+                    'Content-Type: application/json\r\n\r\n' +
+                    JSON.stringify(metadata) +
+                    delimiter +
+                    `Content-Type: ${mimeType}\r\n` +
+                    'Content-Transfer-Encoding: base64\r\n\r\n' +
+                    base64Content +
+                    close_delim;
+                
+                return body;
+            }
+
+            async makeFilePublic(fileId) {
+                const response = await fetch(
+                    `https://www.googleapis.com/drive/v3/files/${fileId}/permissions?key=${window.googleDrive.apiKey}`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${await this.getGoogleDriveToken()}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            role: 'reader',
+                            type: 'anyone'
+                        })
+                    }
+                );
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to make file public: ${response.statusText}`);
+                }
+            }
+
+            async addToGoogleDrive(item) {
+                // For Google Drive, we'll store the metadata in a JSON file in the same folder
+                try {
+                    const metadataFile = {
+                        name: `gallery_metadata_${Date.now()}.json`,
+                        parents: [window.googleDrive.folderId]
+                    };
+                    
+                    const metadata = {
+                        name: item.name,
+                        message: item.message,
+                        imageUrl: item.imageUrl,
+                        timestamp: Date.now(),
+                        date: item.date
+                    };
+                    
+                    const response = await fetch(
+                        `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&key=${window.googleDrive.apiKey}`,
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${await this.getGoogleDriveToken()}`,
+                                'Content-Type': 'multipart/related; boundary="foo_bar_baz"'
+                            },
+                            body: this.createMultipartBody(metadataFile, btoa(JSON.stringify(metadata)), 'application/json')
+                        }
+                    );
+                    
+                    if (!response.ok) {
+                        throw new Error(`Failed to save metadata: ${response.statusText}`);
+                    }
+                    
+                    // Refresh gallery data
+                    await this.loadGalleryData();
+                    
+                } catch (error) {
+                    console.error('Error adding to Google Drive:', error);
+                    throw error;
+                }
+            }
+
+            resetForm() {
+                const form = document.getElementById('gallery-form');
+                if (form) {
+                    form.reset();
+                }
+            }
+
+            showSuccessMessage() {
+                const submitBtn = document.querySelector('.submit-btn');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Submitted! ✓';
+                submitBtn.style.background = '#10b981';
+                
+                setTimeout(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.style.background = '';
+                }, 2000);
+            }
+
+            showErrorMessage() {
+                const submitBtn = document.querySelector('.submit-btn');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Error - Try Again';
+                submitBtn.style.background = '#ef4444';
+                
+                setTimeout(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.style.background = '';
+                }, 3000);
+            }
+
+            renderGallery() {
+                const galleryGrid = document.getElementById('gallery-grid');
+                if (!galleryGrid) return;
+
+                if (this.galleryData.length === 0) {
+                    galleryGrid.innerHTML = `
+                        <div class="empty-gallery">
+                            <div style="text-align: center; padding: 3rem; color: var(--gray-500);">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">📸</div>
+                                <h3>No submissions yet</h3>
+                                <p>Be the first to share your MIC2025 experience!</p>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                galleryGrid.innerHTML = this.galleryData.map(item => `
+                    <div class="gallery-item ${!item.imageUrl ? 'gallery-item-text-only' : ''}">
+                        ${item.imageUrl ? `
+                            <img src="${item.imageUrl}" alt="Gallery image" class="gallery-item-image">
+                        ` : ''}
+                        <div class="gallery-item-content">
+                            <div class="gallery-item-name">${this.escapeHtml(item.name)}</div>
+                            <div class="gallery-item-message">${this.escapeHtml(item.message)}</div>
+                            <div class="gallery-item-date">${item.date}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            renderErrorState() {
+                const galleryGrid = document.getElementById('gallery-grid');
+                if (!galleryGrid) return;
+
+                galleryGrid.innerHTML = `
+                    <div class="empty-gallery">
+                        <div style="text-align: center; padding: 3rem; color: var(--gray-500);">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+                            <h3>Unable to load gallery</h3>
+                            <p>Please check your internet connection and try refreshing the page.</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+        }
+
+        // Initialize gallery when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add a delay to ensure Firebase is loaded
+            setTimeout(() => {
+                new GalleryManager();
+            }, 1000);
+        });
+
+        // Increment visit count
+        const visitCount = parseInt(localStorage.getItem('mic2025_visit_count') || '0') + 1;
+        localStorage.setItem('mic2025_visit_count', visitCount.toString());
+    </script>
+</body>
+</html>
