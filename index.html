@@ -1946,7 +1946,7 @@
     <!-- Navigation -->
     <nav class="nav" role="navigation" aria-label="Main navigation">
         <a href="#program" class="nav-item active" data-section="program">Program</a>
-        <a href="#agenda" class="nav-item" data-section="agenda">My Agenda</a>
+        <a href="#agenda" class="nav-item" data-section="agenda">My Schedule</a>
         <a href="#speakers" class="nav-item" data-section="speakers">Speakers</a>
         <a href="#venue" class="nav-item" data-section="venue">Venue</a>
         <a href="#about" class="nav-item" data-section="about">About</a>
@@ -2098,7 +2098,8 @@
 
         <!-- My Agenda Section -->
         <section id="agenda" class="section" role="region" aria-labelledby="agenda-heading">
-            <h2 id="agenda-heading">My Agenda</h2>
+            <h2 id="agenda-heading">My Schedule</h2>
+            
             <div class="sessions-grid" id="agenda-container">
                 <!-- Bookmarked sessions will be populated by JavaScript -->
             </div>
@@ -2540,7 +2541,7 @@
                 <!-- Modal content will be populated by JavaScript -->
             </div>
             <div class="modal-actions">
-                <button class="modal-btn modal-btn-primary" id="modal-bookmark-btn">Add to My Agenda</button>
+                <button class="modal-btn modal-btn-primary" id="modal-bookmark-btn">Add to My Schedule</button>
                 <button class="modal-btn modal-btn-secondary" id="modal-close-btn">Close</button>
             </div>
         </div>
@@ -2554,7 +2555,7 @@
         </a>
         <a href="#agenda" class="bottom-nav-item" data-section="agenda">
             <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/9.png" alt="Agenda" class="bottom-nav-icon">
-            <span>Agenda</span>
+            <span>Schedule</span>
         </a>
         <a href="#speakers" class="bottom-nav-item" data-section="speakers">
             <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/10.png" alt="Speakers" class="bottom-nav-icon">
@@ -3398,7 +3399,7 @@
                                         <span class="session-time">${session.time}</span>
                                         <button class="bookmark-btn ${bookmarkedSessions.has(session.id) ? 'bookmarked' : ''}" 
                                                 data-session-id="${session.id}" 
-                                                aria-label="${bookmarkedSessions.has(session.id) ? 'Remove from' : 'Add to'} My Agenda">
+                                                aria-label="${bookmarkedSessions.has(session.id) ? 'Remove from' : 'Add to'} My Schedule">
                                             ${bookmarkedSessions.has(session.id) ? '★' : '☆'}
                                         </button>
                                     </div>
@@ -3508,7 +3509,7 @@
                                         <span class="session-time">${session.time}</span>
                                         <button class="bookmark-btn bookmarked" 
                                                 data-session-id="${session.id}" 
-                                                aria-label="Remove from My Agenda">
+                                                aria-label="Remove from My Schedule">
                                             ★
                                         </button>
                                     </div>
@@ -3804,7 +3805,7 @@
                 
                 btn.classList.toggle('bookmarked', isBookmarked);
                 btn.innerHTML = isBookmarked ? '★' : '☆';
-                btn.setAttribute('aria-label', `${isBookmarked ? 'Remove from' : 'Add to'} My Agenda`);
+                btn.setAttribute('aria-label', `${isBookmarked ? 'Remove from' : 'Add to'} My Schedule`);
             });
         }
 
@@ -3900,7 +3901,7 @@
             if (!bookmarkBtn || !currentSession) return;
 
             const isBookmarked = bookmarkedSessions.has(currentSession.id);
-            bookmarkBtn.textContent = isBookmarked ? 'Remove from My Agenda' : 'Add to My Agenda';
+            bookmarkBtn.textContent = isBookmarked ? 'Remove from My Schedule' : 'Add to My Schedule';
         }
 
         // Speaker Modal Functions
