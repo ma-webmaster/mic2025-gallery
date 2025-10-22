@@ -1273,6 +1273,74 @@
             font-size: 0.875rem;
         }
 
+        /* Social Links */
+        .social-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            color: var(--gray-700);
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .social-link:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--purple);
+        }
+
+        .social-link.facebook:hover {
+            border-color: #1877f2;
+            color: #1877f2;
+        }
+
+        .social-link.instagram:hover {
+            border-color: #e4405f;
+            color: #e4405f;
+        }
+
+        .social-link.linkedin:hover {
+            border-color: #0077b5;
+            color: #0077b5;
+        }
+
+        .social-link.pinterest:hover {
+            border-color: #bd081c;
+            color: #bd081c;
+        }
+
+        .social-link.tiktok:hover {
+            border-color: #000000;
+            color: #000000;
+        }
+
+        .social-link.whatsapp:hover {
+            border-color: #25d366;
+            color: #25d366;
+        }
+
+        .social-link.youtube:hover {
+            border-color: #ff0000;
+            color: #ff0000;
+        }
+
+        .social-icon {
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
         /* Gallery Section */
         .section-subtitle {
             text-align: center;
@@ -1773,7 +1841,6 @@
         <a href="#venue" class="nav-item" data-section="venue">Venue</a>
         <a href="#about" class="nav-item" data-section="about">About</a>
         <a href="#sponsors" class="nav-item" data-section="sponsors">Sponsors</a>
-        <a href="#gallery" class="nav-item" data-section="gallery">Gallery</a>
     </nav>
 
     <!-- Main Content -->
@@ -1941,7 +2008,7 @@
 
             <div class="venue-map">
                 <iframe 
-                    src="https://www.openstreetmap.org/export/embed.html?bbox=151.1517662,-33.9621065,151.1557662,-33.9581065&layer=mapnik&marker=-33.9610,151.1545&marker=-33.9615,151.1548&marker=-33.9612,151.1550&marker=-33.9608,151.1542"
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=151.1517662,-33.9621065,151.1557662,-33.9581065&layer=mapnik&marker=-33.9610,151.1545&marker=-33.9615,151.1548&marker=-33.9612,151.1550&marker=-33.9608,151.1542&zoom=17"
                     width="100%"
                     height="300"
                     frameborder="0"
@@ -1952,7 +2019,7 @@
                 ></iframe>
                 <br>
                 <small>
-                    <a href="https://www.openstreetmap.org/?mlat=-33.9610&mlon=151.1545&zoom=16&layers=M" target="_blank" rel="noopener">View Larger Map</a>
+                    <a href="https://www.openstreetmap.org/?mlat=-33.9610&mlon=151.1545&zoom=17&layers=M" target="_blank" rel="noopener">View Larger Map</a>
                 </small>
             </div>
 
@@ -2061,6 +2128,42 @@
                             <p>Celebrating Montessorians across the Asia-Pacific region</p>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Follow Us -->
+            <div class="about-section">
+                <h3>Follow Us</h3>
+                <p>Stay connected with Montessori Australia and get the latest updates on MIC2025 and future events.</p>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/montessoriaustralia/" target="_blank" rel="noopener noreferrer" class="social-link facebook" data-analytics="social_facebook">
+                        <span class="social-icon">📘</span>
+                        <span>Facebook</span>
+                    </a>
+                    <a href="https://www.instagram.com/montessori_australia/" target="_blank" rel="noopener noreferrer" class="social-link instagram" data-analytics="social_instagram">
+                        <span class="social-icon">📷</span>
+                        <span>Instagram</span>
+                    </a>
+                    <a href="https://www.linkedin.com/company/79570266/admin/" target="_blank" rel="noopener noreferrer" class="social-link linkedin" data-analytics="social_linkedin">
+                        <span class="social-icon">💼</span>
+                        <span>LinkedIn</span>
+                    </a>
+                    <a href="https://www.pinterest.com/montessoriaustralia" target="_blank" rel="noopener noreferrer" class="social-link pinterest" data-analytics="social_pinterest">
+                        <span class="social-icon">📌</span>
+                        <span>Pinterest</span>
+                    </a>
+                    <a href="https://www.tiktok.com/@montessoriaustralia" target="_blank" rel="noopener noreferrer" class="social-link tiktok" data-analytics="social_tiktok">
+                        <span class="social-icon">🎵</span>
+                        <span>TikTok</span>
+                    </a>
+                    <a href="https://chat.whatsapp.com/EymLrzOkHRuDvPOrDHLLIe" target="_blank" rel="noopener noreferrer" class="social-link whatsapp" data-analytics="social_whatsapp">
+                        <span class="social-icon">💬</span>
+                        <span>WhatsApp</span>
+                    </a>
+                    <a href="https://www.youtube.com/channel/UCnhCOn_QZ7oQY-4Ur7oQPvg" target="_blank" rel="noopener noreferrer" class="social-link youtube" data-analytics="social_youtube">
+                        <span class="social-icon">📺</span>
+                        <span>YouTube</span>
+                    </a>
                 </div>
             </div>
         </section>
@@ -2264,78 +2367,6 @@
                             <a href="https://montessorisports.org" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Gallery Section -->
-        <section id="gallery" class="section" role="region" aria-labelledby="gallery-heading">
-            <div class="container">
-                <h2 id="gallery-heading" class="section-heading">MIC2025 Gallery</h2>
-                <p class="section-subtitle">Share your memories and moments from the convention</p>
-                
-                <div class="gallery-notice">
-                    <p><strong>Live Gallery:</strong> Your submissions will be visible to all convention attendees!</p>
-                    <details style="margin-top: 1rem; text-align: left;">
-                        <summary style="cursor: pointer; font-weight: 500;">Setup Instructions</summary>
-                        <div style="margin-top: 1rem; padding: 1rem; background: var(--gray-100); border-radius: var(--radius-md); font-size: 0.875rem;">
-                            <p><strong>Free & Open Source Options:</strong></p>
-                            
-                            <h4 style="margin: 1rem 0 0.5rem 0; color: var(--green);">Option 1: GitHub Pages (Recommended)</h4>
-                            <ol style="margin: 0.5rem 0; padding-left: 1.5rem;">
-                                <li>Create a GitHub repository for your gallery</li>
-                                <li>Enable GitHub Pages in repository settings</li>
-                                <li>Create a gallery-data.json file in the repository</li>
-                                <li>Update the GitHub configuration in the code</li>
-                                <li>Free hosting + free storage + version control!</li>
-                            </ol>
-
-                            <h4 style="margin: 1rem 0 0.5rem 0; color: var(--blue);">Option 2: Local JSON File</h4>
-                            <ol style="margin: 0.5rem 0; padding-left: 1.5rem;">
-                                <li>Create a gallery-data.json file in your project</li>
-                                <li>Host on any free web server (GitHub Pages, Netlify, etc.)</li>
-                                <li>No external dependencies - pure HTML/CSS/JS</li>
-                                <li>Perfect for small galleries</li>
-                            </ol>
-
-                            <h4 style="margin: 1rem 0 0.5rem 0; color: var(--purple);">Option 3: Local Storage (Demo)</h4>
-                            <ol style="margin: 0.5rem 0; padding-left: 1.5rem;">
-                                <li>Works immediately - no setup required</li>
-                                <li>Stores data locally in each user's browser</li>
-                                <li>Perfect for testing and demos</li>
-                                <li>No cross-user sharing (demo only)</li>
-                            </ol>
-                        </div>
-                    </details>
-                </div>
-                
-                <!-- Submission Form -->
-                <div class="gallery-submission">
-                    <h3>Share Your Experience</h3>
-                    <form id="gallery-form" class="gallery-form">
-                        <div class="form-group">
-                            <label for="gallery-name">Your Name</label>
-                            <input type="text" id="gallery-name" name="name" placeholder="Enter your name" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="gallery-message">Message/Testimonial</label>
-                            <textarea id="gallery-message" name="message" placeholder="Share your thoughts about the convention..." rows="3"></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="gallery-image">Photo (optional)</label>
-                            <input type="file" id="gallery-image" name="image" accept="image/*">
-                            <small>Upload a photo from the convention</small>
-                        </div>
-                        
-                        <button type="button" class="submit-btn" onclick="return false;">Submit to Gallery</button>
-                    </form>
-                </div>
-
-                <!-- Gallery Display -->
-                <div class="gallery-grid" id="gallery-grid">
-                    <!-- Gallery items will be dynamically added here -->
                 </div>
             </div>
         </section>
@@ -4477,6 +4508,194 @@
         // Increment visit count
         const visitCount = parseInt(localStorage.getItem('mic2025_visit_count') || '0') + 1;
         localStorage.setItem('mic2025_visit_count', visitCount.toString());
+
+        // Basic Analytics System
+        class Analytics {
+            constructor() {
+                this.data = {
+                    pageViews: parseInt(localStorage.getItem('mic2025_page_views') || '0'),
+                    clicks: parseInt(localStorage.getItem('mic2025_clicks') || '0'),
+                    bookmarks: parseInt(localStorage.getItem('mic2025_bookmarks') || '0'),
+                    socialClicks: JSON.parse(localStorage.getItem('mic2025_social_clicks') || '{}'),
+                    sessionViews: parseInt(localStorage.getItem('mic2025_session_views') || '0'),
+                    speakerViews: parseInt(localStorage.getItem('mic2025_speaker_views') || '0'),
+                    searchQueries: JSON.parse(localStorage.getItem('mic2025_search_queries') || '[]'),
+                    filterUsage: JSON.parse(localStorage.getItem('mic2025_filter_usage') || '{}')
+                };
+                this.init();
+            }
+
+            init() {
+                this.trackPageView();
+                this.setupEventListeners();
+                this.logAnalytics();
+            }
+
+            trackPageView() {
+                this.data.pageViews++;
+                localStorage.setItem('mic2025_page_views', this.data.pageViews.toString());
+            }
+
+            trackClick(element, action) {
+                this.data.clicks++;
+                localStorage.setItem('mic2025_clicks', this.data.clicks.toString());
+                console.log(`Analytics: Click tracked - ${action}`, element);
+            }
+
+            trackBookmark(sessionId, action) {
+                this.data.bookmarks++;
+                localStorage.setItem('mic2025_bookmarks', this.data.bookmarks.toString());
+                console.log(`Analytics: Bookmark ${action} - Session: ${sessionId}`);
+            }
+
+            trackSocialClick(platform) {
+                this.data.socialClicks[platform] = (this.data.socialClicks[platform] || 0) + 1;
+                localStorage.setItem('mic2025_social_clicks', JSON.stringify(this.data.socialClicks));
+                console.log(`Analytics: Social click - ${platform}`);
+            }
+
+            trackSessionView(sessionId) {
+                this.data.sessionViews++;
+                localStorage.setItem('mic2025_session_views', this.data.sessionViews.toString());
+                console.log(`Analytics: Session viewed - ${sessionId}`);
+            }
+
+            trackSpeakerView(speakerName) {
+                this.data.speakerViews++;
+                localStorage.setItem('mic2025_speaker_views', this.data.speakerViews.toString());
+                console.log(`Analytics: Speaker viewed - ${speakerName}`);
+            }
+
+            trackSearch(query) {
+                if (query && query.trim().length > 0) {
+                    this.data.searchQueries.push({
+                        query: query.trim(),
+                        timestamp: new Date().toISOString()
+                    });
+                    // Keep only last 50 searches
+                    if (this.data.searchQueries.length > 50) {
+                        this.data.searchQueries = this.data.searchQueries.slice(-50);
+                    }
+                    localStorage.setItem('mic2025_search_queries', JSON.stringify(this.data.searchQueries));
+                    console.log(`Analytics: Search - "${query}"`);
+                }
+            }
+
+            trackFilter(filterType, value) {
+                const key = `${filterType}_${value}`;
+                this.data.filterUsage[key] = (this.data.filterUsage[key] || 0) + 1;
+                localStorage.setItem('mic2025_filter_usage', JSON.stringify(this.data.filterUsage));
+                console.log(`Analytics: Filter used - ${filterType}: ${value}`);
+            }
+
+            setupEventListeners() {
+                // Track all clicks
+                document.addEventListener('click', (e) => {
+                    const element = e.target;
+                    
+                    // Social media clicks
+                    if (element.closest('.social-link')) {
+                        const platform = element.closest('.social-link').classList[1];
+                        this.trackSocialClick(platform);
+                        return;
+                    }
+
+                    // Bookmark clicks
+                    if (element.classList.contains('bookmark-btn')) {
+                        const sessionId = element.dataset.sessionId;
+                        const action = element.classList.contains('bookmarked') ? 'removed' : 'added';
+                        this.trackBookmark(sessionId, action);
+                        return;
+                    }
+
+                    // Session card clicks
+                    if (element.closest('.session-card')) {
+                        const sessionId = element.closest('.session-card').dataset.sessionId;
+                        this.trackSessionView(sessionId);
+                        return;
+                    }
+
+                    // Speaker card clicks
+                    if (element.closest('.speaker-card')) {
+                        const speakerName = element.closest('.speaker-card').querySelector('.speaker-name')?.textContent;
+                        if (speakerName) this.trackSpeakerView(speakerName);
+                        return;
+                    }
+
+                    // General click tracking
+                    this.trackClick(element, 'general');
+                });
+
+                // Track search queries
+                const searchInput = document.getElementById('search');
+                if (searchInput) {
+                    let searchTimeout;
+                    searchInput.addEventListener('input', (e) => {
+                        clearTimeout(searchTimeout);
+                        searchTimeout = setTimeout(() => {
+                            this.trackSearch(e.target.value);
+                        }, 1000); // Track after 1 second of no typing
+                    });
+                }
+
+                // Track filter usage
+                document.addEventListener('change', (e) => {
+                    if (e.target.classList.contains('filter-select')) {
+                        const filterType = e.target.id.replace('-filter', '');
+                        const value = e.target.value;
+                        if (value) {
+                            this.trackFilter(filterType, value);
+                        }
+                    }
+                });
+            }
+
+            logAnalytics() {
+                console.group('📊 MIC2025 Analytics Summary');
+                console.log(`📈 Page Views: ${this.data.pageViews}`);
+                console.log(`🖱️ Total Clicks: ${this.data.clicks}`);
+                console.log(`⭐ Bookmarks: ${this.data.bookmarks}`);
+                console.log(`👥 Session Views: ${this.data.sessionViews}`);
+                console.log(`🎤 Speaker Views: ${this.data.speakerViews}`);
+                console.log(`🔍 Search Queries: ${this.data.searchQueries.length}`);
+                console.log('📱 Social Clicks:', this.data.socialClicks);
+                console.log('🔧 Filter Usage:', this.data.filterUsage);
+                console.log('🔍 Recent Searches:', this.data.searchQueries.slice(-5));
+                console.groupEnd();
+            }
+
+            getAnalyticsData() {
+                return { ...this.data };
+            }
+
+            exportAnalytics() {
+                const data = {
+                    ...this.data,
+                    exportDate: new Date().toISOString(),
+                    userAgent: navigator.userAgent,
+                    screenResolution: `${screen.width}x${screen.height}`,
+                    language: navigator.language
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `mic2025_analytics_${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                console.log('📊 Analytics data exported');
+            }
+        }
+
+        // Initialize analytics
+        const analytics = new Analytics();
+
+        // Make analytics available globally for debugging
+        window.mic2025Analytics = analytics;
     </script>
 </body>
 </html>
