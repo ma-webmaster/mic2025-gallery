@@ -1296,7 +1296,21 @@
         }
 
         .modal-field {
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-speaker-image {
+            text-align: center;
             margin-bottom: 0.75rem;
+        }
+
+        .modal-speaker-image .speaker-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--gold);
+            box-shadow: var(--shadow-md);
         }
 
         .modal-field-label {
@@ -1305,7 +1319,7 @@
             color: var(--gray-600);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.2rem;
         }
 
         .modal-field-value {
@@ -1317,8 +1331,8 @@
             font-size: 0.875rem;
             color: var(--gray-600);
             line-height: 1.6;
-            margin-top: 1rem;
-            padding-top: 1rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
             border-top: 1px solid var(--gray-200);
         }
 
@@ -1524,8 +1538,8 @@
                     <label class="filter-label" for="theme-filter">Theme</label>
                     <select id="theme-filter" class="filter-select" aria-label="Filter by theme">
                         <option value="">All Themes</option>
-                        <option value="networking">Networking</option>
-                        <option value="opening">Opening</option>
+                        <option value="social">Social</option>
+                        <option value="ceremony">Ceremony</option>
                         <option value="technology">Technology</option>
                         <option value="sustainability">Sustainability</option>
                         <option value="personal-growth">Personal Growth</option>
@@ -1539,17 +1553,16 @@
                         <option value="early-childhood">Early Childhood</option>
                         <option value="materials">Materials</option>
                         <option value="awards">Awards</option>
-                        <option value="closing">Closing</option>
                     </select>
                 </div>
                 <div class="filter-group">
                     <label class="filter-label" for="room-filter">Room</label>
                     <select id="room-filter" class="filter-select" aria-label="Filter by room">
                         <option value="">All Rooms</option>
-                        <option value="main-hall">Main Hall</option>
-                        <option value="endeavour-room-1">Endeavour Room 1</option>
-                        <option value="endeavour-room-2">Endeavour Room 2</option>
-                        <option value="endeavour-room-3">Endeavour Room 3</option>
+                        <option value="Main Hall">Main Hall</option>
+                        <option value="Endeavour Room 1">Endeavour Room 1</option>
+                        <option value="Endeavour Room 2">Endeavour Room 2</option>
+                        <option value="Endeavour Room 3">Endeavour Room 3</option>
                     </select>
                 </div>
             </div>
@@ -2041,7 +2054,7 @@
                 title: 'Registration, Networking & Exhibitors',
                 presenter: 'Convention Staff',
                 room: 'Main Hall',
-                theme: 'networking',
+                theme: 'social',
                 description: 'Welcome to MIC2025! Registration, networking opportunities, and exhibitor displays.'
             },
             {
@@ -2051,7 +2064,7 @@
                 title: 'Convention Welcome',
                 presenter: 'Convention Staff',
                 room: 'Main Hall',
-                theme: 'opening',
+                theme: 'ceremony',
                 description: 'Official welcome to the Montessori International Convention 2025.'
             },
             {
@@ -2081,7 +2094,7 @@
                 title: 'Morning Tea, Networking & Exhibitors',
                 presenter: 'Convention Staff',
                 room: 'Main Hall',
-                theme: 'networking',
+                theme: 'social',
                 description: 'Morning tea break with networking opportunities and exhibitor displays.'
             },
             {
@@ -2111,7 +2124,7 @@
                 title: 'Lunch, Networking & Exhibitors',
                 presenter: 'Convention Staff',
                 room: 'Main Hall',
-                theme: 'networking',
+                theme: 'social',
                 description: 'Lunch break with networking opportunities and exhibitor displays.'
             },
             {
@@ -2151,7 +2164,7 @@
                 title: 'Afternoon Tea, Networking & Exhibitors',
                 presenter: 'Convention Staff',
                 room: 'Main Hall',
-                theme: 'networking',
+                theme: 'social',
                 description: 'Afternoon tea break with networking opportunities and exhibitor displays.'
             },
             {
@@ -2191,7 +2204,7 @@
                 title: 'Champagne and Canapés Welcome',
                 presenter: 'Convention Staff',
                 room: 'Main Hall',
-                theme: 'networking',
+                theme: 'social',
                 description: 'Join us for a welcome drink and canapés – the perfect opportunity to meet fellow delegates from around the globe. Connect, unwind, and share your passion for all things Montessori as we kick off the weekend together.'
             },
 
@@ -2203,7 +2216,7 @@
                 title: 'Arrival, Networking & Exhibitors',
                 presenter: 'Convention Staff',
                 room: 'Main Hall',
-                theme: 'networking',
+                theme: 'social',
                 description: 'Day 2 begins with arrival, networking opportunities, and exhibitor displays.'
             },
             {
@@ -2233,7 +2246,7 @@
                 title: 'Morning Tea, Networking & Exhibitors',
                 presenter: 'Convention Staff',
                 room: 'Main Hall',
-                theme: 'networking',
+                theme: 'social',
                 description: 'Morning tea break with networking opportunities and exhibitor displays.'
             },
             {
@@ -2263,7 +2276,7 @@
                 title: 'Lunch, Networking & Exhibitors',
                 presenter: 'Convention Staff',
                 room: 'Main Hall',
-                theme: 'networking',
+                theme: 'social',
                 description: 'Lunch break with networking opportunities and exhibitor displays.'
             },
             {
@@ -2333,7 +2346,7 @@
                 title: 'Afternoon Tea, Networking & Exhibitors',
                 presenter: 'Convention Staff',
                 room: 'Main Hall',
-                theme: 'networking',
+                theme: 'social',
                 description: 'Afternoon tea break with networking opportunities and exhibitor displays.'
             },
             {
@@ -2375,7 +2388,7 @@
                 title: 'Arrival, Networking & Exhibitors',
                 presenter: 'Convention Staff',
                 room: 'Main Hall',
-                theme: 'networking',
+                theme: 'social',
                 description: 'Day 3 begins with arrival, networking opportunities, and exhibitor displays.'
             },
             {
@@ -2405,7 +2418,7 @@
                 title: 'Morning Tea, Networking & Exhibitors',
                 presenter: 'Convention Staff',
                 room: 'Main Hall',
-                theme: 'networking',
+                theme: 'social',
                 description: 'Morning tea break with networking opportunities and exhibitor displays.'
             },
             {
@@ -2435,7 +2448,7 @@
                 title: 'Lunch, Networking & Exhibitors',
                 presenter: 'Convention Staff',
                 room: 'Main Hall',
-                theme: 'networking',
+                theme: 'social',
                 description: 'Lunch break with networking opportunities and exhibitor displays.'
             },
             {
@@ -2465,7 +2478,7 @@
                 title: 'Conference Close',
                 presenter: 'Convention Staff',
                 room: 'Main Hall',
-                theme: 'closing',
+                theme: 'ceremony',
                 description: 'Official closing of the Montessori International Convention 2025.'
             }
         ];
@@ -2989,7 +3002,7 @@
         function addModalEventListeners() {
             const modal = document.getElementById('session-modal');
             const speakerModal = document.getElementById('speaker-modal');
-            const closeBtn = document.querySelector('.modal-close');
+            const sessionCloseBtn = modal.querySelector('.modal-close');
             const closeBtnSecondary = document.getElementById('modal-close-btn');
             const bookmarkBtn = document.getElementById('modal-bookmark-btn');
             const speakerCloseBtn = document.getElementById('speaker-modal-close-btn');
@@ -3007,16 +3020,20 @@
                 document.body.style.overflow = '';
             }
 
-            closeBtn?.addEventListener('click', (e) => {
-                if (modal.classList.contains('active')) {
-                    closeSessionModal();
-                } else if (speakerModal.classList.contains('active')) {
-                    closeSpeakerModal();
-                }
+            sessionCloseBtn?.addEventListener('click', (e) => {
+                e.preventDefault();
+                closeSessionModal();
             });
 
-            closeBtnSecondary?.addEventListener('click', closeSessionModal);
-            speakerCloseBtn?.addEventListener('click', closeSpeakerModal);
+            closeBtnSecondary?.addEventListener('click', (e) => {
+                e.preventDefault();
+                closeSessionModal();
+            });
+            
+            speakerCloseBtn?.addEventListener('click', (e) => {
+                e.preventDefault();
+                closeSpeakerModal();
+            });
 
             // Close on backdrop click
             modal?.addEventListener('click', (e) => {
@@ -3081,7 +3098,7 @@
 
                 const matchesDay = !dayFilter || session.day === dayFilter;
                 const matchesTheme = !themeFilter || session.theme === themeFilter;
-                const matchesRoom = !roomFilter || session.room.toLowerCase().includes(roomFilter.toLowerCase());
+                const matchesRoom = !roomFilter || session.room === roomFilter;
 
                 return matchesSearch && matchesDay && matchesTheme && matchesRoom;
             });
@@ -3117,6 +3134,30 @@
             });
         }
 
+        // Helper function to find speaker image by name
+        function findSpeakerImage(presenterName) {
+            // Clean up presenter name for matching
+            const cleanName = presenterName.toLowerCase()
+                .replace(/\([^)]*\)/g, '') // Remove parentheses content
+                .replace(/\s+/g, ' ')
+                .trim();
+            
+            // Find matching speaker
+            const speaker = speakersData.find(speaker => {
+                const speakerName = speaker.name.toLowerCase()
+                    .replace(/\([^)]*\)/g, '')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+                
+                // Check for exact match or if presenter name contains speaker name
+                return speakerName === cleanName || 
+                       cleanName.includes(speakerName) || 
+                       speakerName.includes(cleanName);
+            });
+            
+            return speaker ? speaker.image : null;
+        }
+
         // Modal Functions
         function openSessionModal(sessionId) {
             const session = allSessions.find(s => s.id === sessionId);
@@ -3131,7 +3172,15 @@
 
             modalTitle.textContent = session.title;
             
+            // Get speaker image
+            const speakerImage = findSpeakerImage(session.presenter);
+            
             modalContent.innerHTML = `
+                ${speakerImage ? `
+                <div class="modal-speaker-image">
+                    <img src="${speakerImage}" alt="Speaker: ${session.presenter}" class="speaker-image">
+                </div>
+                ` : ''}
                 <div class="modal-field">
                     <div class="modal-field-label">Speaker</div>
                     <div class="modal-field-value">${flagify(session.presenter)}</div>
