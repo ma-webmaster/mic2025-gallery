@@ -1337,8 +1337,118 @@
         }
 
         .social-icon {
-            font-size: 1.25rem;
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
             flex-shrink: 0;
+        }
+
+        /* Resources Section */
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .resource-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--purple);
+        }
+
+        .resource-icon {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+            margin-bottom: 0.75rem;
+        }
+
+        .resource-content h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--purple);
+            margin: 0 0 0.5rem 0;
+        }
+
+        .resource-content p {
+            color: var(--gray-600);
+            font-size: 0.8rem;
+            line-height: 1.4;
+            margin: 0 0 1rem 0;
+        }
+
+        .resource-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--purple);
+            color: var(--white);
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .resource-btn:hover {
+            background: var(--blue);
+            transform: translateY(-1px);
+        }
+
+        .resource-btn span:first-child {
+            font-size: 1rem;
+        }
+
+        .resource-note {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--blue);
+        }
+
+        .resource-note p {
+            margin: 0;
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        /* Resources Section (Main Page) */
+        .resources-section {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-200);
+        }
+
+        .resources-title {
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin: 0 0 0.5rem 0;
+        }
+
+        .resources-subtitle {
+            text-align: center;
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            margin: 0 0 1rem 0;
         }
 
         /* Gallery Section */
@@ -1951,6 +2061,36 @@
                 </div>
             </div>
 
+            <!-- Presentations & Handouts -->
+            <div class="resources-section">
+                <h3 class="resources-title">Presentations & Handouts</h3>
+                <p class="resources-subtitle">Access all presentation materials and handouts from MIC2025 sessions</p>
+                <div class="resources-grid">
+                    <div class="resource-card">
+                        <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/presentations.png" alt="Presentations" class="resource-icon">
+                        <div class="resource-content">
+                            <h4>Presentations</h4>
+                            <p>Download presentation slides and materials from all MIC2025 sessions</p>
+                            <a href="https://drive.google.com/drive/folders/1d2mEsg5V-ZCaefFPuvVG5pjviD0_shzw?usp=drive_link" target="_blank" rel="noopener noreferrer" class="resource-btn" data-analytics="resource_presentations">
+                                <span>📥</span>
+                                <span>Access Presentations</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/google-docs.png" alt="Handouts" class="resource-icon">
+                        <div class="resource-content">
+                            <h4>Handouts</h4>
+                            <p>Download supplementary materials, worksheets, and reference documents</p>
+                            <a href="https://drive.google.com/drive/folders/1dNthaCZjDhJWNPIc98KhJgx9HRNSVbG0?usp=sharing" target="_blank" rel="noopener noreferrer" class="resource-btn" data-analytics="resource_handouts">
+                                <span>📥</span>
+                                <span>Access Handouts</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="sessions-grid" id="sessions-container">
                 <!-- Sessions will be populated by JavaScript -->
             </div>
@@ -2137,35 +2277,36 @@
                 <p>Stay connected with Montessori Australia and get the latest updates on MIC2025 and future events.</p>
                 <div class="social-links">
                     <a href="https://www.facebook.com/montessoriaustralia/" target="_blank" rel="noopener noreferrer" class="social-link facebook" data-analytics="social_facebook">
-                        <span class="social-icon">📘</span>
+                        <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/facebook.png" alt="Facebook" class="social-icon">
                         <span>Facebook</span>
                     </a>
                     <a href="https://www.instagram.com/montessori_australia/" target="_blank" rel="noopener noreferrer" class="social-link instagram" data-analytics="social_instagram">
-                        <span class="social-icon">📷</span>
+                        <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/instagram.png" alt="Instagram" class="social-icon">
                         <span>Instagram</span>
                     </a>
                     <a href="https://www.linkedin.com/company/79570266/admin/" target="_blank" rel="noopener noreferrer" class="social-link linkedin" data-analytics="social_linkedin">
-                        <span class="social-icon">💼</span>
+                        <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/linkedin.png" alt="LinkedIn" class="social-icon">
                         <span>LinkedIn</span>
                     </a>
                     <a href="https://www.pinterest.com/montessoriaustralia" target="_blank" rel="noopener noreferrer" class="social-link pinterest" data-analytics="social_pinterest">
-                        <span class="social-icon">📌</span>
+                        <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/pinterest.png" alt="Pinterest" class="social-icon">
                         <span>Pinterest</span>
                     </a>
                     <a href="https://www.tiktok.com/@montessoriaustralia" target="_blank" rel="noopener noreferrer" class="social-link tiktok" data-analytics="social_tiktok">
-                        <span class="social-icon">🎵</span>
+                        <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/tiktok.png" alt="TikTok" class="social-icon">
                         <span>TikTok</span>
                     </a>
                     <a href="https://chat.whatsapp.com/EymLrzOkHRuDvPOrDHLLIe" target="_blank" rel="noopener noreferrer" class="social-link whatsapp" data-analytics="social_whatsapp">
-                        <span class="social-icon">💬</span>
+                        <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/social.png" alt="WhatsApp" class="social-icon">
                         <span>WhatsApp</span>
                     </a>
                     <a href="https://www.youtube.com/channel/UCnhCOn_QZ7oQY-4Ur7oQPvg" target="_blank" rel="noopener noreferrer" class="social-link youtube" data-analytics="social_youtube">
-                        <span class="social-icon">📺</span>
+                        <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/youtube.png" alt="YouTube" class="social-icon">
                         <span>YouTube</span>
                     </a>
                 </div>
             </div>
+
         </section>
 
         <!-- Sponsors Section -->
@@ -4517,6 +4658,7 @@
                     clicks: parseInt(localStorage.getItem('mic2025_clicks') || '0'),
                     bookmarks: parseInt(localStorage.getItem('mic2025_bookmarks') || '0'),
                     socialClicks: JSON.parse(localStorage.getItem('mic2025_social_clicks') || '{}'),
+                    resourceClicks: JSON.parse(localStorage.getItem('mic2025_resource_clicks') || '{}'),
                     sessionViews: parseInt(localStorage.getItem('mic2025_session_views') || '0'),
                     speakerViews: parseInt(localStorage.getItem('mic2025_speaker_views') || '0'),
                     searchQueries: JSON.parse(localStorage.getItem('mic2025_search_queries') || '[]'),
@@ -4552,6 +4694,13 @@
                 this.data.socialClicks[platform] = (this.data.socialClicks[platform] || 0) + 1;
                 localStorage.setItem('mic2025_social_clicks', JSON.stringify(this.data.socialClicks));
                 console.log(`Analytics: Social click - ${platform}`);
+            }
+
+            trackResourceClick(resourceType) {
+                this.data.resourceClicks = this.data.resourceClicks || {};
+                this.data.resourceClicks[resourceType] = (this.data.resourceClicks[resourceType] || 0) + 1;
+                localStorage.setItem('mic2025_resource_clicks', JSON.stringify(this.data.resourceClicks));
+                console.log(`Analytics: Resource click - ${resourceType}`);
             }
 
             trackSessionView(sessionId) {
@@ -4597,6 +4746,13 @@
                     if (element.closest('.social-link')) {
                         const platform = element.closest('.social-link').classList[1];
                         this.trackSocialClick(platform);
+                        return;
+                    }
+
+                    // Resource clicks
+                    if (element.closest('.resource-btn')) {
+                        const resourceType = element.closest('.resource-btn').dataset.analytics;
+                        this.trackResourceClick(resourceType);
                         return;
                     }
 
@@ -4659,6 +4815,7 @@
                 console.log(`🎤 Speaker Views: ${this.data.speakerViews}`);
                 console.log(`🔍 Search Queries: ${this.data.searchQueries.length}`);
                 console.log('📱 Social Clicks:', this.data.socialClicks);
+                console.log('📚 Resource Clicks:', this.data.resourceClicks);
                 console.log('🔧 Filter Usage:', this.data.filterUsage);
                 console.log('🔍 Recent Searches:', this.data.searchQueries.slice(-5));
                 console.groupEnd();
