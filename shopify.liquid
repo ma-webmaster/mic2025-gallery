@@ -1,0 +1,603 @@
+{% comment %}
+  Montessori Collection – Dawn compatible
+  Uses Shopify Search & Discovery facets (filters)
+  Falls back to a menu + tag filter if no facets exist
+{% endcomment %}
+
+{% assign ns = section.id %}
+
+{% style %}
+  .ai-montessori-collection-{{ ns }} {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    max-width: {{ settings.page_width }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* Breadcrumb */
+  .ai-montessori-breadcrumb-{{ ns }}{ margin-bottom:20px; font-size:14px; color:#666; }
+  .ai-montessori-breadcrumb-{{ ns }} a{ color:#666; text-decoration:none; }
+  .ai-montessori-breadcrumb-{{ ns }} a:hover{ color:#4C4CF1; }
+
+  /* Header */
+  .ai-montessori-header-{{ ns }}{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:30px; flex-wrap:wrap; gap:20px;
+  }
+  .ai-montessori-title-section-{{ ns }} h1{
+    font-weight:700; color:#2D3748; font-size:{{ section.settings.title_size }}px; margin:0 0 5px 0;
+  }
+  .ai-montessori-product-count-{{ ns }}{ color:#718096; font-size:14px; }
+  .ai-montessori-sort-dropdown-{{ ns }}{
+    padding:8px 12px; border:1px solid #E2E8F0; border-radius:6px; background:#fff; font-size:14px; color:#2D3748;
+  }
+
+  /* Layout */
+  .ai-montessori-main-{{ ns }}{
+    display:grid; grid-template-columns: {{ section.settings.sidebar_width }}px 1fr; gap:40px; align-items:start;
+  }
+  .ai-montessori-sidebar-{{ ns }}{
+    background:#FAFAFA; padding:24px; border-radius:12px; position:sticky; top:20px;
+    max-height:80vh; overflow-y:auto; box-shadow:0 1px 0 rgba(0,0,0,0.03), 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .ai-montessori-sidebar-title-{{ ns }}{ font-weight:800; font-size:18px; color:#2D3748; margin:0 0 14px 0; }
+
+  /* Filter Groups */
+  .ai-montessori-filter-group-{{ ns }} {
+    margin-bottom: 25px;
+  }
+
+  .ai-montessori-filter-group-{{ ns }}:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-montessori-filter-title-{{ ns }} {
+    font-weight: 600;
+    font-size: 16px;
+    color: #2D3748;
+    margin: 0 0 12px 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .ai-montessori-filter-toggle-{{ ns }} {
+    font-size: 12px;
+    color: #A0AEC0;
+    transition: transform 0.2s ease;
+  }
+
+  .ai-montessori-filter-group-{{ ns }}.collapsed .ai-montessori-filter-toggle-{{ ns }} {
+    transform: rotate(180deg);
+  }
+
+  .ai-montessori-filter-options-{{ ns }} {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    overflow: hidden;
+    max-height: 300px;
+  }
+
+  .ai-montessori-filter-group-{{ ns }}.collapsed .ai-montessori-filter-options-{{ ns }} {
+    max-height: 0;
+    opacity: 0;
+  }
+
+  .ai-montessori-filter-option-{{ ns }} {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ai-montessori-filter-checkbox-{{ ns }} {
+    width: 16px;
+    height: 16px;
+    accent-color: #4C4CF1;
+  }
+
+  .ai-montessori-filter-label-{{ ns }} {
+    font-size: 14px;
+    color: #4A5568;
+    cursor: pointer;
+    flex-grow: 1;
+  }
+
+  .fruit-montessori-filter-count-{{ ns }} {
+    font-size: 12px;
+    color: #A0AEC0;
+    margin-left: auto;
+  }
+
+  /* Grid & Cards */
+  .ai-montessori-products-grid-{{ ns }}{
+    display:grid; grid-template-columns: repeat({{ section.settings.desktop_columns }}, 1fr);
+    gap: {{ settings.spacing_grid_horizontal }}px {{ settings.spacing_grid_vertical }}px;
+  }
+  .ai-montessori-product-card-{{ ns }}{
+    background:#fff; border-radius:14px; padding:18px; position:relative;
+    box-shadow:0 2px 8px rgba(0,0,0,0.05); transition:transform .2s, box-shadow .2s;
+  }
+  .ai-montessori-product-card-{{ ns }}:hover{ transform:translateY(-2px); box-shadow:0 10px 28px rgba(0,0,0,0.1); }
+
+  .ai-montessori-product-image-{{ ns }}{
+    width:100%; height:auto; max-height:260px; object-fit:contain;
+    border-radius:10px; margin-bottom:12px; background:#fff; border:1px solid #eee; padding:10px;
+  }
+
+  .ai-montessori-wishlist-{{ ns }}{
+    position:absolute; top:12px; right:12px; width:34px; height:34px; border-radius:50%;
+    background:#fff; border:1px solid #E2E8F0; cursor:pointer; color:#9CA3AF;
+    display:grid; place-items:center; transition:color .2s, border-color .2s;
+  }
+  .ai-montessori-wishlist-{{ ns }}:hover,
+  .ai-montessori-wishlist-{{ ns }}.active{ color:#9F34FA; border-color:#9F34FA; }
+
+  .ai-montessori-product-title-{{ ns }}{
+    font-weight:700; font-size:16px; color:#2D3748; margin:0 0 6px 0; line-height:1.3; text-decoration:none; display:block;
+  }
+  .ai-montessori-product-title-{{ ns }}:hover{ color:#4C4CF1; }
+
+  .ai-montessori-product-sku-{{ ns }}{ font-size:12px; color:#A0AEC0; margin-bottom:8px; }
+  .ai-montessori-product-description-{{ ns }}{
+    font-size:14px; color:#4A5568; line-height:1.4; margin-bottom:12px;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+  }
+
+  .ai-montessori-price-row-{{ ns }}{ display:flex; align-items:baseline; gap:8px; margin-bottom:6px; }
+  .ai-montessori-product-price-{{ ns }}{ font-weight:800; font-size:16px; color:#1F2937; }
+  .ai-montessori-product-compare-{{ ns }}{ text-decoration:line-through; color:#A0AEC0; font-size:13px; }
+
+  .ai-montessori-product-gst-{{ ns }}{ font-size:12px; color:#6B7280; margin-bottom:12px; }
+  .ai-montessori-product-actions-{{ ns }}{ display:flex; justify-content:space-between; align-items:center; }
+
+  .ai-montessori-add-to-cart-{{ ns }}{
+    width:40px; height:40px; border-radius:50%; border:none; cursor:pointer;
+    background:#4C4CF1; color:#fff; font-size:20px; font-weight:800;
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .1s, background-color .15s, box-shadow .15s;
+    box-shadow:0 6px 18px rgba(76,76,241,0.25);
+  }
+  .ai-montessori-add-to-cart-{{ ns }}:hover{ transform:scale(1.05); background:#3F3FE3; }
+
+  /* Responsive */
+  @media (max-width:1024px){
+    .ai-montessori-main-{{ ns }}{ grid-template-columns:280px 1fr; gap:28px; }
+    .ai-montessori-products-grid-{{ ns }}{ grid-template-columns:repeat({{ section.settings.tablet_columns }}, 1fr); }
+  }
+  @media (max-width:768px){
+    .ai-montessori-main-{{ ns }}{ grid-template-columns:1fr; gap:20px; }
+    .ai-montessori-sidebar-{{ ns }}{ position:static; max-height:none; }
+    .ai-montessori-products-grid-{{ ns }}{ grid-template-columns:repeat({{ section.settings.mobile_columns }}, 1fr); }
+    .ai-montessori-header-{{ ns }}{ flex-direction:column; align-items:flex-start; }
+  }
+{% endstyle %}
+
+<section class="ai-montessori-collection-{{ ns }}">
+  {% if section.settings.show_breadcrumb %}
+    <nav class="ai-montessori-breadcrumb-{{ ns }}">
+      <a href="{{ routes.root_url }}">Home</a> › <span>{{ collection.title | default: section.settings.page_title }}</span>
+    </nav>
+  {% endif %}
+
+  <div class="ai-montessori-header-{{ ns }}">
+    <div class="ai-montessori-title-section-{{ ns }}">
+      <h1>{{ collection.title | default: section.settings.page_title }}</h1>
+      <div class="ai-montessori-product-count-{{ ns }}">
+        <span id="ai-product-count-{{ ns }}">{{ collection.all_products_count | default: 0 }}</span> Products
+      </div>
+    </div>
+
+    {% assign current_sort = collection.sort_by | default: collection.default_sort_by %}
+    <select class="ai-montessori-sort-dropdown-{{ ns }}" id="ai-sort-select-{{ ns }}">
+      {% for option in collection.sort_options %}
+        <option value="{{ option.value }}" {% if option.value == current_sort %}selected{% endif %}>{{ option.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="ai-montessori-main-{{ ns }}">
+    <!-- Sidebar -->
+    <aside class="ai-montessori-sidebar-{{ ns }}">
+      <h2 class="ai-montessori-sidebar-title-{{ ns }}">Refine by</h2>
+
+      {% if section.settings.show_collections_filter %}
+        <div class="ai-montessori-filter-group-{{ ns }}" data-filter-group="collections">
+          <h3 class="ai-montessori-filter-title-{{ ns }}">
+            Collections
+            <span class="ai-montessori-filter-toggle-{{ ns }}">▼</span>
+          </h3>
+          <div class="ai-montessori-filter-options-{{ ns }}">
+            {% for collection_item in collections %}
+              {% unless collection_item.handle == 'all' %}
+                <label class="ai-montessori-filter-option-{{ ns }}">
+                  <input
+                    type="checkbox"
+                    class="ai-montessori-filter-checkbox-{{ ns }}"
+                    data-filter-type="collection"
+                    data-filter-value="{{ collection_item.handle }}"
+                  >
+                  <span class="ai-montessori-filter-label-{{ ns }}">{{ collection_item.title }}</span>
+                  <span class="ai-montessori-filter-count-{{ ns }}">({{ collection_item.products_count }})</span>
+                </label>
+              {% endunless %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="ai-montessori-filter-group-{{ ns }}" data-filter-group="curriculum">
+        <h3 class="ai-montessori-filter-title-{{ ns }}">
+          Curriculum Area
+          <span class="ai-montessori-filter-toggle-{{ ns }}">▼</span>
+        </h3>
+        <div class="ai-montessori-filter-options-{{ ns }}">
+          {% assign curriculum_tags = '' %}
+          {% assign curriculum_counts = '' %}
+          {% for product in collections.all.products limit: 1000 %}
+            {% for tag in product.tags %}
+              {% if tag contains 'Curriculum:' %}
+                {% assign clean_tag = tag | remove: 'Curriculum:' | strip %}
+                {% unless curriculum_tags contains clean_tag %}
+                  {% assign curriculum_tags = curriculum_tags | append: clean_tag | append: ',' %}
+                  {% assign count = 0 %}
+                  {% for count_product in collections.all.products %}
+                    {% if count_product.tags contains tag %}
+                      {% assign count = count | plus: 1 %}
+                    {% endif %}
+                  {% endfor %}
+                  {% assign curriculum_counts = curriculum_counts | append: count | append: ',' %}
+                {% endunless %}
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+
+          {% assign curriculum_array = curriculum_tags | split: ',' %}
+          {% assign count_array = curriculum_counts | split: ',' %}
+          {% for curriculum in curriculum_array %}
+            {% unless curriculum == blank %}
+              {% assign index = forloop.index0 %}
+              <label class="ai-montessori-filter-option-{{ ns }}">
+                <input
+                  type="checkbox"
+                  class="ai-montessori-filter-checkbox-{{ ns }}"
+                  data-filter-type="curriculum"
+                  data-filter-value="{{ curriculum | strip }}"
+                >
+                <span class="ai-montessori-filter-label-{{ ns }}">{{ curriculum | strip }}</span>
+                <span class="ai-montessori-filter-count-{{ ns }}">({{ count_array[index] }})</span>
+              </label>
+            {% endunless %}
+          {% endfor %}
+
+          {% if curriculum_array.size == 0 %}
+            <label class="ai-montessori-filter-option-{{ ns }}">
+              <input type="checkbox" class="ai-montessori-filter-checkbox-{{ ns }}" data-filter-type="curriculum" data-filter-value="Practical Life">
+              <span class="ai-montessori-filter-label-{{ ns }}">Practical Life</span>
+            </label>
+            <label class="ai-montessori-filter-option-{{ ns }}">
+              <input type="checkbox" class="ai-montessori-filter-checkbox-{{ ns }}" data-filter-type="curriculum" data-filter-value="Sensorial">
+              <span class="ai-montessori-filter-label-{{ ns }}">Sensorial</span>
+            </label>
+            <label class="ai-montessori-filter-option-{{ ns }}">
+              <input type="checkbox" class="ai-montessori-filter-checkbox-{{ ns }}" data-filter-type="curriculum" data-filter-value="Language">
+              <span class="ai-montessori-filter-label-{{ ns }}">Language</span>
+            </label>
+            <label class="ai-montessori-filter-option-{{ ns }}">
+              <input type="checkbox" class="ai-montessori-filter-checkbox-{{ ns }}" data-filter-type="curriculum" data-filter-value="Mathematics">
+              <span class="ai-montessori-filter-label-{{ ns }}">Mathematics</span>
+            </label>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="ai-montessori-filter-group-{{ ns }}" data-filter-group="age">
+        <h3 class="ai-montessori-filter-title-{{ ns }}">
+          Age Range
+          <span class="ai-montessori-filter-toggle-{{ ns }}">▼</span>
+        </h3>
+        <div class="ai-montessori-filter-options-{{ ns }}">
+          {% assign age_tags = '' %}
+          {% assign age_counts = '' %}
+          {% for product in collections.all.products limit: 1000 %}
+            {% for tag in product.tags %}
+              {% if tag contains 'Plane:' or tag contains 'Age:' %}
+                {% assign clean_tag = tag | remove: 'Plane:' | remove: 'Age:' | strip %}
+                {% unless age_tags contains clean_tag %}
+                  {% assign age_tags = age_tags | append: clean_tag | append: ',' %}
+                  {% assign count = 0 %}
+                  {% for count_product in collections.all.products %}
+                    {% if count_product.tags contains tag %}
+                      {% assign count = count | plus: 1 %}
+                    {% endif %}
+                  {% endfor %}
+                  {% assign age_counts = age_counts | append: count | append: ',' %}
+                {% endunless %}
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+
+          {% assign age_array = age_tags | split: ',' %}
+          {% assign age_count_array = age_counts | split: ',' %}
+          {% for age in age_array %}
+            {% unless age == blank %}
+              {% assign index = forloop.index0 %}
+              <label class="ai-montessori-filter-option-{{ ns }}">
+                <input
+                  type="checkbox"
+                  class="ai-montessori-filter-checkbox-{{ ns }}"
+                  data-filter-type="age"
+                  data-filter-value="{{ age | strip }}"
+                >
+                <span class="ai-montessori-filter-label-{{ ns }}">{{ age | strip }}</span>
+                <span class="ai-montessori-filter-count-{{ ns }}">({{ age_count_array[index] }})</span>
+              </label>
+            {% endunless %}
+          {% endfor %}
+
+          {% if age_array.size == 0 %}
+            <label class="ai-montessori-filter-option-{{ ns }}">
+              <input type="checkbox" class="ai-montessori-filter-checkbox-{{ ns }}" data-filter-type="age" data-filter-value="0-3">
+              <span class="ai-montessori-filter-label-{{ ns }}">Infant & Toddler (0–3)</span>
+            </label>
+            <label class="ai-montessori-filter-option-{{ ns }}">
+              <input type="checkbox" class="ai-montessori-filter-checkbox-{{ ns }}" data-filter-type="age" data-filter-value="3-6">
+              <span class="ai-montessori-filter-label-{{ ns }}">Early Childhood (3–6)</span>
+            </label>
+            <label class="ai-montessori-filter-option-{{ ns }}">
+              <input type="checkbox" class="ai-montessori-filter-checkbox-{{ ns }}" data-filter-type="age" data-filter-value="6-12">
+              <span class="ai-montessori-filter-label-{{ ns }}">Elementary (6–12)</span>
+            </label>
+            <label class="ai-montessori-filter-option-{{ ns }}">
+              <input type="checkbox" class="ai-montessori-filter-checkbox-{{ ns }}" data-filter-type="age" data-filter-value="12-18">
+              <span class="ai-montessori-filter-label-{{ ns }}">Adolescent (12–18)</span>
+            </label>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if section.settings.show_all_tags_filter %}
+        <div class="ai-montessori-filter-group-{{ ns }}" data-filter-group="tags">
+          <h3 class="ai-montessori-filter-title-{{ ns }}">
+            All Tags
+            <span class="ai-montessori-filter-toggle-{{ ns }}">▼</span>
+          </h3>
+          <div class="ai-montessori-filter-options-{{ ns }}">
+            {% assign all_tags = '' %}
+            {% assign tag_counts = '' %}
+            {% for product in collections.all.products limit: 1000 %}
+              {% for tag in product.tags %}
+                {% unless tag contains 'Curriculum:' or tag contains 'Plane:' or tag contains 'Age:' %}
+                  {% unless all_tags contains tag %}
+                    {% assign all_tags = all_tags | append: tag | append: ',' %}
+                    {% assign count = 0 %}
+                    {% for count_product in collections.all.products %}
+                      {% if count_product.tags contains tag %}
+                        {% assign count = count | plus: 1 %}
+                      {% endif %}
+                    {% endfor %}
+                    {% assign tag_counts = tag_counts | append: count | append: ',' %}
+                  {% endunless %}
+                {% endunless %}
+              {% endfor %}
+            {% endfor %}
+
+            {% assign tags_array = all_tags | split: ',' %}
+            {% assign tags_count_array = tag_counts | split: ',' %}
+            {% for tag in tags_array %}
+              {% unless tag == blank %}
+                {% assign index = forloop.index0 %}
+                <label class="ai-montessori-filter-option-{{ ns }}">
+                  <input
+                    type="checkbox"
+                    class="ai-montessori-filter-checkbox-{{ ns }}"
+                    data-filter-type="tag"
+                    data-filter-value="{{ tag | strip }}"
+                  >
+                  <span class="ai-montessori-filter-label-{{ ns }}">{{ tag | strip }}</span>
+                  <span class="ai-montessori-filter-count-{{ ns }}">({{ tags_count_array[index] }})</span>
+                </label>
+              {% endunless %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </aside>
+
+    <!-- Product Grid -->
+    <main class="ai-montessori-products-grid-{{ ns }}" id="ai-products-grid-{{ ns }}">
+      {% paginate collection.products by section.settings.products_per_page %}
+        {% for product in collection.products %}
+          <article class="ai-montessori-product-card-{{ ns }}" data-product-id="{{ product.id }}">
+            <button class="ai-montessori-wishlist-{{ ns }}" aria-label="Add to wishlist">♡</button>
+
+            <a href="{{ product.url }}" class="ai-montessori-product-title-link-{{ ns }}">
+              {% if product.featured_image %}
+                <img src="{{ product.featured_image | image_url: width: 640 }}"
+                     alt="{{ product.featured_image.alt | escape }}"
+                     class="ai-montessori-product-image-{{ ns }}" loading="lazy">
+              {% endif %}
+              <span class="ai-montessori-product-title-{{ ns }}">{{ product.title }}</span>
+            </a>
+
+            {% if product.variants.first.sku %}
+              <div class="ai-montessori-product-sku-{{ ns }}">SKU: {{ product.variants.first.sku }}</div>
+            {% endif %}
+
+            {% if product.description != blank %}
+              <div class="ai-montessori-product-description-{{ ns }}">{{ product.description | strip_html | truncate: 100 }}</div>
+            {% endif %}
+
+            <div class="ai-montessori-price-row-{{ ns }}">
+              {% if product.compare_at_price > product.price %}
+                <span class="ai-montessori-product-compare-{{ ns }}">{{ product.compare_at_price | money }}</span>
+              {% endif %}
+              <span class="ai-montessori-product-price-{{ ns }}">{{ product.price | money }}</span>
+            </div>
+
+            <div class="ai-montessori-product-gst-{{ ns }}">incl. GST</div>
+
+            <div class="ai-montessori-product-actions-{{ ns }}">
+              <button class="ai-montessori-add-to-cart-{{ ns }}"
+                      data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                      aria-label="Add {{ product.title | escape }} to cart">+</button>
+            </div>
+          </article>
+        {% endfor %}
+        {{ paginate | default_pagination }}
+      {% endpaginate %}
+    </main>
+  </div>
+</section>
+
+<script>
+  (function(){
+    const ns = "{{ ns }}";
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const root = document.querySelector('.ai-montessori-collection-' + ns);
+      if(!root) return;
+
+      // Filter toggle functionality
+      const filterTitles = root.querySelectorAll('.ai-montessori-filter-title-' + ns);
+      filterTitles.forEach(title => {
+        title.addEventListener('click', () => {
+          const filterGroup = title.closest('.ai-montessori-filter-group-' + ns);
+          filterGroup.classList.toggle('collapsed');
+        });
+      });
+
+      // Filter change functionality
+      const checkboxes = root.querySelectorAll('.ai-montessori-filter-checkbox-' + ns);
+      checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+          const activeFilters = {
+            collection: [],
+            curriculum: [],
+            age: [],
+            tag: []
+          };
+
+          // Collect active filters
+          root.querySelectorAll('.ai-montessori-filter-checkbox-' + ns + ':checked').forEach(cb => {
+            const filterType = cb.dataset.filterType;
+            const filterValue = cb.dataset.filterValue;
+            if (activeFilters[filterType]) {
+              activeFilters[filterType].push(filterValue);
+            }
+          });
+
+          // Filter products
+          const productCards = root.querySelectorAll('.ai-montessori-product-card-' + ns);
+          productCards.forEach(card => {
+            let shouldShow = true;
+            const productCollections = (card.dataset.productCollections || '').split(',').filter(c => c.trim());
+            const productTags = (card.dataset.productTags || '').split(',').filter(t => t.trim());
+
+            // Collection filter
+            if (activeFilters.collection.length > 0) {
+              shouldShow = shouldShow && activeFilters.collection.some(filter => 
+                productCollections.includes(filter)
+              );
+            }
+
+            // Curriculum filter
+            if (activeFilters.curriculum.length > 0) {
+              shouldShow = shouldShow && activeFilters.curriculum.some(filter => 
+                productTags.some(tag => tag.includes('Curriculum:' + filter)) ||
+                card.querySelector('.ai-montessori-product-title-' + ns).textContent.toLowerCase().includes(filter.toLowerCase())
+              );
+            }
+
+            // Age filter
+            if (activeFilters.age.length > 0) {
+              shouldShow = shouldShow && activeFilters.age.some(filter => 
+                productTags.some(tag => tag.includes('Plane:' + filter) || tag.includes('Age:' + filter)) ||
+                card.querySelector('.ai-montessori-product-title-' + ns).textContent.toLowerCase().includes(filter.toLowerCase())
+              );
+            }
+
+            // Tag filter
+            if (activeFilters.tag.length > 0) {
+              shouldShow = shouldShow && activeFilters.tag.some(filter => 
+                productTags.includes(filter)
+              );
+            }
+
+            card.style.display = shouldShow ? 'block' : 'none';
+          });
+
+          // Update product count
+          const visibleProducts = root.querySelectorAll('.ai-montessori-product-card-' + ns + '[style*="block"], .ai-montessori-product-card-' + ns + ':not([style*="none"])');
+          const countEl = root.querySelector('#ai-product-count-' + ns);
+          if (countEl) {
+            countEl.textContent = visibleProducts.length;
+          }
+        });
+      });
+
+      const sortSelect = root.querySelector('#ai-sort-select-' + ns);
+      if (sortSelect) {
+        sortSelect.addEventListener('change', (e)=>{
+          const url = new URL(window.location.href);
+          url.searchParams.set('sort_by', e.target.value);
+          window.location = url.toString();
+        });
+      }
+
+      root.querySelectorAll('.ai-montessori-add-to-cart-' + ns).forEach(btn=>{
+        btn.addEventListener('click', (e)=>{
+          e.preventDefault();
+          const variantId = btn.dataset.variantId;
+          if(!variantId) return;
+          fetch('/cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items: [{ id: variantId, quantity: 1 }] })
+          })
+          .then(r=>r.json())
+          .then(()=>{
+            btn.textContent = '✓';
+            btn.style.backgroundColor = '#2fb36d';
+            setTimeout(()=>{ btn.textContent='+'; btn.style.backgroundColor='#4C4CF1'; }, 1200);
+          })
+          .catch(console.error);
+        });
+      });
+
+      root.querySelectorAll('.ai-montessori-wishlist-' + ns).forEach(btn=>{
+        btn.addEventListener('click', (e)=>{
+          e.preventDefault();
+          btn.classList.toggle('active');
+          btn.textContent = btn.classList.contains('active') ? '♥' : '♡';
+        });
+      });
+
+      const countEl = root.querySelector('#ai-product-count-' + ns);
+      if (countEl) {
+        const total = root.querySelectorAll('.ai-montessori-product-card-' + ns).length;
+        if (total) countEl.textContent = total;
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Montessori collection",
+  "settings": [
+    { "type": "text", "id": "page_title", "label": "Page title", "default": "All Products" },
+    { "type": "checkbox", "id": "show_breadcrumb", "label": "Show breadcrumb", "default": true },
+    { "type": "range", "id": "products_per_page", "min": 12, "max": 100, "step": 4, "label": "Products per page", "default": 24 },
+    { "type": "range", "id": "sidebar_width", "min": 200, "max": 400, "step": 20, "unit": "px", "label": "Sidebar width", "default": 320 },
+    { "type": "range", "id": "desktop_columns", "min": 2, "max": 6, "step": 1, "label": "Desktop columns", "default": 4 },
+    { "type": "range", "id": "tablet_columns", "min": 1, "max": 4, "step": 1, "label": "Tablet columns", "default": 2 },
+    { "type": "select", "id": "mobile_columns", "label": "Mobile columns", "options": [{ "value": "1", "label": "1" }, { "value": "2", "label": "2" }], "default": "1" },
+    { "type": "checkbox", "id": "show_collections_filter", "label": "Show collections filter", "default": true },
+    { "type": "checkbox", "id": "show_all_tags_filter", "label": "Show all tags filter", "default": true },
+    { "type": "range", "id": "title_size", "min": 24, "max": 48, "step": 2, "unit": "px", "label": "Page title size", "default": 32 }
+  ],
+  "presets": [{ "name": "Montessori collection" }]
+}
+{% endschema %}
