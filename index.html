@@ -267,6 +267,42 @@
             outline-offset: 1px;
         }
 
+        /* Reset Filters Button */
+        .filter-reset-container {
+            display: none; /* Hidden by default */
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .filter-reset-container.show {
+            display: flex;
+        }
+
+        .reset-filters-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--white);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            color: var(--gray-700);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .reset-filters-btn:hover {
+            background: var(--gray-50);
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .reset-filters-btn:active {
+            transform: scale(0.98);
+        }
+
         /* Day Tabs */
         .day-tabs {
             display: flex;
@@ -460,8 +496,10 @@
 
         .sponsors-track {
             display: flex;
-            animation: scroll 18s linear infinite;
+            animation: scroll 6s linear infinite;
             gap: 1rem;
+            will-change: transform;
+            width: fit-content;
         }
 
         .sponsor-logo {
@@ -1346,9 +1384,15 @@
         /* Resources Section */
         .resources-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
             margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .resource-card {
@@ -1945,7 +1989,7 @@
 
     <!-- Navigation -->
     <nav class="nav" role="navigation" aria-label="Main navigation">
-        <a href="#program" class="nav-item active" data-section="program">Program</a>
+        <a href="#" class="nav-item active" data-section="program">Program</a>
         <a href="#agenda" class="nav-item" data-section="agenda">My Schedule</a>
         <a href="#speakers" class="nav-item" data-section="speakers">Speakers</a>
         <a href="#venue" class="nav-item" data-section="venue">Venue</a>
@@ -2009,6 +2053,13 @@
                 </div>
             </div>
 
+            <div class="filter-reset-container">
+                <button id="reset-filters" class="reset-filters-btn">
+                    <span>🔄</span>
+                    <span>Reset Filters</span>
+                </button>
+            </div>
+
             <!-- Sponsors Carousel -->
             <div class="sponsors-carousel">
                 <h3 class="sponsors-carousel-title">Our Sponsors</h3>
@@ -2035,22 +2086,34 @@
                         <a href="https://transparentclassroom.com" target="_blank" rel="noopener noreferrer" class="sponsor-logo">
                             <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/Untitled-design-9.png" alt="Transparent Classroom Logo" loading="lazy">
                         </a>
+                        <a href="https://upschool.co" target="_blank" rel="noopener noreferrer" class="sponsor-logo">
+                            <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/MIC-Sponsors.png" alt="Upschool Logo" loading="lazy">
+                        </a>
                         <!-- Duplicate for seamless loop -->
-                        <div class="sponsor-logo">
+                        <a href="https://yourchildsday.com.au" target="_blank" rel="noopener noreferrer" class="sponsor-logo">
                             <img src="https://events.montessori.org.au/wp-content/uploads/2025/09/1.png" alt="Your Child's Day Logo" loading="lazy">
-                        </div>
-                        <div class="sponsor-logo">
+                        </a>
+                        <a href="https://mecta.edu.au" target="_blank" rel="noopener noreferrer" class="sponsor-logo">
                             <img src="https://events.montessori.org.au/wp-content/uploads/2025/09/2.png" alt="MECTA Logo" loading="lazy">
-                        </div>
-                        <div class="sponsor-logo">
+                        </a>
+                        <a href="https://kidsgourmetfood.com.au" target="_blank" rel="noopener noreferrer" class="sponsor-logo">
                             <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/Untitled-design16.png" alt="Kids Gourmet Food Logo" loading="lazy">
-                        </div>
-                        <div class="sponsor-logo">
+                        </a>
+                        <a href="https://compliantcleaningsupplies.com.au" target="_blank" rel="noopener noreferrer" class="sponsor-logo">
                             <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/13.png" alt="Compliant Cleaning Supplies Logo" loading="lazy">
-                        </div>
-                        <div class="sponsor-logo">
+                        </a>
+                        <a href="https://montessorisports.com.au" target="_blank" rel="noopener noreferrer" class="sponsor-logo">
                             <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/14.png" alt="Montessori Sports Logo" loading="lazy">
-                        </div>
+                        </a>
+                        <a href="https://southbankmontessori.com.au" target="_blank" rel="noopener noreferrer" class="sponsor-logo">
+                            <img src="https://events.montessori.org.au/wp-content/uploads/2025/09/3.png" alt="Southbank Montessori Logo" loading="lazy">
+                        </a>
+                        <a href="https://transparentclassroom.com" target="_blank" rel="noopener noreferrer" class="sponsor-logo">
+                            <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/Untitled-design-9.png" alt="Transparent Classroom Logo" loading="lazy">
+                        </a>
+                        <a href="https://upschool.co" target="_blank" rel="noopener noreferrer" class="sponsor-logo">
+                            <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/MIC-Sponsors.png" alt="Upschool Logo" loading="lazy">
+                        </a>
                     </div>
                 </div>
             </div>
@@ -2079,6 +2142,17 @@
                             <a href="https://drive.google.com/drive/folders/1dNthaCZjDhJWNPIc98KhJgx9HRNSVbG0?usp=sharing" target="_blank" rel="noopener noreferrer" class="resource-btn" data-analytics="resource_handouts">
                                 <span>📥</span>
                                 <span>Access Handouts</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-icon" style="font-size: 2rem;">🏨</div>
+                        <div class="resource-content">
+                            <h4>Guest Information</h4>
+                            <p>Hotel details, shuttle schedules, breakfast options, and contact information</p>
+                            <a href="https://events.montessori.org.au/wp-content/uploads/2025/10/MIC2025-Guest-Information-Sheet-V2.docx" target="_blank" rel="noopener noreferrer" class="resource-btn" data-analytics="resource_guest_info_download">
+                                <span>📥</span>
+                                <span>Download Guest Info</span>
                             </a>
                         </div>
                     </div>
@@ -2414,6 +2488,15 @@
                             <p class="sponsor-description">Offers unique opportunities to explore the world through a Montessori perspective. Their custom and signature tours invite travellers to connect with like-minded people and experience both the historical and contemporary influences of Maria Montessori's work across more than 110 countries.</p>
                             <a href="https://montessoritoursandtravel.com" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
                         </div>
+
+                        <div class="sponsor-card">
+                            <div class="sponsor-logo">
+                                <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/MIC-Sponsors.png" alt="Upschool Logo" loading="lazy">
+                            </div>
+                            <h4 class="sponsor-name">Upschool</h4>
+                            <p class="sponsor-description">Through hands-on projects such as writing a book, leading community change or exploring global issues, Upschool encourages young learners to become active participants in their learning journey and to use their voice to make a difference.</p>
+                            <a href="https://upschool.co" target="_blank" rel="noopener" class="sponsor-btn">Visit Website →</a>
+                        </div>
                     </div>
                 </div>
 
@@ -2549,7 +2632,7 @@
 
     <!-- Bottom Navigation -->
     <nav class="bottom-nav" role="navigation" aria-label="Bottom navigation">
-        <a href="#program" class="bottom-nav-item active" data-section="program">
+        <a href="#" class="bottom-nav-item active" data-section="program">
             <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/8.png" alt="Program" class="bottom-nav-icon">
             <span>Program</span>
         </a>
@@ -2679,7 +2762,7 @@
                 day: 'fri',
                 time: '13:15',
                 title: 'Big Work in Mainstream Secondary Classrooms',
-                presenter: 'John Butler (🇦🇺 Australia)',
+                presenter: 'Jack Butler (🇦🇺 Australia)',
                 room: 'Endeavour Room 2',
                 theme: 'schools',
                 description: 'This workshop explores how the Montessori concept of Big Work can be adapted for mainstream secondary classrooms to empower students and deepen their connection to ethics and philosophy.'
@@ -3632,20 +3715,48 @@
                     e.target.classList.add('active');
                     
                     applyFilters();
-                    
-                    // Smooth scroll to the day section
-                    setTimeout(() => {
-                        const daySection = document.querySelector(`[data-day="${day}"]`);
-                        if (daySection) {
-                            daySection.scrollIntoView({ 
-                                behavior: 'smooth', 
-                                block: 'start',
-                                inline: 'nearest'
-                            });
-                        }
-                    }, 100);
                 });
             });
+
+            // Reset filters button
+            const resetBtn = document.getElementById('reset-filters');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                    // Reset search input
+                    const searchInput = document.querySelector('.search-input');
+                    if (searchInput) {
+                        searchInput.value = '';
+                    }
+                    
+                    // Reset all filter selects
+                    document.querySelectorAll('.filter-select').forEach(select => {
+                        select.value = '';
+                    });
+                    
+                    // Reset day tabs - don't set any as active
+                    document.querySelectorAll('.day-tab').forEach(tab => {
+                        tab.classList.remove('active');
+                    });
+                    
+                    // Reset day filter to empty (show all days)
+                    const dayFilter = document.getElementById('day-filter');
+                    if (dayFilter) {
+                        dayFilter.value = '';
+                    }
+                    
+                    applyFilters();
+                    
+                    // Explicitly show sponsors and resources after reset
+                    const sponsorsCarousel = document.querySelector('.sponsors-carousel');
+                    const resourcesSection = document.querySelector('.resources-section');
+                    if (sponsorsCarousel) {
+                        sponsorsCarousel.style.display = 'block';
+                    }
+                    if (resourcesSection) {
+                        resourcesSection.style.display = 'block';
+                    }
+                });
+            }
 
             // Speaker search
             const speakerSearch = document.getElementById('speaker-search');
@@ -3660,7 +3771,14 @@
                 item.addEventListener('click', (e) => {
                     e.preventDefault();
                     const section = item.dataset.section;
-                    navigateToSection(section);
+                    
+                    // If Program section and href is #, go to homepage (remove hash)
+                    if (section === 'program' && item.getAttribute('href') === '#') {
+                        window.location.hash = '';
+                        navigateToSection(section);
+                    } else {
+                        navigateToSection(section);
+                    }
                 });
             });
 
@@ -3669,7 +3787,14 @@
                 item.addEventListener('click', (e) => {
                     e.preventDefault();
                     const section = item.dataset.section;
-                    navigateToSection(section);
+                    
+                    // If Program section and href is #, go to homepage (remove hash)
+                    if (section === 'program' && item.getAttribute('href') === '#') {
+                        window.location.hash = '';
+                        navigateToSection(section);
+                    } else {
+                        navigateToSection(section);
+                    }
                 });
             });
         }
@@ -3779,6 +3904,31 @@
             });
 
             renderSessions();
+
+            // Show/hide sponsors and resources based on active filters or search
+            const hasActiveSearch = searchTerm.trim().length > 0;
+            const hasActiveFilters = dayFilter || themeFilter || roomFilter;
+            const isFiltering = hasActiveSearch || hasActiveFilters;
+            
+            const sponsorsCarousel = document.querySelector('.sponsors-carousel');
+            const resourcesSection = document.querySelector('.resources-section');
+            
+            if (sponsorsCarousel) {
+                sponsorsCarousel.style.display = isFiltering ? 'none' : 'block';
+            }
+            if (resourcesSection) {
+                resourcesSection.style.display = isFiltering ? 'none' : 'block';
+            }
+
+            // Show/hide reset button based on active filters
+            const resetContainer = document.querySelector('.filter-reset-container');
+            if (resetContainer) {
+                if (isFiltering) {
+                    resetContainer.classList.add('show');
+                } else {
+                    resetContainer.classList.remove('show');
+                }
+            }
         }
 
         // Bookmark Functions
