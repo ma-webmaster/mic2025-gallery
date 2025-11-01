@@ -207,7 +207,7 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             padding: 1rem;
-            margin: -1rem -1rem 1rem -1rem;
+            margin: -1rem -1rem 0 -1rem;
             border-bottom: 1px solid var(--gray-200);
             z-index: 15;
         }
@@ -307,7 +307,14 @@
         .day-tabs {
             display: flex;
             gap: 0.5rem;
-            margin-bottom: 1rem;
+            margin: 1rem 1rem 0 1rem;
+            position: sticky;
+            top: 75px;
+            background: var(--white);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            z-index: 14;
+            border-bottom: 1px solid var(--gray-200);
         }
 
         .day-tab {
@@ -386,13 +393,18 @@
         }
 
         /* Program Day Sections */
+        #sessions-container {
+            margin-top: 0;
+            padding-top: 0.5rem;
+        }
+
         .program-day-section {
-            margin-bottom: 3rem;
+            margin-bottom: 1.5rem;
         }
 
         .program-day-header {
             position: sticky;
-            top: 80px;
+            top: 160px;
             background: var(--white);
             border-bottom: 3px solid var(--day-color, var(--purple));
             padding: 1rem;
@@ -470,6 +482,33 @@
         .agenda-day-sessions {
             display: grid;
             gap: 1rem;
+        }
+
+        /* Amazon Book Promotion */
+        .amazon-promo {
+            margin: 1rem 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .amazon-promo-link {
+            display: block;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .amazon-promo-link:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .amazon-promo-img {
+            max-width: 100%;
+            height: auto;
+            display: block;
         }
 
         /* Sponsors Carousel */
@@ -1933,6 +1972,10 @@
             }
 
             .program-day-header {
+                top: 120px;
+            }
+
+            .day-tabs {
                 top: 60px;
             }
 
@@ -1952,6 +1995,14 @@
             .modal {
                 margin: 0.5rem;
                 padding: 1rem;
+            }
+
+            .amazon-promo {
+                margin: 0.75rem;
+            }
+
+            .amazon-promo-link {
+                border-radius: var(--radius-md);
             }
         }
 
@@ -2060,6 +2111,13 @@
                 </button>
             </div>
 
+            <!-- Amazon Book Promotion -->
+            <div class="amazon-promo">
+                <a href="https://www.amazon.com.au/exec/obidos/ASIN/1761429809" target="_blank" rel="noopener noreferrer" class="amazon-promo-link">
+                    <img src="https://media.licdn.com/dms/image/sync/v2/D5627AQG6MYhfyxqhWQ/articleshare-shrink_800/B56ZhE4E8PHkAU-/0/1753502209818?e=2147483647&v=beta&t=aLo05PLelq133BsR53wSYY8e2tR3OabSF4JmzqHAiTc" alt="Amazon Book" loading="lazy" class="amazon-promo-img">
+                </a>
+            </div>
+
             <!-- Sponsors Carousel -->
             <div class="sponsors-carousel">
                 <h3 class="sponsors-carousel-title">Our Sponsors</h3>
@@ -2165,7 +2223,7 @@
                 <button class="day-tab" data-day="sun">Sunday</button>
             </div>
 
-            <div class="sessions-grid" id="sessions-container">
+            <div id="sessions-container">
                 <!-- Sessions will be populated by JavaScript -->
             </div>
         </section>
@@ -3715,6 +3773,27 @@
                     e.target.classList.add('active');
                     
                     applyFilters();
+                    
+                    // Scroll to the selected day section
+                    setTimeout(() => {
+                        const daySection = document.querySelector(`.program-day-section[data-day="${day}"]`);
+                        console.log('Looking for day section:', day, daySection);
+                        if (daySection) {
+                            const offset = 180; // Account for sticky elements
+                            const rect = daySection.getBoundingClientRect();
+                            const elementTop = rect.top + window.pageYOffset;
+                            const offsetPosition = elementTop - offset;
+                            
+                            console.log('Scrolling to:', offsetPosition, 'from position:', elementTop);
+                            
+                            window.scrollTo({
+                                top: Math.max(0, offsetPosition),
+                                behavior: 'smooth'
+                            });
+                        } else {
+                            console.log('Day section not found for:', day);
+                        }
+                    }, 300);
                 });
             });
 
@@ -3747,8 +3826,12 @@
                     applyFilters();
                     
                     // Explicitly show sponsors and resources after reset
+                    const amazonPromo = document.querySelector('.amazon-promo');
                     const sponsorsCarousel = document.querySelector('.sponsors-carousel');
                     const resourcesSection = document.querySelector('.resources-section');
+                    if (amazonPromo) {
+                        amazonPromo.style.display = 'flex';
+                    }
                     if (sponsorsCarousel) {
                         sponsorsCarousel.style.display = 'block';
                     }
@@ -3910,9 +3993,13 @@
             const hasActiveFilters = dayFilter || themeFilter || roomFilter;
             const isFiltering = hasActiveSearch || hasActiveFilters;
             
+            const amazonPromo = document.querySelector('.amazon-promo');
             const sponsorsCarousel = document.querySelector('.sponsors-carousel');
             const resourcesSection = document.querySelector('.resources-section');
             
+            if (amazonPromo) {
+                amazonPromo.style.display = isFiltering ? 'none' : 'flex';
+            }
             if (sponsorsCarousel) {
                 sponsorsCarousel.style.display = isFiltering ? 'none' : 'block';
             }
@@ -4156,8 +4243,14 @@
             // Handle hash changes
             window.addEventListener('hashchange', handleHashChange);
             
-            // Initial render
-            renderSessions();
+            // Set default day filter to Friday
+            const dayFilter = document.getElementById('day-filter');
+            if (dayFilter) {
+                dayFilter.value = 'fri';
+            }
+            
+            // Initial render with filters applied
+            applyFilters();
         }
 
         // Start the app

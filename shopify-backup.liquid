@@ -1,0 +1,13 @@
+{% comment %}
+  Montessori Collection — Fixed Infinite Scroll
+{% endcomment %}
+
+{% assign ns = section.id %}
+
+{% style %}
+  .ai-montessori-collection-{{ ns }} {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    max-width: {{ settings.page_width }}px;
+    margin: 0 auto;
+    padding: 20px 20px 50px 20px; /* 20px top, 50px bottom */
+  }
