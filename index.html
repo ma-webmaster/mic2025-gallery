@@ -2114,7 +2114,7 @@
             <!-- Amazon Book Promotion -->
             <div class="amazon-promo">
                 <a href="https://www.amazon.com.au/exec/obidos/ASIN/1761429809" target="_blank" rel="noopener noreferrer" class="amazon-promo-link">
-                    <img src="https://media.licdn.com/dms/image/sync/v2/D5627AQG6MYhfyxqhWQ/articleshare-shrink_800/B56ZhE4E8PHkAU-/0/1753502209818?e=2147483647&v=beta&t=aLo05PLelq133BsR53wSYY8e2tR3OabSF4JmzqHAiTc" alt="Amazon Book" loading="lazy" class="amazon-promo-img">
+                    <img src="https://i.postimg.cc/FzBRwKw0/1753502209818.png" alt="Amazon Book" loading="lazy" class="amazon-promo-img">
                 </a>
             </div>
 
@@ -3988,10 +3988,11 @@
 
             renderSessions();
 
-            // Show/hide sponsors and resources based on active filters or search
+            // Show/hide sponsors and resources based on active search only
+            // (not day filters - users should see sponsors regardless of selected day)
             const hasActiveSearch = searchTerm.trim().length > 0;
-            const hasActiveFilters = dayFilter || themeFilter || roomFilter;
-            const isFiltering = hasActiveSearch || hasActiveFilters;
+            const hasActiveThemRoomFilters = themeFilter || roomFilter;
+            const isFiltering = hasActiveSearch || hasActiveThemRoomFilters;
             
             const amazonPromo = document.querySelector('.amazon-promo');
             const sponsorsCarousel = document.querySelector('.sponsors-carousel');
