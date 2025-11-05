@@ -2708,22 +2708,31 @@
     <div class="modal-overlay" id="feedback-modal" role="dialog" aria-modal="true" aria-labelledby="feedback-modal-title">
         <div class="modal">
             <div class="modal-header">
-                <h3 class="modal-title" id="feedback-modal-title">Share Your Feedback</h3>
+                <h3 class="modal-title" id="feedback-modal-title">MIC2025 Recordings & Feedback</h3>
                 <button class="modal-close" id="feedback-modal-close" aria-label="Close modal">&times;</button>
             </div>
             <div class="modal-content">
                 <p style="margin-bottom: 1rem; color: var(--gray-700); line-height: 1.6;">
                     Thank you for joining us at MIC2025! Your feedback is incredibly important to us as we begin planning future conventions and professional development opportunities.
                 </p>
+                <div style="margin: 1.5rem 0; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md); border-left: 3px solid var(--purple);">
+                    <h4 style="margin: 0 0 0.5rem 0; color: var(--purple); font-size: 1rem;">📹 Access Session Recordings</h4>
+                    <p style="margin: 0; color: var(--gray-700); line-height: 1.5; font-size: 0.875rem;">
+                        Missed a session or want to watch again? Purchase full access to all MIC2025 session recordings for $450 AUD.
+                    </p>
+                </div>
                 <p style="margin-bottom: 1.5rem; color: var(--gray-600); line-height: 1.6;">
                     Please take a few moments to share your thoughts and experiences. Your feedback will help us refine and build upon what we've created together.
                 </p>
             </div>
-            <div class="modal-actions">
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdd5qJSxgwvjVgDpNl69wec97JezsnTQQjLCgxAcSsr9SCIFw/viewform?pli=1" target="_blank" rel="noopener noreferrer" class="modal-btn modal-btn-primary" id="feedback-survey-btn">
-                    Take Survey
+            <div class="modal-actions" style="flex-direction: column; gap: 0.75rem;">
+                <a href="YOUR_HUMANITIX_EVENT_URL_HERE" target="_blank" rel="noopener noreferrer" class="modal-btn modal-btn-primary" id="recordings-btn" style="width: 100%; text-align: center; text-decoration: none;">
+                    🎥 Purchase Recordings ($450 AUD)
                 </a>
-                <button class="modal-btn modal-btn-secondary" id="feedback-modal-close-btn">Maybe Later</button>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdd5qJSxgwvjVgDpNl69wec97JezsnTQQjLCgxAcSsr9SCIFw/viewform?pli=1" target="_blank" rel="noopener noreferrer" class="modal-btn modal-btn-secondary" id="feedback-survey-btn" style="width: 100%; text-align: center; text-decoration: none;">
+                    📝 Take Feedback Survey
+                </a>
+                <button class="modal-btn modal-btn-secondary" id="feedback-modal-close-btn" style="width: 100%;">Maybe Later</button>
             </div>
         </div>
     </div>
@@ -4028,6 +4037,15 @@
             // Survey link click - close modal after opening survey
             const feedbackSurveyBtn = document.getElementById('feedback-survey-btn');
             feedbackSurveyBtn?.addEventListener('click', () => {
+                // Close modal after a short delay to allow link to open
+                setTimeout(() => {
+                    closeFeedbackModal();
+                }, 100);
+            });
+
+            // Recordings button click - close modal after opening Humanitix
+            const recordingsBtn = document.getElementById('recordings-btn');
+            recordingsBtn?.addEventListener('click', () => {
                 // Close modal after a short delay to allow link to open
                 setTimeout(() => {
                     closeFeedbackModal();
