@@ -2780,10 +2780,10 @@
             <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/8.png" alt="Program" class="bottom-nav-icon">
             <span>Program</span>
         </a>
-        <a href="#agenda" class="bottom-nav-item" data-section="agenda">
-            <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/9.png" alt="Agenda" class="bottom-nav-icon">
-            <span>Schedule</span>
-        </a>
+        <button class="bottom-nav-item" id="bottom-nav-survey" type="button" aria-label="Feedback Survey">
+            <span class="bottom-nav-icon" style="font-size: 24px;">💬</span>
+            <span>Survey</span>
+        </button>
         <a href="#speakers" class="bottom-nav-item" data-section="speakers">
             <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/10.png" alt="Speakers" class="bottom-nav-icon">
             <span>Speakers</span>
@@ -3955,13 +3955,24 @@
             document.querySelectorAll('.bottom-nav-item').forEach(item => {
                 item.addEventListener('click', (e) => {
                     e.preventDefault();
+                    
+                    // Check if it's the survey button
+                    if (item.id === 'bottom-nav-survey') {
+                        const feedbackModal = document.getElementById('feedback-modal');
+                        if (feedbackModal) {
+                            feedbackModal.classList.add('active');
+                            document.body.style.overflow = 'hidden';
+                        }
+                        return;
+                    }
+                    
                     const section = item.dataset.section;
                     
                     // If Program section and href is #, go to homepage (remove hash)
                     if (section === 'program' && item.getAttribute('href') === '#') {
                         window.location.hash = '';
                         navigateToSection(section);
-                    } else {
+                    } else if (section) {
                         navigateToSection(section);
                     }
                 });
