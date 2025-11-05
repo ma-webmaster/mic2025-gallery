@@ -1890,6 +1890,64 @@
             outline-offset: 2px;
         }
 
+        /* Floating Feedback Button */
+        .feedback-float-btn {
+            position: fixed;
+            bottom: 90px;
+            right: 1rem;
+            background: linear-gradient(135deg, var(--purple), var(--blue));
+            color: var(--white);
+            border: none;
+            border-radius: 2rem;
+            padding: 0.75rem 1.25rem;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .feedback-float-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.2);
+        }
+
+        .feedback-float-btn:active {
+            transform: translateY(0);
+        }
+
+        .feedback-icon {
+            font-size: 1.25rem;
+        }
+
+        .feedback-text {
+            display: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 4px 12px -2px rgba(159, 52, 250, 0.4);
+            }
+            50% {
+                box-shadow: 0 4px 20px -2px rgba(159, 52, 250, 0.6);
+            }
+        }
+
+        @media (min-width: 768px) {
+            .feedback-text {
+                display: inline;
+            }
+            
+            .feedback-float-btn {
+                bottom: 1.5rem;
+            }
+        }
+
         /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
@@ -2688,7 +2746,35 @@
         </div>
     </div>
 
-    <!-- Bottom Navigation -->
+    <!-- Feedback Survey Modal -->
+    <div class="modal-overlay" id="feedback-modal" role="dialog" aria-modal="true" aria-labelledby="feedback-modal-title">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="feedback-modal-title">Share Your Feedback</h3>
+                <button class="modal-close" id="feedback-modal-close" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-content">
+                <p style="margin-bottom: 1rem; color: var(--gray-700); line-height: 1.6;">
+                    Thank you for joining us at MIC2025! Your feedback is incredibly important to us as we begin planning future conventions and professional development opportunities.
+                </p>
+                <p style="margin-bottom: 1.5rem; color: var(--gray-600); line-height: 1.6;">
+                    Please take a few moments to share your thoughts and experiences. Your feedback will help us refine and build upon what we've created together.
+                </p>
+            </div>
+            <div class="modal-actions">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdd5qJSxgwvjVgDpNl69wec97JezsnTQQjLCgxAcSsr9SCIFw/viewform?pli=1" target="_blank" rel="noopener noreferrer" class="modal-btn modal-btn-primary" id="feedback-survey-btn">
+                    Take Survey
+                </a>
+                <button class="modal-btn modal-btn-secondary" id="feedback-modal-close-btn">Maybe Later</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Feedback Button -->
+    <button class="feedback-float-btn" id="feedback-float-btn" aria-label="Share your feedback" title="Share your feedback">
+        <span class="feedback-icon">💬</span>
+        <span class="feedback-text">Feedback</span>
+    </button>
     <nav class="bottom-nav" role="navigation" aria-label="Bottom navigation">
         <a href="#" class="bottom-nav-item active" data-section="program">
             <img src="https://events.montessori.org.au/wp-content/uploads/2025/10/8.png" alt="Program" class="bottom-nav-icon">
@@ -3885,10 +3971,14 @@
         function addModalEventListeners() {
             const modal = document.getElementById('session-modal');
             const speakerModal = document.getElementById('speaker-modal');
+            const feedbackModal = document.getElementById('feedback-modal');
             const sessionCloseBtn = modal.querySelector('.modal-close');
             const closeBtnSecondary = document.getElementById('modal-close-btn');
             const bookmarkBtn = document.getElementById('modal-bookmark-btn');
             const speakerCloseBtn = document.getElementById('speaker-modal-close-btn');
+            const feedbackFloatBtn = document.getElementById('feedback-float-btn');
+            const feedbackCloseBtn = document.getElementById('feedback-modal-close');
+            const feedbackCloseBtnSecondary = document.getElementById('feedback-modal-close-btn');
 
             // Close session modal
             function closeSessionModal() {
@@ -3901,6 +3991,19 @@
             function closeSpeakerModal() {
                 speakerModal.classList.remove('active');
                 document.body.style.overflow = '';
+            }
+
+            // Feedback Modal functions
+            function openFeedbackModal() {
+                feedbackModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeFeedbackModal() {
+                feedbackModal.classList.remove('active');
+                document.body.style.overflow = '';
+                // Store dismissal in localStorage so it doesn't auto-show again
+                localStorage.setItem('mic2025_feedback_dismissed', 'true');
             }
 
             sessionCloseBtn?.addEventListener('click', (e) => {
@@ -3938,6 +4041,8 @@
                         closeSessionModal();
                     } else if (speakerModal.classList.contains('active')) {
                         closeSpeakerModal();
+                    } else if (feedbackModal && feedbackModal.classList.contains('active')) {
+                        closeFeedbackModal();
                     }
                 }
             });
@@ -3949,6 +4054,46 @@
                     updateModalBookmarkButton();
                 }
             });
+
+            // Floating button click
+            feedbackFloatBtn?.addEventListener('click', () => {
+                openFeedbackModal();
+            });
+
+            // Survey link click - close modal after opening survey
+            const feedbackSurveyBtn = document.getElementById('feedback-survey-btn');
+            feedbackSurveyBtn?.addEventListener('click', () => {
+                // Close modal after a short delay to allow link to open
+                setTimeout(() => {
+                    closeFeedbackModal();
+                }, 100);
+            });
+
+            // Close buttons
+            feedbackCloseBtn?.addEventListener('click', (e) => {
+                e.preventDefault();
+                closeFeedbackModal();
+            });
+
+            feedbackCloseBtnSecondary?.addEventListener('click', (e) => {
+                e.preventDefault();
+                closeFeedbackModal();
+            });
+
+            // Close on backdrop click
+            feedbackModal?.addEventListener('click', (e) => {
+                if (e.target === feedbackModal) {
+                    closeFeedbackModal();
+                }
+            });
+
+            // Auto-show feedback modal after 5 seconds (only once per user)
+            setTimeout(() => {
+                const feedbackDismissed = localStorage.getItem('mic2025_feedback_dismissed');
+                if (!feedbackDismissed && feedbackModal) {
+                    openFeedbackModal();
+                }
+            }, 5000);
         }
 
         // Filtering Functions
