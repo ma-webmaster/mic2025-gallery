@@ -484,33 +484,6 @@
             gap: 1rem;
         }
 
-        /* Amazon Book Promotion */
-        .amazon-promo {
-            margin: 1rem 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .amazon-promo-link {
-            display: block;
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .amazon-promo-link:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .amazon-promo-img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-
         /* Sponsors Carousel */
         .sponsors-carousel {
             margin: 1rem 0;
@@ -2054,14 +2027,6 @@
                 margin: 0.5rem;
                 padding: 1rem;
             }
-
-            .amazon-promo {
-                margin: 0.75rem;
-            }
-
-            .amazon-promo-link {
-                border-radius: var(--radius-md);
-            }
         }
 
         /* Loading states */
@@ -2167,13 +2132,6 @@
                     <span>🔄</span>
                     <span>Reset Filters</span>
                 </button>
-            </div>
-
-            <!-- Amazon Book Promotion -->
-            <div class="amazon-promo">
-                <a href="https://www.amazon.com.au/exec/obidos/ASIN/1761429809" target="_blank" rel="noopener noreferrer" class="amazon-promo-link">
-                    <img src="https://i.postimg.cc/FzBRwKw0/1753502209818.png" alt="Amazon Book" loading="lazy" class="amazon-promo-img">
-                </a>
             </div>
 
             <!-- Sponsors Carousel -->
@@ -3912,12 +3870,8 @@
                     applyFilters();
                     
                     // Explicitly show sponsors and resources after reset
-                    const amazonPromo = document.querySelector('.amazon-promo');
                     const sponsorsCarousel = document.querySelector('.sponsors-carousel');
                     const resourcesSection = document.querySelector('.resources-section');
-                    if (amazonPromo) {
-                        amazonPromo.style.display = 'flex';
-                    }
                     if (sponsorsCarousel) {
                         sponsorsCarousel.style.display = 'block';
                     }
@@ -4150,13 +4104,9 @@
             const hasActiveThemRoomFilters = themeFilter || roomFilter;
             const isFiltering = hasActiveSearch || hasActiveThemRoomFilters;
             
-            const amazonPromo = document.querySelector('.amazon-promo');
             const sponsorsCarousel = document.querySelector('.sponsors-carousel');
             const resourcesSection = document.querySelector('.resources-section');
             
-            if (amazonPromo) {
-                amazonPromo.style.display = isFiltering ? 'none' : 'flex';
-            }
             if (sponsorsCarousel) {
                 sponsorsCarousel.style.display = isFiltering ? 'none' : 'block';
             }
