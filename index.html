@@ -484,6 +484,113 @@
             gap: 1rem;
         }
 
+        /* Recordings Banner */
+        .recordings-banner {
+            margin: 1.5rem 0;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, var(--purple), var(--blue));
+            border-radius: var(--radius-lg);
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .recordings-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .recordings-banner-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+            text-align: center;
+        }
+
+        .recordings-banner-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .recordings-banner-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--white);
+        }
+
+        .recordings-banner-text {
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin: 0;
+            color: rgba(255, 255, 255, 0.95);
+            max-width: 600px;
+        }
+
+        .recordings-banner-price {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--gold);
+            margin: 0.25rem 0;
+        }
+
+        .recordings-banner-btn {
+            margin-top: 0.5rem;
+            padding: 0.75rem 2rem;
+            background: var(--white);
+            color: var(--purple);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .recordings-banner-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            background: var(--gray-50);
+        }
+
+        .recordings-banner-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .recordings-banner {
+                padding: 1rem;
+                margin: 1rem 0;
+            }
+
+            .recordings-banner-title {
+                font-size: 1.125rem;
+            }
+
+            .recordings-banner-text {
+                font-size: 0.8125rem;
+            }
+
+            .recordings-banner-btn {
+                padding: 0.625rem 1.5rem;
+                font-size: 0.9375rem;
+                width: 100%;
+            }
+        }
+
         /* Sponsors Carousel */
         .sponsors-carousel {
             margin: 1rem 0;
@@ -2132,6 +2239,21 @@
                     <span>🔄</span>
                     <span>Reset Filters</span>
                 </button>
+            </div>
+
+            <!-- Recordings Banner -->
+            <div class="recordings-banner">
+                <div class="recordings-banner-content">
+                    <div class="recordings-banner-icon">🎥</div>
+                    <h3 class="recordings-banner-title">Access All MIC2025 Session Recordings</h3>
+                    <p class="recordings-banner-text">
+                        Missed a session or want to watch again? Purchase full access to all recordings from the 3-day convention featuring presentations from international Montessori educators.
+                    </p>
+                    <div class="recordings-banner-price">$450 AUD</div>
+                    <a href="YOUR_HUMANITIX_EVENT_URL_HERE" target="_blank" rel="noopener noreferrer" class="recordings-banner-btn" id="recordings-banner-btn">
+                        Purchase Recordings
+                    </a>
+                </div>
             </div>
 
             <!-- Sponsors Carousel -->
@@ -3879,8 +4001,12 @@
                     applyFilters();
                     
                     // Explicitly show sponsors and resources after reset
+                    const recordingsBanner = document.querySelector('.recordings-banner');
                     const sponsorsCarousel = document.querySelector('.sponsors-carousel');
                     const resourcesSection = document.querySelector('.resources-section');
+                    if (recordingsBanner) {
+                        recordingsBanner.style.display = 'block';
+                    }
                     if (sponsorsCarousel) {
                         sponsorsCarousel.style.display = 'block';
                     }
@@ -4122,9 +4248,13 @@
             const hasActiveThemRoomFilters = themeFilter || roomFilter;
             const isFiltering = hasActiveSearch || hasActiveThemRoomFilters;
             
+            const recordingsBanner = document.querySelector('.recordings-banner');
             const sponsorsCarousel = document.querySelector('.sponsors-carousel');
             const resourcesSection = document.querySelector('.resources-section');
             
+            if (recordingsBanner) {
+                recordingsBanner.style.display = isFiltering ? 'none' : 'block';
+            }
             if (sponsorsCarousel) {
                 sponsorsCarousel.style.display = isFiltering ? 'none' : 'block';
             }
