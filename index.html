@@ -212,6 +212,24 @@
             border-color: rgba(255, 255, 255, 0.5);
         }
 
+        .section-heading {
+            position: absolute;
+            left: 40px;
+            right: 40px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: rgba(241, 179, 58, 0.9);
+            padding: 0.5rem 1rem;
+            border-left: 4px solid var(--purple);
+            background: rgba(5, 5, 8, 0.75);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+            border-radius: 0.5rem;
+            z-index: 2;
+            pointer-events: none;
+        }
+
         .zoom-indicator {
             position: fixed;
             top: 30px;
@@ -378,7 +396,8 @@
         <p>Sydney • October 31 - November 2</p>
         <div class="subtitle">Mouse or Drag to Navigate • Scroll to Zoom • Click to View</div>
         <div class="gallery-tabs" id="galleryTabs">
-            <button class="tab-btn active" data-category="Awards">Awards</button>
+            <button class="tab-btn active" data-category="All">All</button>
+            <button class="tab-btn" data-category="Awards">Awards</button>
             <button class="tab-btn" data-category="MIC Day 1">MIC Day 1</button>
         </div>
     </div>
@@ -412,7 +431,10 @@
 
     <script>
         let allItems = [];
-        let currentCategory = 'Awards';
+        let currentCategory = 'All';
+        const categoriesOrder = ['Awards', 'MIC Day 1'];
+        const imageSizeCache = new Map();
+        let layoutVersion = 0;
 
         const basePath = (() => {
             const path = window.location.pathname;
@@ -437,28 +459,83 @@
         
         // Image grid settings
         const imageWidth = 240;
-        const imageHeight = 320;
         const gap = 20;
         const columns = 12;
         
         // Add padding to ensure edges are visible and header doesn't block
-        const topPadding = 150; // Space for header
+        const topPadding = 320;
         const leftPadding = 40;
         const rightPadding = 40;
         const bottomPadding = 40;
+        const minTileHeight = 180;
+        const maxTileHeight = 520;
+        const headingHeight = 60;
+        const parallaxStrength = 0.25;
         
         let canvasWidth = 0;
         let canvasHeight = 0;
-        const heightVariants = [0.8, 1, 1.25];
-        const parallaxStrength = 0.35;
 
         function normalizeCategory(value) {
             return (value || '').toLowerCase();
         }
 
+        function resolveCategoryName(value) {
+            return value && value.trim() ? value : 'Gallery';
+        }
+
+        function buildGroups(items) {
+            const map = new Map();
+            items.forEach((item) => {
+                const key = resolveCategoryName(item.category);
+                if (!map.has(key)) {
+                    map.set(key, []);
+                }
+                map.get(key).push(item);
+            });
+
+            if (currentCategory !== 'All') {
+                const key = categoriesOrder.find(cat => normalizeCategory(cat) === normalizeCategory(currentCategory)) || resolveCategoryName(currentCategory);
+                const groupItems = map.get(key) || [];
+                return [{ category: key, items: groupItems }];
+            }
+
+            const orderedKeys = [...categoriesOrder, ...map.keys()];
+            const seen = new Set();
+            const groups = [];
+            orderedKeys.forEach((key) => {
+                if (map.has(key) && !seen.has(key)) {
+                    groups.push({ category: key, items: map.get(key) });
+                    seen.add(key);
+                }
+            });
+            return groups;
+        }
+
+        function loadImageDimensions(src) {
+            if (imageSizeCache.has(src)) {
+                return imageSizeCache.get(src);
+            }
+            const promise = new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+                img.onerror = () => resolve({ width: imageWidth, height: imageWidth * 1.3 });
+                img.src = src;
+            });
+            imageSizeCache.set(src, promise);
+            return promise;
+        }
+
+        async function getItemDimensions(item) {
+            if (item._dimensions) return item._dimensions;
+            const src = resolveMediaPath(item.thumb || item.full);
+            const dims = await loadImageDimensions(src);
+            item._dimensions = dims;
+            return dims;
+        }
+
         function getFilteredItems() {
             if (!allItems.length) return [];
-            if (!currentCategory) return allItems;
+            if (!currentCategory || currentCategory === 'All') return allItems;
             const normalized = normalizeCategory(currentCategory);
             const filtered = allItems.filter(item => normalizeCategory(item.category) === normalized);
             return filtered.length ? filtered : allItems;
@@ -477,7 +554,6 @@
             .then(r => r.json())
             .then(items => {
                 allItems = items.map((item, index) => ({ ...item, _id: index }));
-                canvas.innerHTML = "";
                 updateTabsActive();
                 createLayout();
             })
@@ -491,7 +567,6 @@
             e.stopPropagation();
             currentCategory = category;
             updateTabsActive();
-            canvas.innerHTML = "";
             createLayout();
         });
 
@@ -513,20 +588,39 @@
         let lastDragY = 0;
         let dragDistance = 0;
 
-        // Create uniform grid layout
-        function createLayout() {
+        // Create masonry layout
+        async function createLayout() {
+            const version = ++layoutVersion;
             const displayItems = getFilteredItems();
-            if (!displayItems.length) return;
+            if (!displayItems.length) {
+                canvas.innerHTML = '';
+                return;
+            }
 
-            const totalItems = Math.max(displayItems.length, 1);
+            const fragment = document.createDocumentFragment();
             const columnHeights = new Array(columns).fill(topPadding + gap);
-
             canvasWidth = leftPadding + (columns * (imageWidth + gap)) + gap + rightPadding;
 
-            // Set canvas dimensions explicitly
-            canvas.style.width = `${canvasWidth}px`;
-            
-            displayItems.forEach((item) => {
+            const groups = buildGroups(displayItems);
+            const itemsNeedingDims = [];
+            groups.forEach(group => group.items.forEach(item => itemsNeedingDims.push(item)));
+            await Promise.all(itemsNeedingDims.map(getItemDimensions));
+
+            const addHeading = (category) => {
+                const heading = document.createElement('div');
+                heading.className = 'section-heading';
+                const headingTop = Math.min(...columnHeights);
+                heading.style.left = `${leftPadding}px`;
+                heading.style.top = `${headingTop}px`;
+                heading.style.width = `${canvasWidth - leftPadding - rightPadding}px`;
+                heading.innerHTML = `<span>${category}</span>`;
+                fragment.appendChild(heading);
+                for (let i = 0; i < columns; i++) {
+                    columnHeights[i] = Math.max(columnHeights[i], headingTop) + headingHeight + gap;
+                }
+            };
+
+            const placeItem = (item) => {
                 let targetColumn = 0;
                 let minHeight = columnHeights[0];
                 for (let i = 1; i < columns; i++) {
@@ -536,13 +630,15 @@
                     }
                 }
 
-                const tileHeight = imageHeight * (heightVariants[item._id % heightVariants.length] || 1);
+                const dims = item._dimensions || { width: imageWidth, height: imageWidth * 1.2 };
+                const aspectRatio = dims.height && dims.width ? dims.height / dims.width : 1;
+                const tileHeight = Math.max(minTileHeight, Math.min(imageWidth * aspectRatio, maxTileHeight));
                 const globalIndex = typeof item._id === 'number' ? item._id : allItems.indexOf(item);
-                
+
                 const x = leftPadding + targetColumn * (imageWidth + gap) + gap;
                 const y = columnHeights[targetColumn];
                 columnHeights[targetColumn] += tileHeight + gap;
-                
+
                 const node = document.createElement('div');
                 node.className = 'image-node';
                 node.style.left = `${x}px`;
@@ -550,6 +646,7 @@
                 node.style.width = `${imageWidth}px`;
                 node.style.height = `${tileHeight}px`;
                 node.dataset.index = globalIndex;
+
                 const img = document.createElement('img');
                 img.src = resolveMediaPath(item.thumb || item.full);
                 img.alt = item.title || 'MIC 2025 Gallery image';
@@ -560,34 +657,37 @@
                     <h3>${item.category || item.title || 'MIC 2025'}</h3>
                     <p>${item.desc || ''}</p>
                 `;
-                
+
                 node.appendChild(img);
                 node.appendChild(label);
-                canvas.appendChild(node);
-                
-                // Click to open lightbox (only if not dragging)
-                node.addEventListener('mousedown', () => {
-                    dragDistance = 0;
-                });
-                
-                node.addEventListener('touchstart', () => {
-                    touchDistance = 0;
-                });
-                
+
+                node.addEventListener('mousedown', () => { dragDistance = 0; });
+                node.addEventListener('touchstart', () => { touchDistance = 0; });
                 node.addEventListener('click', (e) => {
-                    // Only open if the click wasn't part of a drag
                     if (dragDistance < 5 && touchDistance < 10) {
                         e.stopPropagation();
                         const idx = parseInt(node.dataset.index, 10);
                         openLightbox(Number.isNaN(idx) ? 0 : idx);
                     }
                 });
+
+                fragment.appendChild(node);
+            };
+
+            groups.forEach(group => {
+                if (!group.items.length) return;
+                addHeading(group.category);
+                group.items.forEach(placeItem);
             });
-            
+
+            if (version !== layoutVersion) return;
+
+            canvas.innerHTML = '';
+            canvas.style.width = `${canvasWidth}px`;
             canvasHeight = Math.max(...columnHeights) + bottomPadding;
             canvas.style.height = `${canvasHeight}px`;
+            canvas.appendChild(fragment);
 
-            // Initialize position at top-left corner for clearest initial view
             currentX = 0;
             currentY = 0;
             targetX = 0;
