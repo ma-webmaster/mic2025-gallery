@@ -460,10 +460,11 @@
         // Image grid settings
         const imageWidth = 240;
         const gap = 20;
-        const columns = 12;
+        const MIN_COLUMNS = 4;
+        const MAX_COLUMNS = 8;
         
         // Add padding to ensure edges are visible and header doesn't block
-        const topPadding = 320;
+        const topPadding = 220;
         const leftPadding = 40;
         const rightPadding = 40;
         const bottomPadding = 40;
@@ -474,6 +475,7 @@
         
         let canvasWidth = 0;
         let canvasHeight = 0;
+        let currentColumns = MIN_COLUMNS;
 
         function normalizeCategory(value) {
             return (value || '').toLowerCase();
@@ -531,6 +533,12 @@
             const dims = await loadImageDimensions(src);
             item._dimensions = dims;
             return dims;
+        }
+
+        function getColumnCount() {
+            const availableWidth = window.innerWidth - (leftPadding + rightPadding) - 120;
+            const raw = Math.floor(availableWidth / (imageWidth + gap));
+            return Math.max(MIN_COLUMNS, Math.min(MAX_COLUMNS, raw || MIN_COLUMNS));
         }
 
         function getFilteredItems() {
@@ -598,6 +606,8 @@
             }
 
             const fragment = document.createDocumentFragment();
+            const columns = getColumnCount();
+            currentColumns = columns;
             const columnHeights = new Array(columns).fill(topPadding + gap);
             canvasWidth = leftPadding + (columns * (imageWidth + gap)) + gap + rightPadding;
 
@@ -654,8 +664,8 @@
                 const label = document.createElement('div');
                 label.className = 'image-label';
                 label.innerHTML = `
-                    <h3>${item.category || item.title || 'MIC 2025'}</h3>
-                    <p>${item.desc || ''}</p>
+                    <h3>${resolveCategoryName(item.category)}</h3>
+                    <p>${item.title ? item.title.replace(/_/g, ' ') : (item.desc || '')}</p>
                 `;
 
                 node.appendChild(img);
@@ -1016,6 +1026,13 @@
 
         // Initialize
         animate(); // Start animation loop
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                createLayout();
+            }, 200);
+        });
     </script>
 </body>
 </html>

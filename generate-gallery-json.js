@@ -35,23 +35,29 @@ function getBaseName(filename) {
   return path.parse(filename).name;
 }
 
+const CATEGORY_RULES = [
+  { label: 'Awards', test: /awards/i },
+  { label: 'MIC Day 1', test: /day[\s_-]*1/i },
+];
+
 function extractCategory(filename) {
-  const [possibleCategory] = filename.split(' - ');
-  return possibleCategory && possibleCategory.trim().length > 0
-    ? possibleCategory.trim()
-    : 'General';
+  const lower = filename.toLowerCase();
+  for (const rule of CATEGORY_RULES) {
+    if (rule.test.test(lower)) {
+      return rule.label;
+    }
+  }
+  return 'Gallery';
 }
 
 function buildTitle(filename, category) {
-  const withoutCategory = filename.startsWith(`${category} - `)
-    ? filename.slice(category.length + 3)
-    : filename;
-
-  // Remove extensions (even double ones like .jpg_web.jpg)
-  const withoutExtension = withoutCategory.replace(/\.[^.]+$/g, '').replace(/\.[^.]+$/g, '');
-
-  // Replace separators with spaces and tidy up whitespace
-  const cleaned = withoutExtension
+  const withoutExtension = filename.replace(/\.[^.]+$/g, '').replace(/\.[^.]+$/g, '');
+  const normalizedCategory = category ? category.toLowerCase() : '';
+  let cleaned = withoutExtension;
+  if (normalizedCategory && cleaned.toLowerCase().startsWith(normalizedCategory)) {
+    cleaned = cleaned.slice(category.length);
+  }
+  cleaned = cleaned
     .replace(/[-_]+/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
