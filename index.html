@@ -148,7 +148,7 @@
                 rgba(5, 5, 8, 0.7) 50%,
                 transparent 100%);
             z-index: 1000;
-            pointer-events: none;
+            pointer-events: auto;
         }
 
         .header h1 {
@@ -449,6 +449,8 @@
         
         let canvasWidth = 0;
         let canvasHeight = 0;
+        const heightVariants = [0.8, 1, 1.25];
+        const parallaxStrength = 0.35;
 
         function normalizeCategory(value) {
             return (value || '').toLowerCase();
@@ -486,6 +488,7 @@
             if (!button) return;
             const category = button.dataset.category;
             if (!category || category === currentCategory) return;
+            e.stopPropagation();
             currentCategory = category;
             updateTabsActive();
             canvas.innerHTML = "";
@@ -516,29 +519,36 @@
             if (!displayItems.length) return;
 
             const totalItems = Math.max(displayItems.length, 1);
-            const rows = Math.ceil(totalItems / columns);
+            const columnHeights = new Array(columns).fill(topPadding + gap);
 
             canvasWidth = leftPadding + (columns * (imageWidth + gap)) + gap + rightPadding;
-            canvasHeight = topPadding + (rows * (imageHeight + gap)) + gap + bottomPadding;
 
             // Set canvas dimensions explicitly
             canvas.style.width = `${canvasWidth}px`;
-            canvas.style.height = `${canvasHeight}px`;
             
-            displayItems.forEach((item, index) => {
-                const col = index % columns;
-                const row = Math.floor(index / columns);
+            displayItems.forEach((item) => {
+                let targetColumn = 0;
+                let minHeight = columnHeights[0];
+                for (let i = 1; i < columns; i++) {
+                    if (columnHeights[i] < minHeight) {
+                        minHeight = columnHeights[i];
+                        targetColumn = i;
+                    }
+                }
+
+                const tileHeight = imageHeight * (heightVariants[item._id % heightVariants.length] || 1);
                 const globalIndex = typeof item._id === 'number' ? item._id : allItems.indexOf(item);
                 
-                const x = leftPadding + col * (imageWidth + gap) + gap;
-                const y = topPadding + row * (imageHeight + gap) + gap;
+                const x = leftPadding + targetColumn * (imageWidth + gap) + gap;
+                const y = columnHeights[targetColumn];
+                columnHeights[targetColumn] += tileHeight + gap;
                 
                 const node = document.createElement('div');
                 node.className = 'image-node';
                 node.style.left = `${x}px`;
                 node.style.top = `${y}px`;
                 node.style.width = `${imageWidth}px`;
-                node.style.height = `${imageHeight}px`;
+                node.style.height = `${tileHeight}px`;
                 node.dataset.index = globalIndex;
                 const img = document.createElement('img');
                 img.src = resolveMediaPath(item.thumb || item.full);
@@ -574,6 +584,9 @@
                 });
             });
             
+            canvasHeight = Math.max(...columnHeights) + bottomPadding;
+            canvas.style.height = `${canvasHeight}px`;
+
             // Initialize position at top-left corner for clearest initial view
             currentX = 0;
             currentY = 0;
@@ -594,8 +607,8 @@
             const minY = Math.min(0, window.innerHeight - canvasHeight * scale);
             
             // Map mouse position to pan range (0 = top/left, 1 = bottom/right)
-            targetX = mouseX * minX;
-            targetY = mouseY * minY;
+            targetX = mouseX * minX * parallaxStrength;
+            targetY = mouseY * minY * parallaxStrength;
         });
 
         // Drag to pan
@@ -635,8 +648,8 @@
                 }
                 
                 // Calculate velocity for momentum
-                velocityX = (e.clientX - lastDragX) / deltaTime * 16;
-                velocityY = (e.clientY - lastDragY) / deltaTime * 16;
+                velocityX = (e.clientX - lastDragX) / deltaTime * 8;
+                velocityY = (e.clientY - lastDragY) / deltaTime * 8;
                 
                 targetX = dragLastX + deltaX;
                 targetY = dragLastY + deltaY;
@@ -674,8 +687,8 @@
                 targetY += velocityY;
                 
                 // Decay velocity (friction)
-                velocityX *= 0.92;
-                velocityY *= 0.92;
+                velocityX *= 0.9;
+                velocityY *= 0.9;
                 
                 // Stop if velocity is very small
                 if (Math.abs(velocityX) < 0.1) velocityX = 0;
@@ -696,7 +709,7 @@
             }
             
             // Smooth interpolation (easing)
-            const easing = (isDragging || isTouching) ? 0.15 : 0.06;
+            const easing = (isDragging || isTouching) ? 0.1 : 0.04;
             currentX += (targetX - currentX) * easing;
             currentY += (targetY - currentY) * easing;
             
@@ -818,8 +831,8 @@
                 }
                 
                 // Calculate velocity for momentum
-                velocityX = (e.touches[0].clientX - lastTouchX) / deltaTime * 16;
-                velocityY = (e.touches[0].clientY - lastTouchY) / deltaTime * 16;
+                velocityX = (e.touches[0].clientX - lastTouchX) / deltaTime * 8;
+                velocityY = (e.touches[0].clientY - lastTouchY) / deltaTime * 8;
                 
                 targetX = touchLastX + deltaX;
                 targetY = touchLastY + deltaY;
