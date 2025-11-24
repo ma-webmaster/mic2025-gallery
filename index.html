@@ -182,6 +182,36 @@
             text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
         }
 
+        .gallery-tabs {
+            display: inline-flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .tab-btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+        }
+
+        .tab-btn.active {
+            background: var(--purple);
+            border-color: var(--purple);
+            box-shadow: 0 8px 20px rgba(159, 52, 250, 0.35);
+        }
+
+        .tab-btn:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
         .zoom-indicator {
             position: fixed;
             top: 30px;
@@ -347,9 +377,13 @@
         <h1>MIC 2025 Gallery</h1>
         <p>Sydney • October 31 - November 2</p>
         <div class="subtitle">Mouse or Drag to Navigate • Scroll to Zoom • Click to View</div>
+        <div class="gallery-tabs" id="galleryTabs">
+            <button class="tab-btn active" data-category="Awards">Awards</button>
+            <button class="tab-btn" data-category="MIC Day 1">MIC Day 1</button>
+        </div>
     </div>
 
-    <div class="zoom-indicator" id="zoomIndicator">ZOOM: 100%</div>
+    <div class="zoom-indicator" id="zoomIndicator">ZOOM: 50%</div>
 
     <div class="viewport" id="viewport">
         <div class="canvas" id="canvas">
@@ -378,6 +412,7 @@
 
     <script>
         let allItems = [];
+        let currentCategory = 'Awards';
 
         const basePath = (() => {
             const path = window.location.pathname;
@@ -396,8 +431,9 @@
         const viewport = document.getElementById('viewport');
         const canvas = document.getElementById('canvas');
         const zoomIndicator = document.getElementById('zoomIndicator');
+        const tabsContainer = document.getElementById('galleryTabs');
 
-        let scale = 1;
+        let scale = 0.5;
         
         // Image grid settings
         const imageWidth = 240;
@@ -414,14 +450,47 @@
         let canvasWidth = 0;
         let canvasHeight = 0;
 
+        function normalizeCategory(value) {
+            return (value || '').toLowerCase();
+        }
+
+        function getFilteredItems() {
+            if (!allItems.length) return [];
+            if (!currentCategory) return allItems;
+            const normalized = normalizeCategory(currentCategory);
+            const filtered = allItems.filter(item => normalizeCategory(item.category) === normalized);
+            return filtered.length ? filtered : allItems;
+        }
+
+        function updateTabsActive() {
+            if (!tabsContainer) return;
+            const buttons = tabsContainer.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                const cat = btn.dataset.category || '';
+                btn.classList.toggle('active', cat === currentCategory);
+            });
+        }
+
         fetch("./gallery/gallery.json")
             .then(r => r.json())
             .then(items => {
-                allItems = items;
+                allItems = items.map((item, index) => ({ ...item, _id: index }));
                 canvas.innerHTML = "";
+                updateTabsActive();
                 createLayout();
             })
             .catch(err => console.error("Failed to load gallery JSON", err));
+
+        tabsContainer?.addEventListener('click', (e) => {
+            const button = e.target.closest('.tab-btn');
+            if (!button) return;
+            const category = button.dataset.category;
+            if (!category || category === currentCategory) return;
+            currentCategory = category;
+            updateTabsActive();
+            canvas.innerHTML = "";
+            createLayout();
+        });
 
         // Movement variables
         let targetX = 0;
@@ -443,9 +512,10 @@
 
         // Create uniform grid layout
         function createLayout() {
-            if (!allItems.length) return;
+            const displayItems = getFilteredItems();
+            if (!displayItems.length) return;
 
-            const totalItems = Math.max(allItems.length, 1);
+            const totalItems = Math.max(displayItems.length, 1);
             const rows = Math.ceil(totalItems / columns);
 
             canvasWidth = leftPadding + (columns * (imageWidth + gap)) + gap + rightPadding;
@@ -455,9 +525,10 @@
             canvas.style.width = `${canvasWidth}px`;
             canvas.style.height = `${canvasHeight}px`;
             
-            allItems.forEach((item, index) => {
+            displayItems.forEach((item, index) => {
                 const col = index % columns;
                 const row = Math.floor(index / columns);
+                const globalIndex = typeof item._id === 'number' ? item._id : allItems.indexOf(item);
                 
                 const x = leftPadding + col * (imageWidth + gap) + gap;
                 const y = topPadding + row * (imageHeight + gap) + gap;
@@ -468,6 +539,7 @@
                 node.style.top = `${y}px`;
                 node.style.width = `${imageWidth}px`;
                 node.style.height = `${imageHeight}px`;
+                node.dataset.index = globalIndex;
                 const img = document.createElement('img');
                 img.src = resolveMediaPath(item.thumb || item.full);
                 img.alt = item.title || 'MIC 2025 Gallery image';
@@ -496,7 +568,8 @@
                     // Only open if the click wasn't part of a drag
                     if (dragDistance < 5 && touchDistance < 10) {
                         e.stopPropagation();
-                        openLightbox(index);
+                        const idx = parseInt(node.dataset.index, 10);
+                        openLightbox(Number.isNaN(idx) ? 0 : idx);
                     }
                 });
             });
@@ -623,7 +696,7 @@
             }
             
             // Smooth interpolation (easing)
-            const easing = (isDragging || isTouching) ? 0.25 : 0.12;
+            const easing = (isDragging || isTouching) ? 0.15 : 0.06;
             currentX += (targetX - currentX) * easing;
             currentY += (targetY - currentY) * easing;
             
@@ -689,13 +762,13 @@
         });
 
         document.getElementById('resetView').addEventListener('click', () => {
-            scale = 1;
+            scale = 0.5;
             targetX = 0;
             targetY = 0;
             velocityX = 0;
             velocityY = 0;
             hasUserDragged = false; // Re-enable mouse tracking
-            zoomIndicator.textContent = `ZOOM: 100%`;
+            zoomIndicator.textContent = `ZOOM: ${Math.round(scale * 100)}%`;
         });
 
         // Touch support for mobile
