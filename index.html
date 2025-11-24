@@ -402,7 +402,7 @@
         </div>
     </div>
 
-    <div class="zoom-indicator" id="zoomIndicator">ZOOM: 50%</div>
+    <div class="zoom-indicator" id="zoomIndicator">ZOOM: 100%</div>
 
     <div class="viewport" id="viewport">
         <div class="canvas" id="canvas">
@@ -455,7 +455,7 @@
         const zoomIndicator = document.getElementById('zoomIndicator');
         const tabsContainer = document.getElementById('galleryTabs');
 
-        let scale = 0.5;
+        let scale = 1.0;
         
         // Image grid settings
         const imageWidth = 240;
@@ -464,14 +464,14 @@
         const MAX_COLUMNS = 8;
         
         // Add padding to ensure edges are visible and header doesn't block
-        const topPadding = 220;
+        const topPadding = 300;
         const leftPadding = 40;
         const rightPadding = 40;
         const bottomPadding = 40;
         const minTileHeight = 180;
         const maxTileHeight = 520;
         const headingHeight = 60;
-        const parallaxStrength = 0.25;
+        const parallaxStrength = 0.05;
         
         let canvasWidth = 0;
         let canvasHeight = 0;
@@ -664,8 +664,8 @@
                 const label = document.createElement('div');
                 label.className = 'image-label';
                 label.innerHTML = `
-                    <h3>${resolveCategoryName(item.category)}</h3>
-                    <p>${item.title ? item.title.replace(/_/g, ' ') : (item.desc || '')}</p>
+                    <h3>${item.title ? item.title.replace(/_/g, ' ') : 'MIC 2025'}</h3>
+                    <p>${resolveCategoryName(item.category)}</p>
                 `;
 
                 node.appendChild(img);
@@ -698,9 +698,14 @@
             canvas.style.height = `${canvasHeight}px`;
             canvas.appendChild(fragment);
 
-            currentX = 0;
+            let initialTargetX = 0;
+            if (canvasWidth * scale < window.innerWidth) {
+                initialTargetX = (window.innerWidth - canvasWidth * scale) / 2;
+            }
+
+            currentX = initialTargetX;
+            targetX = initialTargetX;
             currentY = 0;
-            targetX = 0;
             targetY = 0;
         }
 
@@ -819,7 +824,7 @@
             }
             
             // Smooth interpolation (easing)
-            const easing = (isDragging || isTouching) ? 0.1 : 0.04;
+            const easing = (isDragging || isTouching) ? 0.1 : 0.015;
             currentX += (targetX - currentX) * easing;
             currentY += (targetY - currentY) * easing;
             
@@ -832,6 +837,7 @@
         // Zoom functionality
         viewport.addEventListener('wheel', (e) => {
             e.preventDefault();
+            hasUserDragged = true;
             
             const delta = e.deltaY > 0 ? -0.1 : 0.1;
             const newScale = Math.max(0.5, Math.min(2, scale + delta));
@@ -885,7 +891,7 @@
         });
 
         document.getElementById('resetView').addEventListener('click', () => {
-            scale = 0.5;
+            scale = 1.0;
             targetX = 0;
             targetY = 0;
             velocityX = 0;
