@@ -379,6 +379,20 @@
     <script>
         let allItems = [];
 
+        const basePath = (() => {
+            const path = window.location.pathname;
+            if (path.endsWith('/')) return path;
+            const idx = path.lastIndexOf('/');
+            return idx === -1 ? '/' : path.slice(0, idx + 1);
+        })();
+
+        function resolveMediaPath(mediaPath) {
+            if (!mediaPath) return '';
+            if (/^https?:\/\//i.test(mediaPath)) return mediaPath;
+            const cleanPath = mediaPath.replace(/^\/+/, '');
+            return `${basePath}${cleanPath}`;
+        }
+
         const viewport = document.getElementById('viewport');
         const canvas = document.getElementById('canvas');
         const zoomIndicator = document.getElementById('zoomIndicator');
@@ -455,7 +469,7 @@
                 node.style.width = `${imageWidth}px`;
                 node.style.height = `${imageHeight}px`;
                 const img = document.createElement('img');
-                img.src = item.thumb || item.full;
+                img.src = resolveMediaPath(item.thumb || item.full);
                 img.alt = item.title || 'MIC 2025 Gallery image';
 
                 const label = document.createElement('div');
@@ -771,7 +785,7 @@
             currentIndex = index;
             const item = allItems[currentIndex];
             if (!item) return;
-            lightboxImg.src = item.full || item.thumb;
+            lightboxImg.src = resolveMediaPath(item.full || item.thumb);
             lightboxTitle.textContent = item.title || '';
             lightboxDesc.textContent = item.desc || '';
             lightbox.classList.add('active');
@@ -785,7 +799,7 @@
             if (!allItems.length) return;
             currentIndex = (currentIndex + 1) % allItems.length;
             const item = allItems[currentIndex];
-            lightboxImg.src = item.full || item.thumb;
+            lightboxImg.src = resolveMediaPath(item.full || item.thumb);
             lightboxTitle.textContent = item.title || '';
             lightboxDesc.textContent = item.desc || '';
         }
@@ -794,7 +808,7 @@
             if (!allItems.length) return;
             currentIndex = (currentIndex - 1 + allItems.length) % allItems.length;
             const item = allItems[currentIndex];
-            lightboxImg.src = item.full || item.thumb;
+            lightboxImg.src = resolveMediaPath(item.full || item.thumb);
             lightboxTitle.textContent = item.title || '';
             lightboxDesc.textContent = item.desc || '';
         }

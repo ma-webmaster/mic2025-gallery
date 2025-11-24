@@ -85,8 +85,8 @@ async function generateGallery() {
     entries.push({
       type: 'image',
       category,
-      full: `/gallery/full/${fullFile}`,
-      thumb: `/gallery/thumbs/${thumbFile}`,
+      full: `gallery/full/${fullFile}`,
+      thumb: `gallery/thumbs/${thumbFile}`,
       title,
       desc: `MIC 2025 — ${category}`,
     });
