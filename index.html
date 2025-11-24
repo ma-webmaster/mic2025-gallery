@@ -475,7 +475,7 @@
                 const label = document.createElement('div');
                 label.className = 'image-label';
                 label.innerHTML = `
-                    <h3>${item.title || ''}</h3>
+                    <h3>${item.category || item.title || 'MIC 2025'}</h3>
                     <p>${item.desc || ''}</p>
                 `;
                 
