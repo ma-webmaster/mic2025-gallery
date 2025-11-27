@@ -38,6 +38,8 @@ function getBaseName(filename) {
 const CATEGORY_RULES = [
   { label: 'Awards', test: /awards/i },
   { label: 'MIC Day 1', test: /day[\s_-]*1/i },
+  { label: 'MIC Day 2', test: /day[\s_-]*2/i },
+  { label: 'MIC Day 3', test: /day[\s_-]*3/i },
 ];
 
 function extractCategory(filename) {
